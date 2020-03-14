@@ -1,0 +1,5 @@
+nltk==3.4.5
+pocketsphinx==0.1.15
+PyAudio==0.2.11
+six==1.14.0
+SpeechRecognition==3.8.1
