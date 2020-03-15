@@ -8,7 +8,8 @@ r.pause_threshold = 0.6
 
 try:
     print("A moment of silence, please...")
-    with m as source: r.adjust_for_ambient_noise(source, duration=2)
+    with m as source:
+        r.adjust_for_ambient_noise(source, duration=2)
     print("Set minimum energy threshold to {}".format(r.energy_threshold))
     while True:
         print("Say something!")
