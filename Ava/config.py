@@ -1,2 +1,4 @@
+DEBUG = True
+
 LANGUAGE_RECONGITION = "fr-FR"
 LANGUAGE_STEAMER = "french"
