@@ -1,7 +1,8 @@
 import logging
+import time
 from queue import Queue
 from threading import Thread
-import time
+
 import speech_recognition
 from espeakng import ESpeakNG
 from pydub import AudioSegment
@@ -36,9 +37,23 @@ class Ava(object):
                 time.sleep(0.1)
             except KeyboardInterrupt:
                 self._stt_running = False
+
         self._stt_join()
 
         thread.join()
+
+    def _enqueue_audio(self, audio):
+        self._audio_queue.put(audio)
+
+        #if config.DEBUG:
+        #    i += 1
+        #    filename = "%s.wav" % datetime.datetime.now()
+        #    self._save(audio, filename)
+        #    self._play(filename)
+
+    def _enqueue_stt(self, text):
+        if config.DEBUG:
+            self._tts(text)
 
     def _get_source(self):
         return speech_recognition.Microphone()
@@ -59,25 +74,17 @@ class Ava(object):
 
     def _stt_recognize_worker(self):
         # this runs in a background thread
-        i = 1
         while True:
-            audio = self._audio_queue.get()  # retrieve the next audio processing job from the main thread
-            if audio is None: break  # stop processing if the main thread is done
-
-            #if config.DEBUG:
-            #    i += 1
-            #    filename = "%s.wav" % i
-            #    self._save(audio, filename)
-            #    self._play(filename)
-
+            audio = self._audio_queue.get()
+            if audio is None:
+                break
             # received audio data, now we'll recognize it using Google Speech Recognition
             try:
                 # for testing purposes, we're just using the default API key
-                # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
-                # instead of `r.recognize_google(audio)`
+                # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")` instead of `r.recognize_google(audio)`
                 value = self.recognizer.recognize_google(audio, language=config.LANGUAGE_RECONGITION)
                 logger.debug(">" + value)
-                self._tts(value)
+                self._enqueue_stt(value)
             except speech_recognition.UnknownValueError:
                 logger.debug("Google Speech Recognition could not understand audio")
             except speech_recognition.RequestError as e:
@@ -100,7 +107,7 @@ class Ava(object):
                 logger.debug("Listen....")
                 audio = self.recognizer.listen(src, **self.recognizer_listen_kwargs)
                 logger.debug("End Listen....")
-                self._audio_queue.put(audio)
+                self._enqueue_audio(audio)
 
 
     def _stt_join(self):
