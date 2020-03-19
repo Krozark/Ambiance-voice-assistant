@@ -1,123 +1,44 @@
 import logging
 import time
-from queue import Queue
-from threading import Thread
 
-import speech_recognition
-from espeakng import ESpeakNG
 from pydub import AudioSegment
 from pydub.playback import play
 
-from Ava import config
+from Ava.stt import STTEngine
+from Ava.tts import TTSEngine
 
 logger = logging.getLogger(__package__)
 
 
-class Ava(object):
+class Base(object):
+    stt_engine_class = STTEngine
+    tts_engine_class = TTSEngine
+
     def __init__(self):
-        self.source = self._get_source()
-        self.recognizer = self._get_recognizer()
-        logging.info("A moment of silence, please...")
-        self.recognizer_listen_kwargs=dict(
-            phrase_time_limit=5
-        )
-
         self.tts_engine = self._get_tts_engine()
-        self._audio_queue = Queue()
-        self._stt_recognize_worker_thread = None
-        self._stt_running = False
+        self.stt_engine = self._get_stt_engine()
 
-    def run(self):
-        thread = Thread(target=self._stt_start)
-        thread.daemon = True
-        thread.start()
-
-        while self._stt_running:
-            try:
-                time.sleep(0.1)
-            except KeyboardInterrupt:
-                self._stt_running = False
-
-        self._stt_join()
-
-        thread.join()
-
-    def _enqueue_audio(self, audio):
-        self._audio_queue.put(audio)
-
-        #if config.DEBUG:
-        #    i += 1
-        #    filename = "%s.wav" % datetime.datetime.now()
-        #    self._save(audio, filename)
-        #    self._play(filename)
-
-    def _enqueue_stt(self, text):
-        if config.DEBUG:
-            self._tts(text)
-
-    def _get_source(self):
-        return speech_recognition.Microphone()
-
-    def _get_recognizer(self):
-        r = speech_recognition.Recognizer()
-        r.non_speaking_duration = 0.3
-        r.pause_threshold = 0.6
-        return r
+    def get_tts_engine_class(self):
+        return self.tts_engine_class
 
     def _get_tts_engine(self):
-        engine = ESpeakNG()
-        engine.voice = "fr"
-        engine.pitch = 32
-        engine.speed = 150
-        return engine
+        return self.get_tts_engine_class()()
+
+    def get_stt_engine_class(self):
+        return self.stt_engine_class
+
+    def _get_stt_engine(self):
+        return self.get_stt_engine_class()()
 
 
-    def _stt_recognize_worker(self):
-        # this runs in a background thread
-        while True:
-            audio = self._audio_queue.get()
-            if audio is None:
-                break
-            # received audio data, now we'll recognize it using Google Speech Recognition
-            try:
-                # for testing purposes, we're just using the default API key
-                # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")` instead of `r.recognize_google(audio)`
-                value = self.recognizer.recognize_google(audio, language=config.LANGUAGE_RECONGITION)
-                logger.debug(">" + value)
-                self._enqueue_stt(value)
-            except speech_recognition.UnknownValueError:
-                logger.debug("Google Speech Recognition could not understand audio")
-            except speech_recognition.RequestError as e:
-                logger.debug("Could not request results from Google Speech Recognition service; {0}".format(e))
-
-            self._audio_queue.task_done()  # mark the audio processing job as completed in the queue
-
-    def _stt_start(self):
-        # start a new thread to recognize audio, while this thread focuses on listening
-        self._stt_running = True
-        self._stt_recognize_worker_thread = Thread(target=self._stt_recognize_worker)
-        self._stt_recognize_worker_thread.daemon = True
-        self._stt_recognize_worker_thread.start()
-
-        with self.source as src:
-            self.recognizer.adjust_for_ambient_noise(src, duration=2)
-            logger.info("Set minimum energy threshold to {}".format(self.recognizer.energy_threshold))
-
-            while self._stt_running:  # repeatedly listen for phrases and put the resulting audio on the audio processing job queue
-                logger.debug("Listen....")
-                audio = self.recognizer.listen(src, **self.recognizer_listen_kwargs)
-                logger.debug("End Listen....")
-                self._enqueue_audio(audio)
-
-
-    def _stt_join(self):
-        self._audio_queue.join()  # block until all current audio processing jobs are done
-        self._audio_queue.put(None)  # tell the recognize_thread to stop
-        self._stt_recognize_worker_thread.join()  # wait for the recognize_thread to actually stop
-
-
-    def _tts(self, text, wait=True):
-        self.tts_engine.say(text)
+class Ava(Base):
+    def run(self):
+        self.stt_engine.start()
+        try:
+            while True:
+                time.sleep(0.1)
+        except KeyboardInterrupt:
+            pass
 
     def _play(self, filename):
         song = AudioSegment.from_wav(filename)
