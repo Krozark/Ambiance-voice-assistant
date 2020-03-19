@@ -79,7 +79,6 @@ class AudioToFileWorker(IOThread):
 
 class AudioFilePlayerWorker(IThread):
     def _process_input_data(self, filename) -> None:
-        logger.debug("start to play file '{}'".format(filename))
+        logger.debug("Play file '{}'".format(filename))
         song = AudioSegment.from_wav(filename)
         play(song)
-        logger.debug("end to play file '{}'".format(filename))

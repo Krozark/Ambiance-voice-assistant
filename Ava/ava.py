@@ -1,6 +1,7 @@
 import logging
 import time
 
+from Ava import config
 from Ava.audio import (
     MicrophoneWorker,
     AudioToFileWorker,
@@ -21,21 +22,18 @@ class Ava(object):
                          |
                          + --> cache -> Action
         """
+        self._workers = []
+
         source_worker = MicrophoneWorker()
         stt_worker = STTWorker()
-        save_to_file = AudioToFileWorker("dump")
-        play = AudioFilePlayerWorker()
-        self._workers = [
-            source_worker,
-            stt_worker,
-            save_to_file,
-            play
-        ]
+        self._workers += [source_worker, stt_worker]
+        source_worker >> stt_worker
 
-        source_worker >> (
-            save_to_file >> play,
-            stt_worker
-        )
+        if config.DEBUG:
+            save_to_file = AudioToFileWorker("dump")
+            play = AudioFilePlayerWorker()
+            self._workers += [save_to_file, play]
+            source_worker >> (save_to_file >> play)
 
     def run(self):
         for w in self._workers:

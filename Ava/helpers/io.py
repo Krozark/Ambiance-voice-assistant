@@ -6,7 +6,6 @@ logger = logging.getLogger(__package__)
 
 class Queue(_Queue):
     def put(self, value, *args, **kwargs):
-        logger.debug("put value '{}' outputs".format(value))
         super().put(value, *args, **kwargs)
 
 
@@ -20,7 +19,6 @@ class DuplicateOutputQueue(object):
         return self._outputs[-1]
 
     def put(self, value, *args, **kwargs):
-        logger.debug("Dispatch value to '{}' outputs".format(len(self._outputs)))
         for q in self._outputs:
             q.put(value, *args, **kwargs)
 
@@ -49,7 +47,7 @@ class StreamMixin(object):
 
 class WithInput(StreamMixin):
     def __init__(self):
-        self._input_queue = Queue()
+        self._input_queue = DuplicateOutputQueue()
 
     def set_input(self, input):
         self._input_queue = input
@@ -66,7 +64,7 @@ class WithInput(StreamMixin):
 
 class WithOutput(StreamMixin):
     def __init__(self):
-        self._output_queue = Queue()
+        self._output_queue = DuplicateOutputQueue()
 
     def set_output(self, output):
         self._output_queue = output
