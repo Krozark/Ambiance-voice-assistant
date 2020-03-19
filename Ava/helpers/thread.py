@@ -1,10 +1,13 @@
 from threading import Thread as _Thread
-
+import logging
 from .io import (
     WithOutput,
     WithInput,
     WithInputOutput
 )
+
+
+logger = logging.getLogger(__package__)
 
 
 class Thread(_Thread):
@@ -13,11 +16,17 @@ class Thread(_Thread):
         self._is_running = False
 
     def stop(self) -> None:
+        logger.debug("Stop thread {}".format(type(self).__name__))
         self._is_running = False
 
     def start(self) -> None:
+        logger.debug("Start thread {}".format(type(self).__name__))
         self._is_running = True
         super().start()
+
+    def _bootstrap(self):
+        super()._bootstrap()
+        logger.debug("Thread stopped {}".format(type(self).__name__))
 
 
 class OThread(Thread, WithOutput):
@@ -48,6 +57,7 @@ class IThread(Thread, WithInput):
                 self._process_input_data(data)
                 self.input_task_done()
         except StopIteration:
+            logger.debug("Thread {} receive a stop iteration".format(type(self).__name__))
             self._is_running = False
 
 
@@ -74,4 +84,5 @@ class IOThread(Thread, WithInputOutput):
                 self.input_task_done()
                 self.output_push(out)
         except StopIteration:
+            logger.debug("Thread {} receive a stop iteration".format(type(self).__name__))
             self._is_running = False

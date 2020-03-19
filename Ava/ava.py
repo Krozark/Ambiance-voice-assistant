@@ -1,52 +1,56 @@
 import logging
 import time
 
-from pydub import AudioSegment
-from pydub.playback import play
-
-from Ava.stt import STTEngine
-from Ava.tts import TTSEngine
+from Ava.audio import (
+    MicrophoneWorker,
+    AudioToFileWorker,
+    AudioFilePlayerWorker
+)
+from Ava.stt import STTWorker
 
 logger = logging.getLogger(__package__)
 
 
-class Base(object):
-    stt_engine_class = STTEngine
-    tts_engine_class = TTSEngine
+class Ava(object):
 
     def __init__(self):
-        self.tts_engine = self._get_tts_engine()
-        self.stt_engine = self._get_stt_engine()
+        """
+        Mic --+--> save to file --> play
+              |
+              +--> Stt --+--> tss
+                         |
+                         + --> cache -> Action
+        """
+        source_worker = MicrophoneWorker()
+        stt_worker = STTWorker()
+        save_to_file = AudioToFileWorker("dump")
+        play = AudioFilePlayerWorker()
+        self._workers = [
+            source_worker,
+            stt_worker,
+            save_to_file,
+            play
+        ]
 
-    def get_tts_engine_class(self):
-        return self.tts_engine_class
+        source_worker >> (
+            save_to_file >> play,
+            stt_worker
+        )
 
-    def _get_tts_engine(self):
-        return self.get_tts_engine_class()()
-
-    def get_stt_engine_class(self):
-        return self.stt_engine_class
-
-    def _get_stt_engine(self):
-        return self.get_stt_engine_class()()
-
-
-class Ava(Base):
     def run(self):
-        self.stt_engine.start()
+        for w in self._workers:
+            w.start()
         try:
             while True:
                 time.sleep(0.1)
         except KeyboardInterrupt:
-            pass
+            logger.info("Stopping. Please wait...")
 
-    def _play(self, filename):
-        song = AudioSegment.from_wav(filename)
-        play(song)
+        for w in self._workers:
+            w.stop()
 
-    def _save(self, audio, filename):
-        with open(filename, "wb") as f:
-            f.write(audio.get_wav_data())
+        for w in self._workers:
+            w.join()
 
 
 if __name__ == "__main__":
