@@ -9,6 +9,10 @@ from Ava.audio import (
     STTWorker
 )
 
+from Ava.text import (
+    TTSEngineWorker
+)
+
 logger = logging.getLogger(__package__)
 
 
@@ -18,7 +22,7 @@ class Ava(object):
         """
         Mic --+--> Stt --+--> cache -> Action
               |          |
-              |           +--> tss
+              |           +-- (if config.DEBUG) --> tss
               |
               +-- (if config.DEBUG_AUDIO) --> save to file --> play
 
@@ -37,6 +41,11 @@ class Ava(object):
             play = AudioFilePlayerWorker()
             self._workers += [save_to_file, play]
             source_worker >> (save_to_file >> play)
+
+        if config.DEBUG:
+            tss = TTSEngineWorker()
+            stt_worker >> tss
+            self._workers.append(tss)
 
     def run(self):
         for w in self._workers:

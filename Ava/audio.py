@@ -17,6 +17,7 @@ logger = logging.getLogger(__package__)
 
 
 class RecognizerMixin(object):
+    """Mixin for class that use reconizer"""
     recognizer_class = speech_recognition.Recognizer
 
     def __init__(self):
@@ -44,6 +45,9 @@ class RecognizerMixin(object):
 
 
 class MicrophoneWorker(OThread, RecognizerMixin):
+    """
+    Class that run a task in background, on put to it's output tha audio listen
+    """
     source_class = speech_recognition.Microphone
 
     def __init__(self):
@@ -66,6 +70,9 @@ class MicrophoneWorker(OThread, RecognizerMixin):
 
 
 class AudioToFileWorker(IOThread):
+    """
+    Class that take audio as input, and save it to file. The filename is send as output
+    """
     def __init__(self, path=None):
         super().__init__()
         self._path = path or ""
@@ -80,6 +87,9 @@ class AudioToFileWorker(IOThread):
 
 
 class AudioFilePlayerWorker(IThread):
+    """
+    Task that take a music filename as input and play it
+    """
     def _process_input_data(self, filename) -> None:
         logger.debug("Play file '{}'".format(filename))
         song = AudioSegment.from_wav(filename)
@@ -87,6 +97,9 @@ class AudioFilePlayerWorker(IThread):
 
 
 class STTWorker(IOThread, RecognizerMixin):
+    """
+    Task that take a audio as input, and output the text of this audio
+    """
     language = config.LANGUAGE_RECONGITION
     google_key = None
 
@@ -95,11 +108,12 @@ class STTWorker(IOThread, RecognizerMixin):
         RecognizerMixin.__init__(self)
 
     def _process_input_data(self, audio):
+        value = ""
         try:
             value = self._recognizer.recognize_google(audio, language=self.language, key=self.google_key)
             logger.debug(">" + value)
-            return value
         except speech_recognition.UnknownValueError:
             logger.debug("Google Speech Recognition could not understand audio")
         except speech_recognition.RequestError as e:
             logger.debug("Could not request results from Google Speech Recognition service; {0}".format(e))
+        return value

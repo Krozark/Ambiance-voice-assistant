@@ -13,15 +13,27 @@ class DuplicateOutputQueue(object):
         self._outputs = []
 
     def create_output(self) -> Queue:
+        """
+        Creat a new output
+        :return: the new output to use (Queue)
+        """
         logger.debug("Create new queue as output")
         self._outputs.append(Queue())
         return self._outputs[-1]
 
     def add_output(self, queue: Queue) -> None:
+        """
+        Add an existing output to the internal list
+        :param queue: Queue to add
+        """
         logger.debug("add existing queue as output")
         self._outputs.append(queue)
 
-    def put(self, value, *args, **kwargs):
+    def put(self, value, *args, **kwargs) -> None:
+        """
+        Put duplicate an item to all outputs
+        :param value: item to send
+        """
         for q in self._outputs:
             q.put(value, *args, **kwargs)
 
@@ -51,6 +63,9 @@ class StreamMixin(object):
 
 
 class WithInput(StreamMixin):
+    """
+    Class that contain a internal Queue as input
+    """
     def __init__(self):
         self._input_queue = None
 
@@ -68,6 +83,9 @@ class WithInput(StreamMixin):
 
 
 class WithOutput(StreamMixin):
+    """
+    Class that contain a internal Queue as output
+    """
     def __init__(self):
         self._output_queue = Queue()
 
@@ -88,6 +106,9 @@ class WithOutput(StreamMixin):
 
 
 class WithInputOutput(WithInput, WithOutput):
+    """
+    Class that contain a internal Queue as input, and another as output
+    """
     def __init__(self):
         WithInput.__init__(self)
         WithOutput.__init__(self)
