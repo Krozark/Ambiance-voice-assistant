@@ -1,22 +1,25 @@
 import logging
-from queue import Queue as _Queue
+from queue import Queue
 
 logger = logging.getLogger(__package__)
 
 
-class Queue(_Queue):
-    def put(self, value, *args, **kwargs):
-        super().put(value, *args, **kwargs)
-
-
 class DuplicateOutputQueue(object):
+    """
+    Class tha internally manage a pool of Queue(). Each time an item is put()
+    this item is put into all the queues. This is usefull to manage a single entry with multiple outputs.
+    """
     def __init__(self):
         self._outputs = []
 
-    def create_output(self):
-        logger.debug("Create new queue output")
+    def create_output(self) -> Queue:
+        logger.debug("Create new queue as output")
         self._outputs.append(Queue())
         return self._outputs[-1]
+
+    def add_output(self, queue: Queue) -> None:
+        logger.debug("add existing queue as output")
+        self._outputs.append(queue)
 
     def put(self, value, *args, **kwargs):
         for q in self._outputs:
@@ -24,11 +27,17 @@ class DuplicateOutputQueue(object):
 
 
 class StreamMixin(object):
+    """
+    Allow the class to us ">>" to define it's output(s)
+    self >> other
+    """
     def __rshift__(self, other):
-        """self >> other"""
         if isinstance(other, (tuple, list)):
-            output = DuplicateOutputQueue()
-            self.set_output(output)
+            old = self.get_output()
+            if not isinstance(old, DuplicateOutputQueue):
+                new = DuplicateOutputQueue()
+                new.add_output(old)
+                self.set_output(new)
             for u in other:
                 self >> u
         else:
@@ -39,10 +48,6 @@ class StreamMixin(object):
             else:
                 other.set_input(output)
         return self
-
-    def __or__(self, other):
-        """self | other"""
-        return self >> other
 
 
 class WithInput(StreamMixin):

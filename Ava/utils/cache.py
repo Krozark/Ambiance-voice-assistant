@@ -5,8 +5,6 @@ from Ava.stem import steam_sentence
 
 logger = logging.getLogger(__package__)
 
-logging.basicConfig(level=logging.DEBUG)
-
 
 class _WithName:
     def __init__(self, name: str):
@@ -15,9 +13,11 @@ class _WithName:
     def __str__(self):
         return self.name
 
+
 class Event(_WithName):
     def trigger(self) -> None:
         print("Trigger event <%s>" % self.name)
+
 
 class EventList:
     def __init__(self):
@@ -72,6 +72,7 @@ class _CacheNode(_WithName):
                 return self._leaf
             return EventList()
 
+
 class Cache:
     def __init__(self):
         self._root = {}
@@ -99,6 +100,8 @@ class Cache:
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
+
     cache = Cache()
     cache.add("la", Event("la"))
     cache.add("la nuit", Event("la nuit"))

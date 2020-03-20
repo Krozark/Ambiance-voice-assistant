@@ -1,4 +1,5 @@
 DEBUG = True
+DEBUG_AUDIO = False
 
 LANGUAGE_RECONGITION = "fr-FR"
 LANGUAGE_STEAMER = "french"
