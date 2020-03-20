@@ -61,7 +61,7 @@ class IThread(Thread, WithInput):
     def stop(self) -> None:
         """Stop the current thread (non blocking)"""
         super().stop()
-        self.input_push(None)
+        self._input_push(StopIteration)
 
     def _process_input_data(self, data) -> None:
         """
@@ -77,8 +77,8 @@ class IThread(Thread, WithInput):
         try:
             while self._is_running:
                 data = self.input_pop()
-                if data is None:
-                    raise StopIteration
+                if data is StopIteration:
+                    raise StopIteration()
                 self._process_input_data(data)
                 self.input_task_done()
         except StopIteration:
@@ -99,7 +99,7 @@ class IOThread(Thread, WithInputOutput):
     def stop(self) -> None:
         """Stop the current thread (non blocking)"""
         super().stop()
-        self.input_push(None)
+        self._input_push(StopIteration)
         self.output_push(None)
 
     def _process_input_data(self, data):
@@ -115,8 +115,8 @@ class IOThread(Thread, WithInputOutput):
         try:
             while self._is_running:
                 data = self.input_pop()
-                if data is None:
-                    raise StopIteration
+                if data is StopIteration:
+                    raise StopIteration()
                 out = self._process_input_data(data)
                 self.input_task_done()
                 self.output_push(out)

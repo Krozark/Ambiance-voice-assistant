@@ -72,8 +72,8 @@ class WithInput(StreamMixin):
     def set_input(self, input):
         self._input_queue = input
 
-    def input_push(self, value) -> None:
-        return self._input_queue.put(value)
+    def _input_push(self, value) -> None:
+        self._input_queue.put(value)
 
     def input_pop(self):
         return self._input_queue.get()
@@ -96,13 +96,8 @@ class WithOutput(StreamMixin):
         return self._output_queue
 
     def output_push(self, value) -> None:
-        self._output_queue.put(value)
-
-    def output_pop(self):
-        return self._output_queue.get()
-
-    def output_task_done(self) -> None:
-        self._output_queue.task_done()
+        if self._output_queue:
+            self._output_queue.put(value)
 
 
 class WithInputOutput(WithInput, WithOutput):
