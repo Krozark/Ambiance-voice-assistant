@@ -24,7 +24,7 @@ class Ava(object):
         self._workers = []
 
         self.create_pipeline(
-            debug_audio=True,#config.DEBUG_AUDIO,
+            debug_audio=False,#config.DEBUG_AUDIO,
             debug_tts=False# config.DEBUG
         )  # real pipeline with microphone
         # self.create_debug_tss_pipeline()  # pipeline that d'on need microphone
