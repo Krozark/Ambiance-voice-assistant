@@ -77,10 +77,11 @@ class IThread(Thread, WithInput):
         try:
             while self._is_running:
                 data = self.input_pop()
+                self.input_task_done()
                 if data is StopIteration:
                     raise StopIteration()
-                self._process_input_data(data)
-                self.input_task_done()
+                if data is not None:
+                    self._process_input_data(data)
         except StopIteration:
             logger.debug("Thread {} receive a stop iteration".format(type(self).__name__))
             self._is_running = False
@@ -115,11 +116,13 @@ class IOThread(Thread, WithInputOutput):
         try:
             while self._is_running:
                 data = self.input_pop()
+                self.input_task_done()
                 if data is StopIteration:
                     raise StopIteration()
-                out = self._process_input_data(data)
-                self.input_task_done()
-                self.output_push(out)
+                if data is not None:
+                    out = self._process_input_data(data)
+                    if out is not None:
+                        self.output_push(out)
         except StopIteration:
             logger.debug("Thread {} receive a stop iteration".format(type(self).__name__))
             self._is_running = False

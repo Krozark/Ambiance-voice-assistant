@@ -58,7 +58,7 @@ class FileTokenizerWorker(OThread):
         with open(filename, "rt") as f:
             data = f.read()
         data = data.replace("\n", " ").split(" ")
-        data = [TextWorker.normalize_word(w) for w in data]
+        data = [FileTokenizerWorker.normalize_word(w) for w in data]
         return data
 
     def run(self) -> None:

@@ -23,8 +23,11 @@ class Ava(object):
     def __init__(self):
         self._workers = []
 
-        # self.create_pipeline()  # real pipeline with microphone
-        self.create_debug_tss_pipeline()  # pipeline that d'on need microphone
+        self.create_pipeline(
+            debug_audio=True,#config.DEBUG_AUDIO,
+            debug_tts=False# config.DEBUG
+        )  # real pipeline with microphone
+        # self.create_debug_tss_pipeline()  # pipeline that d'on need microphone
 
     def run(self):
         for w in self._workers:
@@ -41,7 +44,7 @@ class Ava(object):
         for w in self._workers:
             w.join()
 
-    def create_pipeline(self):
+    def create_pipeline(self, debug_audio=False, debug_tts=False):
         """
         Mic --+--> Stt --+--> cache -> Action
               |          |
@@ -55,10 +58,10 @@ class Ava(object):
         self._workers += [source_worker, stt_worker]
         source_worker >> stt_worker
 
-        if config.DEBUG_AUDIO:
+        if debug_audio:
             self.add_debug_audio_pipeline(source_worker)
 
-        if config.DEBUG:
+        if debug_tts:
             self.add_debug_tss_pipeline(stt_worker)
 
     def add_debug_audio_pipeline(self, audio_source):
@@ -96,5 +99,6 @@ class Ava(object):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
+
     ava = Ava()
     ava.run()

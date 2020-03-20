@@ -67,6 +67,7 @@ class MicrophoneWorker(OThread, RecognizerMixin):
                 audio = self.listen(src)
                 logger.debug("End Listen....")
                 self.output_push(audio)
+        self.stop()
 
 
 class AudioToFileWorker(IOThread):
@@ -110,7 +111,7 @@ class STTWorker(IOThread, RecognizerMixin):
     def _process_input_data(self, audio):
         try:
             value = self._recognizer.recognize_google(audio, language=self.language, key=self.google_key)
-            logger.debug(">" + value)
+            logger.debug("Recognize: " + value)
             return value
         except speech_recognition.UnknownValueError:
             logger.debug("Google Speech Recognition could not understand audio")

@@ -3,6 +3,8 @@ from queue import Queue
 
 logger = logging.getLogger(__package__)
 
+QueueClass = Queue
+
 
 class DuplicateOutputQueue(object):
     """
@@ -12,16 +14,16 @@ class DuplicateOutputQueue(object):
     def __init__(self):
         self._outputs = []
 
-    def create_output(self) -> Queue:
+    def create_output(self) -> QueueClass:
         """
         Creat a new output
         :return: the new output to use (Queue)
         """
         logger.debug("Create new queue as output")
-        self._outputs.append(Queue())
+        self._outputs.append(QueueClass())
         return self._outputs[-1]
 
-    def add_output(self, queue: Queue) -> None:
+    def add_output(self, queue: QueueClass) -> None:
         """
         Add an existing output to the internal list
         :param queue: Queue to add
@@ -53,12 +55,18 @@ class StreamMixin(object):
             for u in other:
                 self >> u
         else:
-            # self.output = other.input other.set_input(self)
             output = self.get_output()
-            if isinstance(output, DuplicateOutputQueue):
+            if output is None: # No output, so we create one
+                new = QueueClass()
+                self.set_output(new)
+                other.set_input(new)
+            elif isinstance(output, QueueClass):  # already a output, so we create a pool and add it old + new output
+                new = DuplicateOutputQueue()
+                new.add_output(output)
+                self.set_output(new)
+                other.set_input(new.create_output())
+            elif isinstance(output, DuplicateOutputQueue): # already a pool, ad a new output
                 other.set_input(output.create_output())
-            else:
-                other.set_input(output)
         return self
 
 
@@ -87,7 +95,7 @@ class WithOutput(StreamMixin):
     Class that contain a internal Queue as output
     """
     def __init__(self):
-        self._output_queue = Queue()
+        self._output_queue = None
 
     def set_output(self, output):
         self._output_queue = output
