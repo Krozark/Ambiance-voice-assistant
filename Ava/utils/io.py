@@ -52,7 +52,7 @@ class StreamMixin(object):
 
 class WithInput(StreamMixin):
     def __init__(self):
-        self._input_queue = DuplicateOutputQueue()
+        self._input_queue = None
 
     def set_input(self, input):
         self._input_queue = input
@@ -69,7 +69,7 @@ class WithInput(StreamMixin):
 
 class WithOutput(StreamMixin):
     def __init__(self):
-        self._output_queue = DuplicateOutputQueue()
+        self._output_queue = Queue()
 
     def set_output(self, output):
         self._output_queue = output
