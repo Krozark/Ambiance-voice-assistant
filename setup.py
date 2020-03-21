@@ -15,5 +15,6 @@ setup(
       'pydub~=0.23',
       'py-espeak-ng~=0.1',
       'PyAudio~=0.2',
+      'spacy~=2.2',
    ],
 )

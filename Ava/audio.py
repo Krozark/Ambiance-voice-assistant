@@ -17,7 +17,7 @@ logger = logging.getLogger(__package__)
 
 
 class RecognizerMixin(object):
-    """Mixin for class that use reconizer"""
+    """Mixin for class that use recognizer"""
     recognizer_class = speech_recognition.Recognizer
 
     def __init__(self):
@@ -101,8 +101,7 @@ class STTWorker(IOThread, RecognizerMixin):
     """
     Task that take a audio as input, and output the text of this audio
     """
-    language = config.LANGUAGE_RECONGITION
-    google_key = None
+    language = config.LANGUAGES_INFORMATION_CURRENT["recognition"]
 
     def __init__(self):
         IOThread.__init__(self)
@@ -110,7 +109,7 @@ class STTWorker(IOThread, RecognizerMixin):
 
     def _process_input_data(self, audio):
         try:
-            value = self._recognizer.recognize_google(audio, language=self.language, key=self.google_key)
+            value = self._recognizer.recognize_google(audio, language=self.language, key=config.GOOGLE_RECOGNITION_KEY)
             logger.debug("Recognize: " + value)
             return value
         except speech_recognition.UnknownValueError:

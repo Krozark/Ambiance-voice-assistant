@@ -2,6 +2,7 @@ import logging
 import time
 import random
 from espeakng import ESpeakNG
+from Ava import config
 
 from .utils import (
     IThread,
@@ -21,7 +22,7 @@ class TTSEngine:
 
     def _get_engine(self):
         engine = ESpeakNG()
-        engine.voice = "fr-FR"
+        engine.voice = config.LANGUAGES_INFORMATION_CURRENT["voice"]
         engine.pitch = 32
         engine.speed = 150
         return engine

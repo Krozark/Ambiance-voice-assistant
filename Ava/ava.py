@@ -69,7 +69,7 @@ class Ava(object):
             audio_source = MicrophoneWorker()
             self.add_worker(audio_source)
             if debug_audio:
-                save_to_file = AudioToFileWorker("dump")
+                save_to_file = AudioToFileWorker("debug_audio")
                 play = AudioFilePlayerWorker()
                 audio_source >> (save_to_file >> play)
                 self.add_worker(save_to_file, play)
@@ -79,7 +79,7 @@ class Ava(object):
             audio_source >> text_source
         else:
             text_source = FileReaderWorker(
-                os.path.join(config.PROJECT_PATH, "..", "data/liste_francais-utf8.txt"),
+                os.path.join(config.LANGUAGES_INFORMATION_CURRENT["dictionary"]),
                 word_count=25,
                 timedelta=10
             )
