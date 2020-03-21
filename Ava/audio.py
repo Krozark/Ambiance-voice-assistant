@@ -32,7 +32,7 @@ class RecognizerMixin(object):
     def adjust_for_ambient_noise(self, source):
         logging.info("A moment of silence, please...")
         self._recognizer.adjust_for_ambient_noise(source, duration=2)
-        logger.info("Set minimum energy threshold to {}".format(self.get_energy_threshold()))
+        logger.info("Set minimum energy threshold = '%s'", self.get_energy_threshold())
 
     def get_energy_threshold(self):
         return self._recognizer.energy_threshold
@@ -92,7 +92,7 @@ class AudioFilePlayerWorker(IThread):
     Task that take a music filename as input and play it
     """
     def _process_input_data(self, filename) -> None:
-        logger.debug("Play file '{}'".format(filename))
+        logger.debug("Play file '%s'", filename)
         song = AudioSegment.from_wav(filename)
         play(song)
 
@@ -110,10 +110,10 @@ class STTWorker(IOThread, RecognizerMixin):
     def _process_input_data(self, audio):
         try:
             value = self._recognizer.recognize_google(audio, language=self.language, key=config.GOOGLE_RECOGNITION_KEY)
-            logger.debug("Recognize: " + value)
+            logger.debug("Recognize: '%s'", value)
             return value
         except speech_recognition.UnknownValueError:
             logger.debug("Google Speech Recognition could not understand audio")
         except speech_recognition.RequestError as e:
-            logger.debug("Could not request results from Google Speech Recognition service; {0}".format(e))
+            logger.debug("Could not request results from Google Speech Recognition service; %s", e)
         return None

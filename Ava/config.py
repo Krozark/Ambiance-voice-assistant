@@ -10,7 +10,10 @@ LANGUAGES_INFORMATION = {
         "recognition": "fr-FR",
         "voice": "fr-FR",
         "steamer": "french",
-        "dictionary": os.path.join(PROJECT_PATH, "..", "data", "liste_francais-utf8.txt"),
+        "nltk": "french",
+        #"dictionary": os.path.join(PROJECT_PATH, "..", "data", "liste_francais-utf8.txt"),
+        "dictionary": os.path.join(PROJECT_PATH, "..", "data", "Le Mystère des XV-francais-utf-8.txt"),
+        "spacy": "fr_core_news_md",
     }
 }
 

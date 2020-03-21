@@ -13,8 +13,10 @@ from Ava.audio import (
 from Ava.text import (
     TTSEngineWorker,
     FileReaderWorker,
+    NormalizerWorker,
     TokenizerWorker,
-    LoggerWorker
+    LoggerWorker,
+    LemmatizerWorker
 )
 
 logger = logging.getLogger(__package__)
@@ -63,7 +65,7 @@ class Ava(object):
 
         text_source --+-- (if debug_tts) --> TTSEngineWorker
                       |
-                      +--> TokenizerWorker -> cache -> Action
+                      +--> NormalizerWorker --> LemmatizerWorker --> TokenizerWorker --> cache --> Action
         """
         if audio_input:
             audio_source = MicrophoneWorker()
@@ -80,7 +82,6 @@ class Ava(object):
         else:
             text_source = FileReaderWorker(
                 os.path.join(config.LANGUAGES_INFORMATION_CURRENT["dictionary"]),
-                word_count=25,
                 timedelta=10
             )
             self._workers.append(text_source)
@@ -90,13 +91,17 @@ class Ava(object):
             text_source >> tss
             self.add_worker(tss)
 
-        tokenizer = TokenizerWorker()
-        self.add_worker(tokenizer)
-        text_source >> tokenizer
+        normalizer = NormalizerWorker()
+        self.add_worker(normalizer)
+        text_source >> normalizer
 
-        p = LoggerWorker(level=logging.INFO)
-        self.add_worker(p)
-        tokenizer >> p
+        lemma = LemmatizerWorker()
+        self.add_worker(lemma)
+        normalizer >> lemma
+
+        # p = LoggerWorker(level=logging.INFO)
+        # self.add_worker(p)
+        # lemma >> p
 
 
 if __name__ == "__main__":

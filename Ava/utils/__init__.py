@@ -9,4 +9,5 @@ from .thread import (
     IThread,
     OThread,
     IOThread,
+    IOxThread
 )

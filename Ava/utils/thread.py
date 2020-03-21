@@ -87,12 +87,7 @@ class IThread(Thread, WithInput):
             self._is_running = False
 
 
-class IOThread(Thread, WithInputOutput):
-    """
-    Thread class that have input and output.
-     Process input one item at the time, and send the result to it's output.
-    You need to overwrite _process_input_data()
-    """
+class _IOThreadBase(Thread, WithInputOutput):
     def __init__(self):
         Thread.__init__(self)
         WithInputOutput.__init__(self)
@@ -103,11 +98,18 @@ class IOThread(Thread, WithInputOutput):
         self._input_push(StopIteration)
         self.output_push(None)
 
+
+class IOThread(_IOThreadBase):
+    """
+    Thread class that have input and output.
+    Process input one item at the time, and send the result to it's output.
+    You need to overwrite _process_input_data()
+    """
     def _process_input_data(self, data):
         """
         Process one item
         :param data:item to precess
-        :return: Somthing to send to output
+        :return: Something to send to output
         """
         raise NotImplementedError()
 
@@ -123,6 +125,38 @@ class IOThread(Thread, WithInputOutput):
                     out = self._process_input_data(data)
                     if out is not None:
                         self.output_push(out)
+        except StopIteration:
+            logger.debug("Thread {} receive a stop iteration".format(type(self).__name__))
+            self._is_running = False
+
+
+class IOxThread(_IOThreadBase):
+    """
+    Thread class that have input and multiple output.
+    Process input one item at the time, and send the result to it's output.
+    You need to overwrite _process_input_data()
+    """
+
+    def _process_input_data(self, data) -> None:
+        """
+        Process one item and yield any number of outputs
+        :param data:item to process
+        :return: None
+        """
+        raise NotImplementedError()
+
+    def run(self) -> None:
+        """Thread implementation"""
+        try:
+            while self._is_running:
+                data = self.input_pop()
+                self.input_task_done()
+                if data is StopIteration:
+                    raise StopIteration()
+                if data is not None:
+                    for out in self._process_input_data(data):
+                        if out is not None:
+                            self.output_push(out)
         except StopIteration:
             logger.debug("Thread {} receive a stop iteration".format(type(self).__name__))
             self._is_running = False

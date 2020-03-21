@@ -8,17 +8,30 @@ from .utils import (
     IThread,
     OThread,
     IOThread,
+    IOxThread,
 )
+import spacy
+import nltk
 
 logger = logging.getLogger(__package__)
 
 
-class TTSEngine:
+class LoggerWorker(IThread):
+    def __init__(self, level=logging.DEBUG):
+        super().__init__()
+        self._level = level
+
+    def _process_input_data(self, data) -> None:
+        logger.log(self._level, data)
+
+
+class TTSEngineWorker(IThread):
     """
-    Class that implement mechanism for text to speech
+    Task that take a text as input and transform it as sound
     """
     def __init__(self):
         self._engine = self._get_engine()
+        IThread.__init__(self)
 
     def _get_engine(self):
         engine = ESpeakNG()
@@ -30,64 +43,61 @@ class TTSEngine:
     def say(self, text, sync=True):
         self._engine.say(text, sync=sync)
 
-
-class TTSEngineWorker(TTSEngine, IThread):
-    """
-    Task that take a text as input and transform it as sound
-    """
-    def __init__(self):
-        TTSEngine.__init__(self)
-        IThread.__init__(self)
-
     def _process_input_data(self, text):
         if text:
             self.say(text)
 
 
 class FileReaderWorker(OThread):
-    def __init__(self, filename, word_count=1, timedelta=1):
+    def __init__(self, filename, timedelta=1):
         super().__init__()
         self._timedelta = timedelta
-        self._word_count = word_count
-        self._dictionary = self.create_tokens(filename)
+        self._sentences = self.get_sentences(filename)
 
     @staticmethod
-    def create_tokens(filename):
+    def get_sentences(filename):
         with open(filename, "rt") as f:
             data = f.read()
-        data = data.replace("\n", " ").split(" ")
-        return data
+        return nltk.sent_tokenize(data, config.LANGUAGES_INFORMATION_CURRENT["nltk"])
 
     def run(self) -> None:
+        current = 0
         while self._is_running:
-            pick = " ".join([random.choice(self._dictionary) for x in range(0, self._word_count)])
-            logger.debug("Chose '{}'".format(pick))
+            pick = self._sentences[current]
+            logger.debug("Next sentence = '%s' ", pick)
             self.output_push(pick)
             time.sleep(self._timedelta)
+            current = (current + 1) % len(self._sentences)
 
 
-class TokenizerWorker(IOThread):
-    @classmethod
-    def _normalize_sentence(cls, sentence):
-        normalized = sentence.strip().lower()
+class NormalizerWorker(IOThread):
+    def _process_input_data(self, text):
+        logger.debug("Receive data to normalize = '%s'", text)
+        normalized = text.strip().lower()
+        logger.debug("Normalized as = '%s'", normalized)
         return normalized
 
+
+class TokenizerWorker(IOxThread):
     @classmethod
     def _tokenize(cls, sentence):
         token = sentence.split()
         return token
 
     def _process_input_data(self, text):
-        tokens = self._tokenize(self._normalize_sentence(text))
-        for token in tokens:
-            self.output_push(token)
+        for token in self._tokenize(text):
+            yield token
 
 
-class LoggerWorker(IThread):
-    def __init__(self, level=logging.DEBUG):
+class LemmatizerWorker(IOxThread):
+    def __init__(self):
         super().__init__()
-        self._level = level
+        logger.info("Loading spacy, please wait, this could take a moment...")
+        self._nlp = spacy.load(config.LANGUAGES_INFORMATION_CURRENT["spacy"])
+        logger.info("Spacy loaded")
 
-    def _process_input_data(self, data) -> None:
-        logger.log(self._level, data)
-
+    def _process_input_data(self, data):
+        doc = self._nlp(data)
+        for token in doc:
+            logger.debug("Lemmanize '%s' as '%s'", token, token.lemma_)
+            yield token.lemma_
