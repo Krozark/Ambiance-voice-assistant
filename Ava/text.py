@@ -5,7 +5,8 @@ from espeakng import ESpeakNG
 
 from .utils import (
     IThread,
-    OThread
+    OThread,
+    IOThread,
 )
 
 logger = logging.getLogger(__package__)
@@ -42,7 +43,7 @@ class TTSEngineWorker(TTSEngine, IThread):
             self.say(text)
 
 
-class FileTokenizerWorker(OThread):
+class FileReaderWorker(OThread):
     def __init__(self, filename, word_count=1, timedelta=1):
         super().__init__()
         self._timedelta = timedelta
@@ -50,15 +51,10 @@ class FileTokenizerWorker(OThread):
         self._dictionary = self.create_tokens(filename)
 
     @staticmethod
-    def normalize_word(word):
-        return word.strip().lower()
-
-    @staticmethod
     def create_tokens(filename):
         with open(filename, "rt") as f:
             data = f.read()
         data = data.replace("\n", " ").split(" ")
-        data = [FileTokenizerWorker.normalize_word(w) for w in data]
         return data
 
     def run(self) -> None:
@@ -67,3 +63,30 @@ class FileTokenizerWorker(OThread):
             logger.debug("Chose '{}'".format(pick))
             self.output_push(pick)
             time.sleep(self._timedelta)
+
+
+class TokenizerWorker(IOThread):
+    @classmethod
+    def _normalize_sentence(cls, sentence):
+        normalized = sentence.strip().lower()
+        return normalized
+
+    @classmethod
+    def _tokenize(cls, sentence):
+        token = sentence.split()
+        return token
+
+    def _process_input_data(self, text):
+        tokens = self._tokenize(self._normalize_sentence(text))
+        for token in tokens:
+            self.output_push(token)
+
+
+class LoggerWorker(IThread):
+    def __init__(self, level=logging.DEBUG):
+        super().__init__()
+        self._level = level
+
+    def _process_input_data(self, data) -> None:
+        logger.log(self._level, data)
+

@@ -12,7 +12,9 @@ from Ava.audio import (
 
 from Ava.text import (
     TTSEngineWorker,
-    FileTokenizerWorker
+    FileReaderWorker,
+    TokenizerWorker,
+    LoggerWorker
 )
 
 logger = logging.getLogger(__package__)
@@ -24,10 +26,14 @@ class Ava(object):
         self._workers = []
 
         self.create_pipeline(
-            debug_audio=False,#config.DEBUG_AUDIO,
-            debug_tts=False# config.DEBUG
-        )  # real pipeline with microphone
-        # self.create_debug_tss_pipeline()  # pipeline that d'on need microphone
+            audio_input=False,
+            debug_audio=False,
+            debug_tts=False,
+        )
+
+    def add_worker(self, *args):
+        for worker in args:
+            self._workers.append(worker)
 
     def run(self):
         for w in self._workers:
@@ -44,57 +50,53 @@ class Ava(object):
         for w in self._workers:
             w.join()
 
-    def create_pipeline(self, debug_audio=False, debug_tts=False):
+    def create_pipeline(self, audio_input=True, debug_audio=False, debug_tts=False):
         """
-        Mic --+--> Stt --+--> cache -> Action
-              |          |
-              |          +-- (if config.DEBUG) --> add_debug_tss_pipeline()
-              |
-              +-- (if config.DEBUG_AUDIO) --> add_debug_audio_pipeline()
+        (if audio_input)
+        MicrophoneWorker --+-- (if debug_audio) --> AudioToFileWorker -> AudioFilePlayerWorker
+                           |
+                           +--> STTWorker as text_source
+        (else)
+        FileReaderWorker as text_source
+        (end if)
+
+
+        text_source --+-- (if debug_tts) --> TTSEngineWorker
+                      |
+                      +--> TokenizerWorker -> cache -> Action
         """
+        if audio_input:
+            audio_source = MicrophoneWorker()
+            self.add_worker(audio_source)
+            if debug_audio:
+                save_to_file = AudioToFileWorker("dump")
+                play = AudioFilePlayerWorker()
+                audio_source >> (save_to_file >> play)
+                self.add_worker(save_to_file, play)
 
-        source_worker = MicrophoneWorker()
-        stt_worker = STTWorker()
-        self._workers += [source_worker, stt_worker]
-        source_worker >> stt_worker
-
-        if debug_audio:
-            self.add_debug_audio_pipeline(source_worker)
+            text_source = STTWorker()
+            self.add_worker(text_source)
+            audio_source >> text_source
+        else:
+            text_source = FileReaderWorker(
+                os.path.join(config.PROJECT_PATH, "..", "data/liste_francais-utf8.txt"),
+                word_count=25,
+                timedelta=10
+            )
+            self._workers.append(text_source)
 
         if debug_tts:
-            self.add_debug_tss_pipeline(stt_worker)
+            tss = TTSEngineWorker()
+            text_source >> tss
+            self.add_worker(tss)
 
-    def add_debug_audio_pipeline(self, audio_source):
-        """
-        audio_source --> save_to_file --> play
-        """
-        save_to_file = AudioToFileWorker("dump")
-        play = AudioFilePlayerWorker()
+        tokenizer = TokenizerWorker()
+        self.add_worker(tokenizer)
+        text_source >> tokenizer
 
-        audio_source >> (save_to_file >> play)
-
-        self._workers += [save_to_file, play]
-
-    def add_debug_tss_pipeline(self, text_source):
-        """
-        text_source --> TTS
-        """
-        tss = TTSEngineWorker()
-        text_source >> tss
-        self._workers.append(tss)
-
-    def create_debug_tss_pipeline(self):
-        """
-        Text --> TTS
-        """
-        text_source = FileTokenizerWorker(
-            os.path.join(config.PROJECT_PATH, "..", "data/liste_francais-utf8.txt"),
-            word_count=5,
-            timedelta=0.1
-        )
-        self._workers.append(text_source)
-        self.add_debug_tss_pipeline(text_source)
-        return text_source
+        p = LoggerWorker(level=logging.INFO)
+        self.add_worker(p)
+        tokenizer >> p
 
 
 if __name__ == "__main__":
