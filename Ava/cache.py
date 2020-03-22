@@ -1,7 +1,10 @@
 import logging
 from typing import List, Tuple
 
-from Ava.utils.action import Action, ActionList
+from Ava.action import (
+    Action,
+    ActionList
+)
 
 
 logger = logging.getLogger(__package__)

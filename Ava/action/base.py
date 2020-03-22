@@ -16,4 +16,3 @@ class Action(object):
 
     def __str__(self):
         return "%s" % self._name
-
