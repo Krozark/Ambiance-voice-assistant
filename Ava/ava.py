@@ -3,17 +3,14 @@ import os
 import time
 
 from Ava import config
-from Ava.audio import (
+from Ava.worker import (
     MicrophoneWorker,
     AudioToFileWorker,
     AudioFilePlayerWorker,
-    STTWorker
-)
-from Ava.text import (
-    TTSEngineWorker,
+    STTWorker,
+    TTSWorker,
     FileReaderWorker,
     NormalizerWorker,
-    LemmatizerWorker,
     SteammerWorker,
 )
 
@@ -85,7 +82,7 @@ class Ava(object):
             self._workers.append(text_source)
 
         if debug_tts:
-            tss = TTSEngineWorker()
+            tss = TTSWorker()
             text_source >> tss
             self.add_worker(tss)
 

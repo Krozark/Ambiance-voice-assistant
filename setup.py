@@ -12,8 +12,8 @@ setup(
    install_requires=[
       'nltk~=3.4',
       'SpeechRecognition~=3.8',
-      'pydub~=0.23',
       'py-espeak-ng~=0.1',
+      'playsound~=1.2',
       'PyAudio~=0.2',
       'spacy~=2.2',
    ],

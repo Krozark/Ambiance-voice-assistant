@@ -9,7 +9,7 @@ from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
 
 from Ava import config
-from .utils import (
+from Ava.utils import (
     IThread,
     OThread,
     IOThread,
@@ -28,7 +28,7 @@ class LoggerWorker(IThread):
         logger.log(self._level, data)
 
 
-class TTSEngineWorker(IThread):
+class TTSWorker(IThread):
     """
     Task that take a text as input and transform it as sound
     """
