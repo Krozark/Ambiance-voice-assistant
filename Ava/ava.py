@@ -1,6 +1,6 @@
 import logging
-import time
 import os
+import time
 
 from Ava import config
 from Ava.audio import (
@@ -9,14 +9,12 @@ from Ava.audio import (
     AudioFilePlayerWorker,
     STTWorker
 )
-
 from Ava.text import (
     TTSEngineWorker,
     FileReaderWorker,
     NormalizerWorker,
-    TokenizerWorker,
-    LoggerWorker,
-    LemmatizerWorker
+    LemmatizerWorker,
+    SteammerWorker,
 )
 
 logger = logging.getLogger(__package__)
@@ -81,8 +79,8 @@ class Ava(object):
             audio_source >> text_source
         else:
             text_source = FileReaderWorker(
-                os.path.join(config.LANGUAGES_INFORMATION_CURRENT["dictionary"]),
-                timedelta=10
+                os.path.join(config.LANGUAGES_INFORMATION_CURRENT["data-file"]),
+                timedelta=20
             )
             self._workers.append(text_source)
 
@@ -95,13 +93,17 @@ class Ava(object):
         self.add_worker(normalizer)
         text_source >> normalizer
 
-        lemma = LemmatizerWorker()
-        self.add_worker(lemma)
-        normalizer >> lemma
+        # lemma = LemmatizerWorker()
+        # self.add_worker(lemma)
+        # normalizer >> lemma
+
+        stemmer = SteammerWorker()
+        self.add_worker(stemmer)
+        normalizer >> stemmer
 
         # p = LoggerWorker(level=logging.INFO)
         # self.add_worker(p)
-        # lemma >> p
+        # stemmer >> p
 
 
 if __name__ == "__main__":

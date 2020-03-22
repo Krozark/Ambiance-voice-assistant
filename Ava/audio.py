@@ -29,15 +29,15 @@ class RecognizerMixin(object):
         recognizer.pause_threshold = 0.6
         return recognizer
 
-    def adjust_for_ambient_noise(self, source):
+    def adjust_for_ambient_noise(self, source) -> None:
         logging.info("A moment of silence, please...")
         self._recognizer.adjust_for_ambient_noise(source, duration=2)
         logger.info("Set minimum energy threshold = '%s'", self.get_energy_threshold())
 
-    def get_energy_threshold(self):
+    def get_energy_threshold(self) -> int:
         return self._recognizer.energy_threshold
 
-    def set_energy_threshold(self, threshold):
+    def set_energy_threshold(self, threshold: int) ->_None:
         self._recognizer.energy_threshold = threshold
 
     def listen(self, source):
@@ -91,7 +91,7 @@ class AudioFilePlayerWorker(IThread):
     """
     Task that take a music filename as input and play it
     """
-    def _process_input_data(self, filename) -> None:
+    def _process_input_data(self, filename: str) -> None:
         logger.debug("Play file '%s'", filename)
         song = AudioSegment.from_wav(filename)
         play(song)
