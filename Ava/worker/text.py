@@ -84,6 +84,7 @@ class NormalizerWorker(IOThread):
 class TokenizerWorker(IOxThread):
     def _process_input_data(self, text: str) -> List[str]:
         for token in word_tokenize(text):
+            logger.debug("TokenizerWorker create token %s", token)
             yield token
 
 

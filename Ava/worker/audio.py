@@ -3,7 +3,8 @@ import logging
 import os
 
 import speech_recognition
-from playsound import playsound
+from pydub import AudioSegment
+from pydub.playback import play
 
 from Ava import config
 from Ava.utils import (
@@ -36,7 +37,7 @@ class RecognizerMixin(object):
     def get_energy_threshold(self) -> int:
         return self._recognizer.energy_threshold
 
-    def set_energy_threshold(self, threshold: int) ->_None:
+    def set_energy_threshold(self, threshold: int) -> None:
         self._recognizer.energy_threshold = threshold
 
     def listen(self, source):
@@ -92,7 +93,8 @@ class AudioFilePlayerWorker(IThread):
     """
     def _process_input_data(self, filename: str) -> None:
         logger.debug("Play file '%s'", filename)
-        playsound(filename,block=True)
+        audio = AudioSegment.from_file(filename)
+        play(audio)
 
 
 class STTWorker(IOThread, RecognizerMixin):
