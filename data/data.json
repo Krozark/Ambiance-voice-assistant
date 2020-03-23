@@ -1,0 +1,49 @@
+{
+    "pipeline": [
+
+    ],
+    "types": {
+        "TTS": "Ava.action.TTSAction"
+    },
+    "actions": [
+        {
+            "key": "Ava",
+            "args": "Oui?",
+            "type": "TTS"
+        },
+        {
+            "key": "coucou",
+            "args": "Tu veux voir ma bite ?",
+            "type": "TTS"
+        },
+        {
+            "key": "Comment tu t'appelles",
+            "args": "Mon nom est Ava",
+            "type": "TTS"
+        },
+        {
+            "key": "Qui t'a créé",
+            "type": "TTS",
+            "args": "Maxime Barbier"
+        },
+        {
+            "key": "Qui est maxime barbier",
+            "type": "TTS",
+            "args": "Mon créateur"
+        },
+        {
+            "key": "camion",
+            "type": "TTS",
+            "args": "pwet pwet"
+        },
+        {
+            "key": "1 2 3",
+            "type": "TTS",
+            "args": "Soleil"
+        },
+        {
+            "key": "Que veux-tu faire",
+            "type": "TTS",
+            "args": "Je veux t'aider"
+        }
+}

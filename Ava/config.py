@@ -12,13 +12,11 @@ LANGUAGES_INFORMATION = {
         "recognition": "fr-FR",
         "voice": "fr-FR",
         "nltk": "french",
-        #"data-file": os.path.join(PROJECT_PATH, "..", "data", "liste_francais-utf8.txt"),
-        "data-file": os.path.join(DATA_PATH, "text-francais-utf8.txt"),
+        "input-file": os.path.join(DATA_PATH, "text-francais-utf8.txt"),
         "spacy": "fr_core_news_md",
+        "data-file": os.path.join(DATA_PATH, "data.json"),
     }
 }
-
 LANGUAGES_INFORMATION_CURRENT = LANGUAGES_INFORMATION[LANGUAGE]
 
 GOOGLE_RECOGNITION_KEY = None
-

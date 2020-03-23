@@ -23,12 +23,12 @@ from Ava.action import (
     TTSAction
 )
 from nltk.tokenize import word_tokenize
+import json
 
 logger = logging.getLogger(__package__)
 
 
 class Ava(object):
-
     class Strategie(enum.Enum):
         tokenizer = 1
         lemmatizer = 2
@@ -43,6 +43,17 @@ class Ava(object):
             debug_tts=False,
             token_strategie=Ava.Strategie.tokenizer,
         )
+
+    def load_from_file(self, filename=None):
+        if filename is None:
+            filename = config.LANGUAGES_INFORMATION_CURRENT["data-file"]
+
+        with open(filename, "rt") as f:
+            data = json.loads(f.read())
+            self.loads(data)
+
+    def load(self, data):
+        pass
 
     def register(self, sentence, action) -> None:
         self._cache.register(word_tokenize(sentence.lower()), action)
@@ -101,7 +112,7 @@ class Ava(object):
             audio_source >> text_source
         else:
             text_source = FileReaderWorker(
-                os.path.join(config.LANGUAGES_INFORMATION_CURRENT["data-file"]),
+                os.path.join(config.LANGUAGES_INFORMATION_CURRENT["input-file"]),
                 timedelta=20
             )
             self._workers.append(text_source)
@@ -135,13 +146,15 @@ class Ava(object):
         self.add_worker(action)
         self._cache >> action
 
-
+    def __str__(self):
+        return "[Ava]\n%s" % self._cache
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
     ava = Ava()
+    ava.load_from_file()
 
     ava.register(
         "Ava",
@@ -176,6 +189,5 @@ if __name__ == "__main__":
         TTSAction("Je veux t'aider")
     )
 
-    print(ava._cache)
-
+    logger.info("%s", ava)
     ava.run()
