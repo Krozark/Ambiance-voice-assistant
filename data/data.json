@@ -1,7 +1,7 @@
 {
     "pipeline": {
         "kwargs": {
-            "audio_input": true,
+            "audio_input": false,
             "debug_audio": false,
             "debug_tts": false,
             "token_strategie": 0

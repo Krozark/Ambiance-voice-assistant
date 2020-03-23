@@ -193,8 +193,7 @@ class Ava(object):
 
 
 if __name__ == "__main__":
-    logger.setLevel(logging.DEBUG)
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG if config.DEBUG else logging.INFO)
 
     ava = Ava()
     ava.load_from_file()
