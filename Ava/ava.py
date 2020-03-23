@@ -38,12 +38,11 @@ class Ava(object):
         self._workers = []
         self._cache = CacheWorker()
         self.create_pipeline(
-            audio_input=True,
+            audio_input=False,
             debug_audio=False,
             debug_tts=False,
             token_strategie=Ava.Strategie.tokenizer,
         )
-
 
     def register(self, sentence, action) -> None:
         self._cache.register(word_tokenize(sentence.lower()), action)

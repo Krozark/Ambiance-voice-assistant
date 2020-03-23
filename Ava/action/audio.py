@@ -2,6 +2,11 @@ from pydub import AudioSegment
 from pydub.playback import play
 
 from .base import Action
+from Ava import config
+import logging
+
+
+logger = logging.getLogger(__package__)
 
 
 class AudioFilePlayerAction(Action):
@@ -11,7 +16,10 @@ class AudioFilePlayerAction(Action):
         super().__init__(*args, **kwargs)
 
     def trigger(self) -> None:
-        audio = AudioSegment.from_file(self._filename)
-        play(audio)
+        if config.DEBUG_AUDIO_AS_TEXT:
+            logger.info("Play file %s", self._filename)
+        else:
+            audio = AudioSegment.from_file(self._filename)
+            play(audio)
 
 

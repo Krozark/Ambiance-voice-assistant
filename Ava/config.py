@@ -1,6 +1,7 @@
 import os
 
 DEBUG = True
+DEBUG_AUDIO_AS_TEXT = DEBUG
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 DATA_PATH = os.path.join(PROJECT_PATH, "..", "data")
@@ -12,7 +13,7 @@ LANGUAGES_INFORMATION = {
         "voice": "fr-FR",
         "nltk": "french",
         #"data-file": os.path.join(PROJECT_PATH, "..", "data", "liste_francais-utf8.txt"),
-        "data-file": os.path.join(DATA_PATH, "Le Mystère des XV-francais-utf-8.txt"),
+        "data-file": os.path.join(DATA_PATH, "text-francais-utf8.txt"),
         "spacy": "fr_core_news_md",
     }
 }

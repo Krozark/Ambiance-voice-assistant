@@ -4,7 +4,6 @@ from typing import List
 
 import nltk
 import spacy
-from espeakng import ESpeakNG
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
 
@@ -14,6 +13,7 @@ from Ava.utils import (
     OThread,
     IOThread,
     IOxThread,
+    TTSMixin,
 )
 
 logger = logging.getLogger(__package__)
@@ -28,24 +28,10 @@ class LoggerWorker(IThread):
         logger.log(self._level, data)
 
 
-class TTSWorker(IThread):
+class TTSWorker(IThread, TTSMixin):
     """
     Task that take a text as input and transform it as sound
     """
-    def __init__(self):
-        self._engine = self._get_engine()
-        IThread.__init__(self)
-
-    def _get_engine(self):
-        engine = ESpeakNG()
-        engine.voice = config.LANGUAGES_INFORMATION_CURRENT["voice"]
-        engine.pitch = 32
-        engine.speed = 150
-        return engine
-
-    def say(self, text: str, sync: bool=True) -> None:
-        self._engine.say(text, sync=sync)
-
     def _process_input_data(self, text: str) -> None:
         if text:
             self.say(text)
