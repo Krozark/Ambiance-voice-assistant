@@ -1,8 +1,16 @@
+from .action import (
+    ActionList,
+    Action
+)
 from .audio import (
     RecognizerBase
 )
 from .cache import (
     Cache
+)
+from .factory import (
+    Factory,
+    factory,
 )
 from .io import (
     WithInput,

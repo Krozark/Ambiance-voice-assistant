@@ -6,6 +6,7 @@ class ActionList(list):
     def __str__(self):
         return "\n".join([i.__str__() for i in self])
 
+
 class Action(object):
     def __init__(self, name=None):
         self._name = name

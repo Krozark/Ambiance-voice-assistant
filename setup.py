@@ -8,7 +8,9 @@ setup(
    license="GNU GPL3",
    author='Maxime Barbier',
    author_email='maxime@maxime-barbier.fr',
-   project_urls="https://github.com/Krozark/Ambiance-voice-assistant",
+   project_urls={
+      "github": "https://github.com/Krozark/Ambiance-voice-assistant",
+   },
    packages=['Ava'],
    install_requires=[
       'nltk~=3.4',

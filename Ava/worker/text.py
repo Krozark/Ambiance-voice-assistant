@@ -8,12 +8,12 @@ from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
 
 from Ava import config
-from Ava.utils import (
+from Ava.core import (
     IThread,
     OThread,
     IOThread,
     IOxThread,
-    TTSMixin,
+    TTSMixin
 )
 
 logger = logging.getLogger(__package__)
@@ -88,7 +88,7 @@ class LemmatizerWorker(IOxThread):
             yield token.lemma_
 
 
-class SteammerWorker(IOxThread):
+class StemmerWorker(IOxThread):
     def __init__(self):
         super().__init__()
         self._stemmer = SnowballStemmer(config.LANGUAGES_INFORMATION_CURRENT["nltk"])

@@ -1,7 +1,9 @@
 import logging
 
-from Ava.utils import TTSMixin
-from .base import Action
+from Ava.core import (
+    Action,
+    TTSMixin
+)
 
 logger = logging.getLogger(__package__)
 

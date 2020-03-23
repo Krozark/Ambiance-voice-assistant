@@ -1,10 +1,12 @@
+import logging
+
 from pydub import AudioSegment
 from pydub.playback import play
 
-from .base import Action
 from Ava import config
-import logging
-
+from Ava.core import (
+    Action
+)
 
 logger = logging.getLogger(__package__)
 

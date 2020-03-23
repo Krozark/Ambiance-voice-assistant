@@ -1,12 +1,10 @@
 import logging
 from typing import Union
 
-from Ava.action import (
-    ActionList
-)
-from Ava.utils import (
+from Ava.core import (
+    ActionList,
     IOThread,
-    Cache
+    Cache,
 )
 
 logger = logging.getLogger(__package__)
@@ -15,7 +13,7 @@ logger = logging.getLogger(__package__)
 class CacheWorker(IOThread, Cache):
     def __init__(self, max_tokens=10):
         IOThread.__init__(self)
-        Cache.__init__(self, ActionList)
+        Cache.__init__(self)
         self._tokens = []
         self.__max_tokens = max_tokens
 

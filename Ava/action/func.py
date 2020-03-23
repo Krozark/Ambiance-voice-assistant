@@ -1,4 +1,7 @@
-from .base import Action
+from Ava.core import (
+    Action
+)
+
 
 class CallbackAction(Action):
     def __init__(self, callback, *args, **kwargs):

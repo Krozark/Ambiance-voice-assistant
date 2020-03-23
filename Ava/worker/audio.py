@@ -7,15 +7,14 @@ from pydub import AudioSegment
 from pydub.playback import play
 
 from Ava import config
-from Ava.utils import (
+from Ava.core import (
     IOThread,
     OThread,
     IThread,
-    RecognizerBase
+    RecognizerBase,
 )
 
 logger = logging.getLogger(__package__)
-
 
 
 class MicrophoneWorker(OThread, RecognizerBase):

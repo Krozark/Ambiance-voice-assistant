@@ -17,5 +17,5 @@ from .text import (
     NormalizerWorker,
     TokenizerWorker,
     LemmatizerWorker,
-    SteammerWorker,
+    StemmerWorker,
 )

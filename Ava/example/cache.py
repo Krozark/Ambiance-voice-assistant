@@ -6,7 +6,7 @@ from Ava.action import (
     CallbackAction,
     AudioFilePlayerAction
 )
-from Ava.utils import (
+from Ava.core import (
     Cache
 )
 

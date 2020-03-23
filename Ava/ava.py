@@ -1,9 +1,15 @@
+import enum
+import json
 import logging
 import os
 import time
-import enum
+
+from nltk.tokenize import word_tokenize
 
 from Ava import config
+from Ava.core import (
+    factory as global_factory,
+)
 from Ava.worker import (
     MicrophoneWorker,
     AudioToFileWorker,
@@ -12,18 +18,12 @@ from Ava.worker import (
     TTSWorker,
     FileReaderWorker,
     NormalizerWorker,
-    SteammerWorker,
+    StemmerWorker,
     CacheWorker,
     LemmatizerWorker,
     TokenizerWorker,
     ActionWorker,
 )
-from Ava.action import (
-    AudioFilePlayerAction,
-    TTSAction
-)
-from nltk.tokenize import word_tokenize
-import json
 
 logger = logging.getLogger(__package__)
 
@@ -34,15 +34,11 @@ class Ava(object):
         lemmatizer = 2
         stemmer = 3
 
-    def __init__(self):
+    def __init__(self, factory=global_factory):
         self._workers = []
+        self._factory = factory
         self._cache = CacheWorker()
-        self.create_pipeline(
-            audio_input=False,
-            debug_audio=False,
-            debug_tts=False,
-            token_strategie=Ava.Strategie.tokenizer,
-        )
+        self._register_defaults()
 
     def load_from_file(self, filename=None):
         if filename is None:
@@ -50,10 +46,12 @@ class Ava(object):
 
         with open(filename, "rt") as f:
             data = json.loads(f.read())
-            self.loads(data)
+            self.load(data)
 
     def load(self, data):
-        pass
+        self._load_pipeline(data.get("pipeline"))
+        self._load_types(data.get("types"))
+        self._load_register(data.get("register"))
 
     def register(self, sentence, action) -> None:
         self._cache.register(word_tokenize(sentence.lower()), action)
@@ -113,7 +111,7 @@ class Ava(object):
         else:
             text_source = FileReaderWorker(
                 os.path.join(config.LANGUAGES_INFORMATION_CURRENT["input-file"]),
-                timedelta=20
+                timedelta=3
             )
             self._workers.append(text_source)
 
@@ -129,7 +127,7 @@ class Ava(object):
         if token_strategie == Ava.Strategie.lemmatizer:
             tokenizer = LemmatizerWorker()
         elif token_strategie == Ava.Strategie.stemmer:
-            tokenizer = SteammerWorker()
+            tokenizer = StemmerWorker()
         else:
             tokenizer = TokenizerWorker()
         self.add_worker(tokenizer)
@@ -146,48 +144,60 @@ class Ava(object):
         self.add_worker(action)
         self._cache >> action
 
+    def _register_defaults(self):
+        # Actions
+        self._factory.register("Action:AudioFIlePlayer", "Ava.action.AudioFilePlayerAction",)
+        self._factory.register("Action:TTS", "Ava.action.TTSAction")
+        # Workers
+
+    def _load_pipeline(self, data):
+        kwargs = dict(
+            audio_input=False,
+            debug_audio=False,
+            debug_tts=False,
+            token_strategie=Ava.Strategie.tokenizer,
+        )
+        kwargs.update(data.get("kwargs", dict()))
+        self.create_pipeline(**kwargs)
+
+    def _load_types(self, data):
+        for alias, value in data.items():
+            args = None
+            kwargs = None
+            if isinstance(value, str):
+                t = value
+            else:
+                t = value["class"]
+                args = value.get("args", args)
+                kwargs = value.get("kwargs", kwargs)
+            self._factory.register(alias, t, args, kwargs)
+
+    def _load_register(self, data_list):
+        for data in data_list:
+            logger.debug("register data %s", data)
+            key = data["key"]
+            args = data.get("args", None)
+            kwargs = data.get("kwargs", None)
+            type_alias = data["type"]
+
+            if args is not None and not isinstance(args, (list, tuple)):
+                args = [args]
+            obj = self._factory.construct(type_alias, args=args, kwargs=kwargs)
+            self.register(key, obj)
+
     def __str__(self):
-        return "[Ava]\n%s" % self._cache
+        r = "[Ava]\n"
+        r += "[Factory]\n%s\n" % ("\n".join(["  " + x for x in self._factory.__str__().split("\n")]))
+        r += self._cache.__str__()
+        return r
 
 
 if __name__ == "__main__":
+    logger.setLevel(logging.DEBUG)
     logging.basicConfig(level=logging.DEBUG)
 
     ava = Ava()
     ava.load_from_file()
-
-    ava.register(
-        "Ava",
-        TTSAction("Oui?")
-    )
-    ava.register(
-        "coucou",
-        TTSAction("Tu veux voir ma bite ?")
-    )
-    ava.register(
-        "Comment tu t'appelles",
-        TTSAction("Mon nom est Ava")
-    )
-    ava.register(
-        "Qui t'a créé",
-        TTSAction("Maxime Barbier")
-    )
-    ava.register(
-        "Qui est maxime barbier",
-        TTSAction("Mon créateur")
-    )
-    ava.register(
-        "camion",
-        TTSAction("pwet pwet")
-    )
-    ava.register(
-        "1 2 3",
-        TTSAction("Soleil")
-    )
-    ava.register(
-        "Que veux-tu faire",
-        TTSAction("Je veux t'aider")
-    )
 
     logger.info("%s", ava)
     ava.run()
