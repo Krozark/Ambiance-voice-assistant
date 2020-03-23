@@ -4,7 +4,7 @@
             "audio_input": false,
             "debug_audio": false,
             "debug_tts": false,
-            "token_strategie": 0
+            "token_strategy": 0
         }
     },
     "types": {

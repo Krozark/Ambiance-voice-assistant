@@ -29,7 +29,7 @@ logger = logging.getLogger(__package__)
 
 
 class Ava(object):
-    class Strategie(enum.Enum):
+    class Strategy(enum.Enum):
         tokenizer = 1
         lemmatizer = 2
         stemmer = 3
@@ -75,7 +75,7 @@ class Ava(object):
         for w in self._workers:
             w.join()
 
-    def create_pipeline(self, audio_input=True, debug_audio=False, debug_tts=False, token_strategie=Strategie.tokenizer):
+    def create_pipeline(self, audio_input=True, debug_audio=False, debug_tts=False, token_strategy=Strategy.tokenizer):
         """
         (if audio_input)
         MicrophoneWorker --+-- (if debug_audio) --> AudioToFileWorker -> AudioFilePlayerWorker
@@ -124,9 +124,9 @@ class Ava(object):
         self.add_worker(normalizer)
         text_source >> normalizer
 
-        if token_strategie == Ava.Strategie.lemmatizer:
+        if token_strategy == Ava.Strategy.lemmatizer:
             tokenizer = LemmatizerWorker()
-        elif token_strategie == Ava.Strategie.stemmer:
+        elif token_strategy == Ava.Strategy.stemmer:
             tokenizer = StemmerWorker()
         else:
             tokenizer = TokenizerWorker()
@@ -155,7 +155,7 @@ class Ava(object):
             audio_input=False,
             debug_audio=False,
             debug_tts=False,
-            token_strategie=Ava.Strategie.tokenizer,
+            token_strategy=Ava.Strategy.tokenizer,
         )
         kwargs.update(data.get("kwargs", dict()))
         self.create_pipeline(**kwargs)

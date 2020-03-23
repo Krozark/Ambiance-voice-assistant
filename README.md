@@ -10,3 +10,9 @@ languages by changing LANGUAGE and LANGUAGES_INFORMATION variables to conf.py
 python setup.py install
 python3 -m spacy download fr_core_news_md
 ```
+
+# Run
+
+```
+python Ava/ava.py
+```
