@@ -1,5 +1,5 @@
 import logging
-
+import datetime
 from Ava.core import (
     Action,
     TTSMixin
@@ -15,4 +15,8 @@ class TTSAction(Action, TTSMixin):
         super().__init__(*args, **kwargs)
 
     def trigger(self) -> None:
-        self.say(self._sentence)
+        self.say(
+            self._sentence.format(
+                now=datetime.datetime.now()
+            )
+        )

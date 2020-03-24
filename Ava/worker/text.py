@@ -47,7 +47,8 @@ class FileReaderWorker(OThread):
     def get_sentences(filename: str) -> str:
         with open(filename, "rt") as f:
             data = f.read()
-        return nltk.sent_tokenize(data, config.LANGUAGES_INFORMATION_CURRENT["nltk"])
+        s = nltk.sent_tokenize(data, config.LANGUAGES_INFORMATION_CURRENT["nltk"])
+        return [x for x in s if not x.startswith("#")]
 
     def run(self) -> None:
         current = 0

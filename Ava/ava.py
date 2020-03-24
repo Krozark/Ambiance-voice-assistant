@@ -190,13 +190,3 @@ class Ava(object):
         r += "[Factory]\n%s\n" % ("\n".join(["  " + x for x in self._factory.__str__().split("\n")]))
         r += self._cache.__str__()
         return r
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG if config.DEBUG else logging.INFO)
-
-    ava = Ava()
-    ava.load_from_file()
-
-    logger.info("%s", ava)
-    ava.run()
