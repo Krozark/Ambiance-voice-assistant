@@ -53,8 +53,10 @@ class Ava(object):
         self._load_types(data.get("types"))
         self._load_register(data.get("register"))
 
-    def register(self, sentence, action) -> None:
-        self._cache.register(word_tokenize(sentence.lower()), action)
+    def register(self, tokens, action) -> None:
+        if isinstance(tokens, str):
+            tokens = word_tokenize(tokens.lower())
+        self._cache.register(tokens, action)
 
     def add_worker(self, *args):
         for worker in args:
@@ -175,7 +177,7 @@ class Ava(object):
     def _load_register(self, data_list):
         for data in data_list:
             logger.debug("register data %s", data)
-            key = data["key"]
+            tokens = data["tokens"]
             args = data.get("args", None)
             kwargs = data.get("kwargs", None)
             type_alias = data["type"]
@@ -183,7 +185,7 @@ class Ava(object):
             if args is not None and not isinstance(args, (list, tuple)):
                 args = [args]
             obj = self._factory.construct(type_alias, args=args, kwargs=kwargs)
-            self.register(key, obj)
+            self.register(tokens, obj)
 
     def __str__(self):
         r = "[Ava]\n"

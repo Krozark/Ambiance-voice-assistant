@@ -81,12 +81,13 @@ class STTWorker(IOThread, RecognizerBase):
         RecognizerBase.__init__(self)
 
     def _process_input_data(self, audio):
+        res = None
         try:
-            value = self._recognizer.recognize_google(audio, language=self.language, key=config.GOOGLE_RECOGNITION_KEY)
-            logger.debug("Recognize: '%s'", value)
-            return value
+            res = self._recognizer.recognize_google(audio, language=self.language, key=config.GOOGLE_RECOGNITION_KEY)
+            logger.debug("Recognize: '%s'", res)
         except speech_recognition.UnknownValueError:
             logger.debug("Google Speech Recognition could not understand audio")
+            res = "."
         except speech_recognition.RequestError as e:
             logger.debug("Could not request results from Google Speech Recognition service; %s", e)
-        return None
+        return res

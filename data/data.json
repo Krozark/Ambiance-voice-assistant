@@ -17,50 +17,55 @@
     },
     "register": [
         {
-            "key": "Ava",
+            "tokens": "Ava",
             "args": "Oui?",
             "kwargs" : {},
             "type": "TTS"
         },
         {
-            "key": "coucou",
+            "tokens": "coucou",
             "args": "Tu veux voir ma bite ?",
             "type": "Action:TTS"
         },
         {
-            "key": "Comment tu t'appelles",
+            "tokens": "Comment tu t'appelles",
             "args": "Mon nom est Ambiance voice assistant, ou Ava.",
             "type": "Action:TTS"
         },
         {
-            "key": "Qui t'a créé",
+            "tokens": "Qui t'a créé",
             "type": "Action:TTS",
             "args": "Maxime Barbier"
         },
         {
-            "key": "Qui est maxime barbier",
+            "tokens": "Qui est maxime barbier",
             "type": "Action:TTS",
             "args": "Mon créateur"
         },
         {
-            "key": "camion",
+            "tokens": "camion",
             "type": "Action:TTS",
             "args": "pwet pwet"
         },
         {
-            "key": "1 2 3",
+            "tokens": "1 2 3",
             "type": "Action:TTS",
             "args": "Soleil"
         },
         {
-            "key": "Que veux-tu faire",
+            "tokens": "Que veux-tu faire",
             "type": "Action:TTS",
             "args": "Je veux t'aider"
         },
         {
-            "key": "Il est quelle heure",
+            "tokens": "Il est quelle heure",
             "type": "Action:TTS",
             "args": "Il est {now.hour} heure {now.minute} minutes."
+        },
+        {
+            "tokens": "Merci",
+            "type": "Action:TTS",
+            "args": "Derien."
         }
     ]
 }
