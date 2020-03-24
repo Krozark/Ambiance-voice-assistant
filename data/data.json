@@ -60,7 +60,16 @@
         {
             "tokens": "Il est quelle heure",
             "type": "Action:TTS",
-            "args": "Il est {now.hour} heure {now.minute} minutes."
+            "args": "Il est {now.hour} heure {now.minute} minutes{suffix}.",
+            "kwargs": {
+                "python": [
+                    "import datetime",
+                    "now = datetime.datetime.now()",
+                    "suffix=\"\"",
+                    "if now.hour >= 18 and now.hour < 21:",
+                    " suffix=\", l'heure de l'appero!\""
+                ]
+            }
         },
         {
             "tokens": "Merci",

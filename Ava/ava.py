@@ -14,15 +14,15 @@ from Ava.worker import (
     MicrophoneWorker,
     AudioToFileWorker,
     AudioFilePlayerWorker,
+    ActionWorker,
     STTWorker,
     TTSWorker,
     FileReaderWorker,
     NormalizerWorker,
-    StemmerWorker,
+    TokenizerSimpleWorker,
+    TokenizerStemWorker,
+    TokenizerLemmaWorker,
     CacheWorker,
-    LemmatizerWorker,
-    TokenizerWorker,
-    ActionWorker,
 )
 
 logger = logging.getLogger(__package__)
@@ -30,9 +30,9 @@ logger = logging.getLogger(__package__)
 
 class Ava(object):
     class Strategy(enum.Enum):
-        tokenizer = 1
-        lemmatizer = 2
-        stemmer = 3
+        simple = 1
+        lemma = 2
+        stem = 3
 
     def __init__(self, factory=global_factory):
         self._workers = []
@@ -77,7 +77,7 @@ class Ava(object):
         for w in self._workers:
             w.join()
 
-    def create_pipeline(self, audio_input=True, debug_audio=False, debug_tts=False, token_strategy=Strategy.tokenizer):
+    def create_pipeline(self, audio_input=True, debug_audio=False, debug_tts=False, token_strategy=Strategy.simple):
         """
         (if audio_input)
         MicrophoneWorker --+-- (if debug_audio) --> AudioToFileWorker -> AudioFilePlayerWorker
@@ -90,11 +90,11 @@ class Ava(object):
 
         text_source --+-- (if debug_tts) --> TTSEngineWorker
                       |
-                      +--> NormalizerWorker --+ --> (if token_strategie == Ava.Strategie.lemmatizer) LemmatizerWorker as tokenizer -->
+                      +--> NormalizerWorker --+ --> (if token_strategy == Ava.Strategie.lemma) LemmaTokenizerWorker as tokenizer -->
                                               |
-                                              + --> (elif token_strategie == Ava.Strategie.stemmer) SteammerWorker as tokenizer -->
+                                              + --> (elif token_strategie == Ava.Strategie.stemmer) StemTokenizerWorker as tokenizer -->
                                               |
-                                              + -->  (else) TokenizerWorker as tokenizer -->
+                                              + -->  (else) TokenizerSimpleWorker as tokenizer -->
 
         tokenizer--> CacheWorker --> ActionWorker
         """
@@ -126,12 +126,13 @@ class Ava(object):
         self.add_worker(normalizer)
         text_source >> normalizer
 
-        if token_strategy == Ava.Strategy.lemmatizer:
-            tokenizer = LemmatizerWorker()
-        elif token_strategy == Ava.Strategy.stemmer:
-            tokenizer = StemmerWorker()
+        if token_strategy == Ava.Strategy.lemma:
+            tokenizer = TokenizerLemmaWorker()
+        elif token_strategy == Ava.Strategy.stem:
+            tokenizer = TokenizerStemWorker()
         else:
-            tokenizer = TokenizerWorker()
+            tokenizer = TokenizerSimpleWorker()
+
         self.add_worker(tokenizer)
         normalizer >> tokenizer
 
@@ -157,7 +158,7 @@ class Ava(object):
             audio_input=False,
             debug_audio=False,
             debug_tts=False,
-            token_strategy=Ava.Strategy.tokenizer,
+            token_strategy=Ava.Strategy.simple,
         )
         kwargs.update(data.get("kwargs", dict()))
         self.create_pipeline(**kwargs)

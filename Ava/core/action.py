@@ -8,7 +8,7 @@ class ActionList(list):
 
 
 class Action(object):
-    def __init__(self, name=None):
+    def __init__(self, name=None, **kwargs):
         self._name = name
 
     def trigger(self) -> None:

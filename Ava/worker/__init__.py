@@ -14,8 +14,10 @@ from .text import (
     LoggerWorker,
     TTSWorker,
     FileReaderWorker,
-    NormalizerWorker,
-    TokenizerWorker,
-    LemmatizerWorker,
-    StemmerWorker,
+    NormalizerWorker
+)
+from .token import (
+    TokenizerSimpleWorker,
+    TokenizerLemmaWorker,
+    TokenizerStemWorker
 )
