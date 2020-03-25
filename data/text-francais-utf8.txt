@@ -1,9 +1,11 @@
 # Ava ?
 # Coucou !
 # Qui t'a créé ?
-# Qui est Maxime Barbier
-# Camion
-# 1 2 3
+# Qui est Maxime Barbier ?
+# Camion.
+# 1 2 3.
 # Que veux-tu faire ?
-
-Il est quelle heure ?
+# Il est quelle heure ?
+# Ouvre wikipedia.
+cherche sur internet bannane
+# cherche sur internet bannane au chocolat

@@ -7,3 +7,6 @@ from .func import (
 from .text import (
     TTSAction
 )
+from .web import (
+    WebBrowserAction
+)

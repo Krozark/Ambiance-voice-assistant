@@ -8,8 +8,7 @@
         }
     },
     "types": {
-        "TTS": "Ava.action.TTSAction",
-        "TTS2": {
+        "TTS": {
             "class": "Ava.action.TTSAction",
             "args": [],
             "kwargs": {}
@@ -17,64 +16,110 @@
     },
     "register": [
         {
+            "tokens": {
+                "tokens": [
+                    "cherche",
+                    "sur",
+                    "internet",
+                    "search"
+                ],
+                "regex": {
+                    "search": "\\w+"
+                }
+            },
+            "type": {
+                "type":"Action:WebBrowser",
+                "kwargs": {
+                    "_python": [
+                        "url=\"https://duckduckgo.com/?q=\" + search"
+                    ]
+                }
+            }
+        }
+    ],
+    "_comment": [
+        {
             "tokens": "Ava",
-            "args": "Oui?",
-            "kwargs" : {},
-            "type": "TTS"
-        },
-        {
-            "tokens": "coucou",
-            "args": "Tu veux voir ma bite ?",
-            "type": "Action:TTS"
-        },
-        {
-            "tokens": "Comment tu t'appelles",
-            "args": "Mon nom est Ambiance voice assistant, ou Ava.",
-            "type": "Action:TTS"
-        },
-        {
-            "tokens": "Qui t'a créé",
-            "type": "Action:TTS",
-            "args": "Maxime Barbier"
-        },
-        {
-            "tokens": "Qui est maxime barbier",
-            "type": "Action:TTS",
-            "args": "Mon créateur"
-        },
-        {
-            "tokens": "camion",
-            "type": "Action:TTS",
-            "args": "pwet pwet"
-        },
-        {
-            "tokens": "1 2 3",
-            "type": "Action:TTS",
-            "args": "Soleil"
-        },
-        {
-            "tokens": "Que veux-tu faire",
-            "type": "Action:TTS",
-            "args": "Je veux t'aider"
-        },
-        {
-            "tokens": "Il est quelle heure",
-            "type": "Action:TTS",
-            "args": "Il est {now.hour} heure {now.minute} minutes{suffix}.",
-            "kwargs": {
-                "python": [
-                    "import datetime",
-                    "now = datetime.datetime.now()",
-                    "suffix=\"\"",
-                    "if now.hour >= 18 and now.hour < 21:",
-                    " suffix=\", l'heure de l'appero!\""
-                ]
+            "type": {
+                "type": "TTS",
+                "args": "Oui?"
             }
         },
         {
-            "tokens": "Merci",
-            "type": "Action:TTS",
-            "args": "Derien."
+            "tokens": ["Merci"],
+            "type": {
+                "type": "Action:TTS",
+                "args": "Derien."
+            }
+        },
+         {
+            "tokens": {
+                "tokens": "Comment tu t'appelles"
+            },
+            "type": {
+                "type": "Action:TTS",
+                "args": "Mon nom est Ambiance voice assistant, ou Ava."
+            }
+        },
+        {
+            "tokens": "Il est quelle heure",
+            "type": {
+                "type": "Action:TTS",
+                "args": "Il est {now.tm_hour} heure {now.tm_min} minutes{suffix}.",
+                "kwargs": {
+                    "_python": [
+                        "import time",
+                        "now = time.localtime()",
+                        "suffix=\"\"",
+                        "if now.tm_hour >= 18 and now.tm_hour < 21:",
+                        " suffix=\", l'heure de l'appero!\""
+                    ]
+                }
+            }
+        },
+        {
+            "tokens": ["Ouvre", "wikipedia"],
+            "type": {
+                "type": "Action:WebBrowser",
+                "kwargs": {
+                 "url":  "https://www.wikipedia.org/"
+                }
+            }
+        },
+        {
+            "tokens": "coucou",
+            "type": {
+                "type": "Action:TTS",
+                "args": "Tu veux voir ma bite ?"
+            }
+        },
+        {
+            "tokens": "Qui t'a créé",
+            "type": {
+                "type": "Action:TTS",
+                "args": "Maxime Barbier"
+            }
+        },
+        {
+            "tokens": "Qui est maxime barbier",
+            "type": {
+                "type": "Action:TTS",
+                "args": "Mon créateur."
+            }
+        },
+        {
+            "tokens": "camion",
+            "type": {
+                "type": "Action:TTS",
+                "args": "pouette pouette!"
+            }
+        },
+        {
+            "tokens": "1 2 3",
+            "type": {
+                "type": "Action:TTS",
+                "args": "Soleil!"
+            }
         }
     ]
 }

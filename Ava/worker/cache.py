@@ -26,14 +26,15 @@ class CacheWorker(IOThread, Cache):
 
         logger.debug("CacheWorker tokens %s", self._tokens)
 
-        index, action, it = 0, None, 0
+        index, action, it , regex_kwargs = 0, None, 0, dict()
         for i in range(0, len(self._tokens)):
-            new_index, new_action = self.get(self._tokens[i:])
+            new_index, new_action, new_kwargs = self.get(self._tokens[i:])
             if new_index > index and new_action:
-                index, action, it = new_index, new_action, i
+                index, action, it, regex_kwargs = new_index, new_action, i, new_kwargs
 
         if index and action:
             self._tokens = self._tokens[it + index:]
+            action.set_trigger_kwargs(regex_kwargs)
             logger.debug("CacheWorker find action '%s' at index '%s' it= %s", action, index, it)
             return action
         return None

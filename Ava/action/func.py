@@ -8,5 +8,5 @@ class CallbackAction(Action):
         self._func = callback
         super().__init__(*args, **kwargs)
 
-    def trigger(self) -> None:
+    def _do_trigger(self, **kwargs) -> None:
         self._func()

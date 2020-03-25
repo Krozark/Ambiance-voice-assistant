@@ -53,10 +53,8 @@ class Ava(object):
         self._load_types(data.get("types"))
         self._load_register(data.get("register"))
 
-    def register(self, tokens, action) -> None:
-        if isinstance(tokens, str):
-            tokens = word_tokenize(tokens.lower())
-        self._cache.register(tokens, action)
+    def register(self, tokens, action, token_regex=None) -> None:
+        self._cache.register(tokens, action, token_regex=token_regex)
 
     def add_worker(self, *args):
         for worker in args:
@@ -149,8 +147,9 @@ class Ava(object):
 
     def _register_defaults(self):
         # Actions
-        self._factory.register("Action:AudioFIlePlayer", "Ava.action.AudioFilePlayerAction",)
+        #self._factory.register("Action:AudioFIlePlayer", "Ava.action.AudioFilePlayerAction",)
         self._factory.register("Action:TTS", "Ava.action.TTSAction")
+        self._factory.register("Action:WebBrowser", "Ava.action.WebBrowserAction")
         # Workers
 
     def _load_pipeline(self, data):
@@ -178,15 +177,31 @@ class Ava(object):
     def _load_register(self, data_list):
         for data in data_list:
             logger.debug("register data %s", data)
-            tokens = data["tokens"]
-            args = data.get("args", None)
-            kwargs = data.get("kwargs", None)
-            type_alias = data["type"]
+            # get object
+            type_type = data["type"]
+            type_args = None
+            type_kwargs = None
+            if isinstance(type_type, dict):
+                type_args = type_type.get("args")
+                if type_args is not None and not isinstance(type_args, (list, tuple)):
+                    type_args = [type_args]
+                type_kwargs = type_type.get("kwargs")
+                type_type = type_type["type"]
+            obj = self._factory.construct(type_type, args=type_args, kwargs=type_kwargs)
 
-            if args is not None and not isinstance(args, (list, tuple)):
-                args = [args]
-            obj = self._factory.construct(type_alias, args=args, kwargs=kwargs)
-            self.register(tokens, obj)
+            # tokens
+            tokens_tokens = data["tokens"]
+            token_regex = dict()
+            if isinstance(tokens_tokens, dict):
+                token_regex = tokens_tokens.get("regex")
+                tokens_tokens = tokens_tokens.get("tokens", {})
+
+            if isinstance(tokens_tokens, str):
+                tokens_tokens = word_tokenize(tokens_tokens)
+            elif isinstance(tokens_tokens, (tuple, list)):
+                tokens_tokens = [x.lower() for x in tokens_tokens]
+
+            self.register(tokens_tokens, obj, token_regex=token_regex)
 
     def __str__(self):
         r = "[Ava]\n"

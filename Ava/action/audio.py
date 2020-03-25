@@ -14,10 +14,9 @@ logger = logging.getLogger(__package__)
 class AudioFilePlayerAction(Action):
     def __init__(self, filename, *args, **kwargs):
         self._filename = filename
-        kwargs.setdefault("name", filename)
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, name=filename, **kwargs)
 
-    def trigger(self) -> None:
+    def _do_trigger(self, **kwargs) -> None:
         if config.DEBUG_AUDIO_AS_TEXT:
             logger.info("Play file %s", self._filename)
         else:

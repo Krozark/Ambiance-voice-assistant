@@ -39,7 +39,7 @@ class FileReaderWorker(OThread):
         self._sentences = self.get_sentences(filename)
 
     @staticmethod
-    def get_sentences(filename: str) -> str:
+    def get_sentences(filename: str) -> list:
         with open(filename, "rt") as f:
             data = f.read()
         s = nltk.sent_tokenize(data, config.LANGUAGES_INFORMATION_CURRENT["nltk"])
