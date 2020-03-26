@@ -4,10 +4,8 @@ from typing import Union
 from Ava.core import (
     ActionList,
     IOThread,
-    Cache,
+    Cache
 )
-from Ava.core.cache import CacheCouldMatchMoreError
-from Ava.core.io import EmptyException
 
 logger = logging.getLogger(__package__)
 
@@ -28,31 +26,35 @@ class CacheWorker(IOThread, Cache):
 
         logger.debug("CacheWorker tokens %s", self._tokens)
 
-        index, action, it  = 0, None, 0
+        it  = 0
+        result = None
         for i in range(0, len(self._tokens)):
-            retry = True
-            while retry:
-                try:
-                    new_index, new_action = self.get(self._tokens[i:])
-                    retry = False
-                except CacheCouldMatchMoreError as e:
-                    # try to add a new item
-                    new_index, new_action = e.data
-                    try:
-                        logger.debug("try to get to get a new token")
-                        data = self.input_pop(timeout=1)
-                        if data is StopIteration:
-                            raise StopIteration()
-                        if data is not None:
-                            self._tokens.append(data)
-                    except EmptyException:
-                        logger.warning("Impossible to get a new item")
-                        retry = False
-            if new_index > index and new_action:
-                index, action, it = new_index, new_action, i
+            new_result = self.get(self._tokens[i:])
+            logger.debug("Cache found result: %s", result)
+            # retry = True
+            # while retry:
+            #     try:
+            #         new_index, new_action = self.get(self._tokens[i:])
+            #         retry = False
+            #     except CacheCouldMatchMoreError as e:
+            #         # try to add a new item
+            #         new_index, new_action = e.data
+            #         try:
+            #             logger.debug("try to get to get a new token")
+            #             data = self.input_pop(timeout=1)
+            #             if data is StopIteration:
+            #                 raise StopIteration()
+            #             if data is not None:
+            #                 self._tokens.append(data)
+            #         except EmptyException:
+            #             logger.warning("Impossible to get a new item")
+            #             retry = False
+            if new_result > result:
+                result = new_result
+                it = i
 
-        if index and action:
-            self._tokens = self._tokens[it + index:]
-            logger.debug("CacheWorker find action '%s' at index '%s' it= %s", action, index, it)
-            return action
+        if result:
+            self._tokens = self._tokens[it + result.index:]
+            logger.debug("CacheWorker find action '%s' at index '%s' it= %s", result.action, result.index, it)
+            return result.action
         return None

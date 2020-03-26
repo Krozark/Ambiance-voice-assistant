@@ -7,6 +7,6 @@ Coucou !
 # Que veux-tu faire ?
 # Il est quelle heure ?
 # Ouvre wikipedia
-# cherche sur internet bannane
-cherche sur duckduckgo bannane au chocolat
+cherche sur internet bannane
+# cherche sur duckduckgo bannane au chocolat
 

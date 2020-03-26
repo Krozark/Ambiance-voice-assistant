@@ -6,7 +6,8 @@ from .audio import (
     RecognizerBase
 )
 from .cache import (
-    Cache
+    Cache,
+    CacheResult
 )
 from .factory import (
     Factory,

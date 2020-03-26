@@ -15,7 +15,25 @@
         }
     },
     "register": [
-         {
+        {
+            "tokens": "coucou",
+            "type": {
+                "type": "Action:TTS",
+                "args": "Tu veux voir ma bite ?"
+            }
+        },
+        {
+            "tokens": {
+                "tokens": ["cherche", "sur", "internet", "$search"],
+                "regex": {
+                    "$search": "\\w+"
+                }
+            },
+            "type": "Action:WebBrowserSearch"
+        }
+    ],
+    "_comment": [
+        {
             "tokens": {
                 "tokens": ["cherche", "sur", "duckduckgo", "$sentence"],
                 "regex": {
@@ -29,9 +47,7 @@
                 "type": "Action:TTS",
                 "args": "Derien."
             }
-        }
-    ],
-    "_comment": [
+        },
         {
             "tokens": "Ava",
             "type": {
@@ -81,13 +97,6 @@
             }
         },
         {
-            "tokens": "coucou",
-            "type": {
-                "type": "Action:TTS",
-                "args": "Tu veux voir ma bite ?"
-            }
-        },
-        {
             "tokens": "Qui t'a créé",
             "type": {
                 "type": "Action:TTS",
@@ -114,15 +123,6 @@
                 "type": "Action:TTS",
                 "args": "Soleil!"
             }
-        },
-        {
-            "tokens": {
-                "tokens": ["cherche", "sur", "internet", "$search"],
-                "regex": {
-                    "$search": "\\w+"
-                }
-            },
-            "type": "Action:WebBrowserSearch"
         },
         {
             "tokens": {
