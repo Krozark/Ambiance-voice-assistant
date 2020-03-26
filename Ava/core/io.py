@@ -1,10 +1,13 @@
 import logging
-from queue import Queue
+from queue import (
+    Queue,
+    Empty
+)
 
 logger = logging.getLogger(__package__)
 
 QueueClass = Queue
-
+EmptyException = Empty
 
 class DuplicateOutputQueue(object):
     """
@@ -83,8 +86,8 @@ class WithInput(StreamMixin):
     def _input_push(self, value) -> None:
         self._input_queue.put(value)
 
-    def input_pop(self):
-        return self._input_queue.get()
+    def input_pop(self, timeout=None):
+        return self._input_queue.get(timeout=timeout)
 
     def input_task_done(self) -> None:
         self._input_queue.task_done()

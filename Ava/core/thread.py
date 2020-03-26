@@ -71,13 +71,17 @@ class IThread(Thread, WithInput):
         """
         raise NotImplementedError()
 
+    def input_pop(self, timeout=None):
+        res = self._input_queue.get(timeout=timeout)
+        self.input_task_done()
+        return res
+
     def run(self) -> None:
         """Thread implementation"""
         # this runs in a background thread
         try:
             while self._is_running:
                 data = self.input_pop()
-                self.input_task_done()
                 if data is StopIteration:
                     raise StopIteration()
                 if data is not None:
@@ -91,6 +95,11 @@ class _IOThreadBase(Thread, WithInputOutput):
     def __init__(self):
         Thread.__init__(self)
         WithInputOutput.__init__(self)
+
+    def input_pop(self, timeout=None):
+        res = self._input_queue.get(timeout=timeout)
+        self.input_task_done()
+        return res
 
     def stop(self) -> None:
         """Stop the current thread (non blocking)"""
@@ -118,7 +127,6 @@ class IOThread(_IOThreadBase):
         try:
             while self._is_running:
                 data = self.input_pop()
-                self.input_task_done()
                 if data is StopIteration:
                     raise StopIteration()
                 if data is not None:
@@ -137,7 +145,7 @@ class IOxThread(_IOThreadBase):
     You need to overwrite _process_input_data()
     """
 
-    def _process_input_data(self, data) -> None:
+    def _process_input_data(self, data) -> list:
         """
         Process one item and yield any number of outputs
         :param data:item to process
@@ -150,7 +158,6 @@ class IOxThread(_IOThreadBase):
         try:
             while self._is_running:
                 data = self.input_pop()
-                self.input_task_done()
                 if data is StopIteration:
                     raise StopIteration()
                 if data is not None:

@@ -20,7 +20,7 @@ class Action(object):
     def __init__(self, *args, name=None, _python=None, **kwargs):
         self._name = name
         self._python = self._get_python(_python)
-        self.__trigger_kwargs = dict()
+        self._trigger_kwargs = dict()
 
     def _get_python(self, data):
         if not data:
@@ -32,17 +32,17 @@ class Action(object):
     def _do_trigger(self, **kwargs) -> None:
         raise NotImplemented()
 
-    def set_trigger_kwargs(self, kwargs):
-        self.__trigger_kwargs = kwargs
+    def set_trigger_kwargs(self, kwargs) -> None:
+        self._trigger_kwargs = {key.replace("$", ""): " ".join(value) for key, value in kwargs.items()}
 
     def trigger(self) -> None:
         if self._python:
             g = {}
-            l = self.__trigger_kwargs.copy()
+            l = self._trigger_kwargs.copy()
             exec(self._python, g, l)
-            self.__trigger_kwargs.update(l)
-        logger.debug("Trigger Action '%s' with kwargs=%s", self, self.__trigger_kwargs)
-        self._do_trigger(**self.__trigger_kwargs)
+            self._trigger_kwargs.update(l)
+        logger.debug("Trigger Action '%s' with kwargs=%s", self, self._trigger_kwargs)
+        self._do_trigger(**self._trigger_kwargs)
 
     def __str__(self):
         r = self.__class__.__name__

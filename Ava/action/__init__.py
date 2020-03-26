@@ -8,5 +8,6 @@ from .text import (
     TTSAction
 )
 from .web import (
-    WebBrowserAction
+    WebBrowserAction,
+    WebBrowserSearchAction
 )

@@ -1,7 +1,7 @@
 {
     "pipeline": {
         "kwargs": {
-            "audio_input": true,
+            "audio_input": false,
             "debug_audio": false,
             "debug_tts": false,
             "token_strategy": 0
@@ -15,25 +15,19 @@
         }
     },
     "register": [
-        {
+         {
             "tokens": {
-                "tokens": [
-                    "cherche",
-                    "sur",
-                    "internet",
-                    "search"
-                ],
+                "tokens": ["cherche", "sur", "duckduckgo", "$sentence"],
                 "regex": {
-                    "search": "\\w+"
+                    "$sentence": {
+                        "regex": "\\w+",
+                        "multiple": true
+                    }
                 }
             },
             "type": {
-                "type":"Action:WebBrowser",
-                "kwargs": {
-                    "_python": [
-                        "url=\"https://duckduckgo.com/?q=\" + search"
-                    ]
-                }
+                "type": "Action:TTS",
+                "args": "Derien."
             }
         }
     ],
@@ -120,6 +114,27 @@
                 "type": "Action:TTS",
                 "args": "Soleil!"
             }
+        },
+        {
+            "tokens": {
+                "tokens": ["cherche", "sur", "internet", "$search"],
+                "regex": {
+                    "$search": "\\w+"
+                }
+            },
+            "type": "Action:WebBrowserSearch"
+        },
+        {
+            "tokens": {
+                "tokens": ["cherche", "sur", "duckduckgo", "$search"],
+                "regex": {
+                    "$search": {
+                        "regex": "\\w+",
+                        "number": -1
+                    }
+                }
+            },
+            "type": "Action:WebBrowserSearch"
         }
     ]
 }

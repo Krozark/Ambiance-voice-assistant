@@ -14,9 +14,8 @@ class TTSAction(Action, TTSMixin):
         kwargs.setdefault("name", sentence)
         super().__init__(*args, **kwargs)
 
-
-
-    def _do_trigger(self, **kwargs) -> None:
+    def _do_trigger(self, sentence=None, **kwargs) -> None:
+        sentence = sentence or self._sentence or ""
         if kwargs:
             sentence = self._sentence.format(**kwargs)
         else:

@@ -150,6 +150,7 @@ class Ava(object):
         #self._factory.register("Action:AudioFIlePlayer", "Ava.action.AudioFilePlayerAction",)
         self._factory.register("Action:TTS", "Ava.action.TTSAction")
         self._factory.register("Action:WebBrowser", "Ava.action.WebBrowserAction")
+        self._factory.register("Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
         # Workers
 
     def _load_pipeline(self, data):
