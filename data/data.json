@@ -16,6 +16,23 @@
     },
     "register": [
         {
+            "tokens": {
+                "tokens": ["1", "$search"],
+                "regex": {
+                    "$search": {
+                        "regex": "\\d",
+                        "multiple": true
+                    }
+                }
+            },
+            "type": {
+                "type": "Action:TTS",
+                "args": "1 $search+"
+            }
+        }
+    ],
+    "_comment": [
+        {
             "tokens": "coucou",
             "type": {
                 "type": "Action:TTS",
@@ -30,9 +47,7 @@
                 }
             },
             "type": "Action:WebBrowserSearch"
-        }
-    ],
-    "_comment": [
+        },
         {
             "tokens": {
                 "tokens": ["cherche", "sur", "duckduckgo", "$sentence"],

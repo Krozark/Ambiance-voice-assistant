@@ -4,7 +4,7 @@ from espeakng import ESpeakNG
 
 from Ava import config
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 
 def _get_engine():

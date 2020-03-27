@@ -2,7 +2,7 @@ import logging
 
 import speech_recognition
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 
 class RecognizerBase(object):

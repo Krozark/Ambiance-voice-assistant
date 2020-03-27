@@ -5,7 +5,7 @@ from Ava.core import (
     Action
 )
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 
 class WebBrowserAction(Action):

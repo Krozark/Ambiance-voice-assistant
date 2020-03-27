@@ -25,7 +25,7 @@ from Ava.worker import (
     CacheWorker,
 )
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 
 class Ava(object):

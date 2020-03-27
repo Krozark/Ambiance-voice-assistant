@@ -1,6 +1,6 @@
 import logging
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 
 class ActionList(list):

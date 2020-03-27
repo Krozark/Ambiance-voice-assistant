@@ -14,7 +14,7 @@ from Ava.core import (
     RecognizerBase,
 )
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 
 class MicrophoneWorker(OThread, RecognizerBase):

@@ -8,7 +8,7 @@ from Ava.ava import Ava as Ava_class
 
 
 def main():
-    logger = logging.getLogger(__package__)
+    logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.DEBUG if config.DEBUG else logging.INFO)
 
     ava = Ava_class()

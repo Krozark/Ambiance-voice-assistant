@@ -5,30 +5,43 @@ from collections import defaultdict
 
 from .action import ActionList, Action
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 
 class CacheResult(object):
-    def __init__(self, index, action, could_more=False, kwargs=None):
-        self.index = index
+    def __init__(self, length, action, regex_kwargs):
+        self.length = length
         self.action = action
-        self.could_more = could_more
-        self.kwargs = kwargs
+        self.regex_kwargs = regex_kwargs
 
-    def __bool__(self):
-        return bool(self.index or self.action)
+    def if_deeper(self):
+        return self.action is None
 
     def __gt__(self, other):
-        if not other:
+        """
+        Sort by:
+        length, deeper, len(regex_kwargs)
+        :param other:
+        :return:
+        """
+        if other is None:
             return True
-        return bool(other.index > self.index and other.action)
+
+        if other.length < self.length:
+            return True
+        elif other.length == self.length:
+            if self.if_deeper() == other.if_deeper():
+                if len(self.regex_kwargs) < len(other.regex_kwargs):
+                    return True
+            else:
+                return self.if_deeper()
+        return False
 
     def __str__(self):
-        return "%s" % self.__dict__
+        return "length=%s, action=%s, regex=%s" % (self.length, self.action, self.regex_kwargs.items())
+
 
 class _RegexNodeStruct(object):
-    END_OF_SENTENCE_TOKEN = [".", "!", "?", "..."]
-
     def __init__(self, name, regex_data, node):
         self.name = name
         self.node = node
@@ -56,55 +69,27 @@ class _CacheNodeData(object):
         self._nodes = dict()
         self._node_regex = list()  # (_RegexNodeStruct),
 
-    # def get(self, tokens: List[str], depth, regex_kwargs=None) -> CacheResult:
-    #     regex_kwargs = regex_kwargs or defaultdict(list)
-    #     result = CacheResult(0, None)
-    #
-    #     token_len = len(tokens)
-    #     if token_len > 0:
-    #         token = tokens[0]
-    #         try:
-    #             result = self._nodes[token].get(tokens[1:], depth + 1, regex_kwargs)
-    #         except KeyError:
-    #             pass
-    #
-    #         for regex_struct in self._node_regex:
-    #             if regex_struct.match(token):
-    #                 regex_kwargs[regex_struct.name].append(token)
-    #                 if not regex_struct.regex_multiple:  # if valid only once
-    #                     return regex_struct.node.get(tokens[1:], depth + 1, regex_kwargs)
-    #                 # we have to make another try
-    #                 if len(tokens) == 1:  # end of tokens ?
-    #                     self._leaf.set_trigger_kwargs(regex_kwargs)
-    #                     data = depth, self._leaf
-    #                     raise CacheCouldMatchMoreError(data)
-    #
-    #                 if not any(map(lambda x: tokens[1] == x, regex_struct.END_OF_SENTENCE_TOKEN)):  # end of sentence ?
-    #                     return self.get(tokens[1:], depth + 1, regex_kwargs)
-    #
-    #     if not result and self._leaf:
-    #         self._leaf.set_trigger_kwargs(regex_kwargs)
-    #         result = CacheResult(depth, self._leaf)
-    #     return result
-
-    def get(self, tokens: List[str], depth, regex_kwargs) -> CacheResult:
-        result = CacheResult(0, None)
+    def get(self, tokens: List[str], depth, regex_kwargs, results: List[CacheResult]) -> None:
         if tokens:
+            # try to found deeper
             token = tokens[0]
-            logger.error("***************** [%s] %s", depth, token)
             try:
-                result = self._nodes[token].get(tokens[1:], depth + 1, regex_kwargs.copy())
+                self._nodes[token].get(tokens[1:], depth + 1, regex_kwargs, results)
             except KeyError:
-                for regex_struct in self._node_regex:
-                    logger.error("******************* [%s] %s", depth, regex_struct)
-                    if regex_struct.match(token):
-                        regex_kwargs[regex_struct.name].append(token)
-                        result = regex_struct.node.get(tokens[1:], depth + 1, regex_kwargs.copy())
+                pass
 
-        if not result and self._leaf:
-            result =  CacheResult(depth, self._leaf, regex_kwargs)
-        logger.error("************ Result %s", result)
-        return result
+            for regex_struct in self._node_regex:
+                if regex_struct.match(token):
+                    copy =  regex_kwargs.copy()
+                    copy[regex_struct.name].append(token)
+                    regex_struct.node.get(tokens[1:], depth + 1, copy, results)
+        elif self.can_deeper():
+            # no more token, but we can potentially match if mor token received
+            results.append(CacheResult(depth, None, regex_kwargs))
+
+        if self._leaf:
+            # We have a leaf, to we add it
+            results.append(CacheResult(depth, self._leaf, regex_kwargs))
 
     def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str]) -> None:
         if not tokens:
@@ -139,6 +124,9 @@ class _CacheNodeData(object):
             r += regex_struct.node.__str__(depth + 1)
         return r
 
+    def can_deeper(self):
+        return bool(len(self._nodes) + len(self._node_regex))
+
 
 class Cache(object):
     def __init__(self):
@@ -153,8 +141,12 @@ class Cache(object):
         self.__max_depth = max(self.__max_depth, len(tokens))
         self._root.register(tokens, action, token_regex)
 
-    def get(self, tokens) -> CacheResult:
-        return self._root.get(tokens, 0,  defaultdict(list))
+    def get(self, tokens) -> List[CacheResult]:
+        results = []
+        self._root.get(tokens, 0,  defaultdict(list), results)
+        results = sorted(results)
+        logger.debug("Found %s results for tokens %s => %s", len(results), tokens, ["<%s>" % x for x in results])
+        return results
 
     def get_depth(self):
         return self.__max_depth

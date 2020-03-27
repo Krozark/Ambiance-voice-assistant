@@ -4,7 +4,7 @@ from queue import (
     Empty
 )
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 QueueClass = Queue
 EmptyException = Empty

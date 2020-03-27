@@ -3,7 +3,7 @@ from Ava.core import (
     IThread,
 )
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 
 class ActionWorker(IThread):

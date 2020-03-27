@@ -3,11 +3,11 @@ import logging
 from .io import (
     WithOutput,
     WithInput,
-    WithInputOutput
+    WithInputOutput,
+    EmptyException
 )
 
-
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 
 class Thread(_Thread):
@@ -49,7 +49,19 @@ class OThread(Thread, WithOutput):
         self.output_push(None)
 
 
-class IThread(Thread, WithInput):
+class _IThreadMixin(object):
+    def input_pop(self, timeout=None):
+        try:
+            res = self._input_queue.get(timeout=timeout)
+            self.input_task_done()
+            if res is StopIteration:
+                raise StopIteration()
+        except EmptyException:
+            res = None
+        return res
+
+
+class IThread(Thread, _IThreadMixin, WithInput):
     """
     Thread class that have input and process them one by one.
     You need to overwrite _process_input_data()
@@ -71,19 +83,12 @@ class IThread(Thread, WithInput):
         """
         raise NotImplementedError()
 
-    def input_pop(self, timeout=None):
-        res = self._input_queue.get(timeout=timeout)
-        self.input_task_done()
-        return res
-
     def run(self) -> None:
         """Thread implementation"""
         # this runs in a background thread
         try:
             while self._is_running:
                 data = self.input_pop()
-                if data is StopIteration:
-                    raise StopIteration()
                 if data is not None:
                     self._process_input_data(data)
         except StopIteration:
@@ -91,15 +96,10 @@ class IThread(Thread, WithInput):
             self._is_running = False
 
 
-class _IOThreadBase(Thread, WithInputOutput):
+class _IOThreadBase(Thread, _IThreadMixin, WithInputOutput):
     def __init__(self):
         Thread.__init__(self)
         WithInputOutput.__init__(self)
-
-    def input_pop(self, timeout=None):
-        res = self._input_queue.get(timeout=timeout)
-        self.input_task_done()
-        return res
 
     def stop(self) -> None:
         """Stop the current thread (non blocking)"""
@@ -127,8 +127,6 @@ class IOThread(_IOThreadBase):
         try:
             while self._is_running:
                 data = self.input_pop()
-                if data is StopIteration:
-                    raise StopIteration()
                 if data is not None:
                     out = self._process_input_data(data)
                     if out is not None:
@@ -158,8 +156,6 @@ class IOxThread(_IOThreadBase):
         try:
             while self._is_running:
                 data = self.input_pop()
-                if data is StopIteration:
-                    raise StopIteration()
                 if data is not None:
                     for out in self._process_input_data(data):
                         if out is not None:

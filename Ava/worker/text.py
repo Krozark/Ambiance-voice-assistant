@@ -11,7 +11,7 @@ from Ava.core import (
     TTSMixin
 )
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 
 class LoggerWorker(IThread):
