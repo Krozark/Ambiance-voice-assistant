@@ -41,6 +41,7 @@ class CacheWorker(IOxThread, Cache):
                 self._tokens = self._tokens[result.length:]
                 logger.debug("Find action '%s'", result)
                 action = result.action
+                action.set_trigger_kwargs(result.kwargs)
             except IndexError:
                 pass
         return action

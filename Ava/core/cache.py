@@ -9,10 +9,10 @@ logger = logging.getLogger(__name__)
 
 
 class CacheResult(object):
-    def __init__(self, length, action, regex_kwargs):
+    def __init__(self, length, action, kwargs):
         self.length = length
         self.action = action
-        self.regex_kwargs = regex_kwargs
+        self.kwargs = kwargs
 
     def if_deeper(self):
         return self.action is None
@@ -20,7 +20,7 @@ class CacheResult(object):
     def __gt__(self, other):
         """
         Sort by:
-        length, deeper, len(regex_kwargs)
+        length, deeper, len(kwargs)
         :param other:
         :return:
         """
@@ -31,14 +31,14 @@ class CacheResult(object):
             return True
         elif other.length == self.length:
             if self.if_deeper() == other.if_deeper():
-                if len(self.regex_kwargs) < len(other.regex_kwargs):
+                if len(self.kwargs) < len(other.kwargs):
                     return True
             else:
                 return self.if_deeper()
         return False
 
     def __str__(self):
-        return "length=%s, action=%s, regex=%s" % (self.length, self.action, self.regex_kwargs.items())
+        return "length=%s, action=%s, regex=%s" % (self.length, self.action, self.kwargs.items())
 
 
 class _RegexNodeStruct(object):
@@ -69,17 +69,17 @@ class _CacheNodeData(object):
     def can_deeper(self):
         return bool(len(self._nodes) + len(self._node_regex))
 
-    def get(self, tokens: List[str], depth, regex_kwargs, results: List[CacheResult]) -> None:
+    def get(self, tokens: List[str], depth, kwargs, results: List[CacheResult]) -> None:
         if tokens:
             # try to found deeper
             token = tokens[0]
             try:
-                self._nodes[token].get(tokens[1:], depth + 1, regex_kwargs, results)
+                self._nodes[token].get(tokens[1:], depth + 1, kwargs, results)
             except KeyError:
                 pass
             for regex_struct in self._node_regex:
                 if regex_struct.match(token):
-                    copy = regex_kwargs.copy()
+                    copy = kwargs.copy()
                     copy[regex_struct.name].append(token)
                     regex_struct.node.get(tokens[1:], depth + 1, copy, results)
                     if regex_struct.regex_multiple:
@@ -87,11 +87,11 @@ class _CacheNodeData(object):
 
         elif self.can_deeper():
             # no more token, but we can potentially match if mor token received
-            results.append(CacheResult(depth, None, regex_kwargs))
+            results.append(CacheResult(depth, None, kwargs))
 
         if self._leaf:
             # We have a leaf, to we add it
-            results.append(CacheResult(depth, self._leaf, regex_kwargs))
+            results.append(CacheResult(depth, self._leaf, kwargs))
 
     def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str]) -> None:
         if not tokens:
