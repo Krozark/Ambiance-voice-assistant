@@ -59,15 +59,15 @@ class _RegexNodeStruct(object):
     def __str__(self, depth=0):
         return "%s(%s)" % (self.name, self.regex_str)
 
-    def get(self, tokens: List[str], depth, regex_kwargs=None) -> Union[Tuple[int, object], Tuple[int, None]]:
-        pass
-
 
 class _CacheNodeData(object):
     def __init__(self):
         self._leaf = ActionList()
         self._nodes = dict()
         self._node_regex = list()  # (_RegexNodeStruct),
+
+    def can_deeper(self):
+        return bool(len(self._nodes) + len(self._node_regex))
 
     def get(self, tokens: List[str], depth, regex_kwargs, results: List[CacheResult]) -> None:
         if tokens:
@@ -77,12 +77,14 @@ class _CacheNodeData(object):
                 self._nodes[token].get(tokens[1:], depth + 1, regex_kwargs, results)
             except KeyError:
                 pass
-
             for regex_struct in self._node_regex:
                 if regex_struct.match(token):
-                    copy =  regex_kwargs.copy()
+                    copy = regex_kwargs.copy()
                     copy[regex_struct.name].append(token)
                     regex_struct.node.get(tokens[1:], depth + 1, copy, results)
+                    if regex_struct.regex_multiple:
+                        self.get(tokens[1:], depth + 1, copy, results)
+
         elif self.can_deeper():
             # no more token, but we can potentially match if mor token received
             results.append(CacheResult(depth, None, regex_kwargs))
@@ -123,9 +125,6 @@ class _CacheNodeData(object):
             r += "  " * depth + "[Node Regex] %s \n" % regex_struct
             r += regex_struct.node.__str__(depth + 1)
         return r
-
-    def can_deeper(self):
-        return bool(len(self._nodes) + len(self._node_regex))
 
 
 class Cache(object):

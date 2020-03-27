@@ -27,7 +27,7 @@
             },
             "type": {
                 "type": "Action:TTS",
-                "args": "1 $search+"
+                "args": "1 $search={search}"
             }
         }
     ],
