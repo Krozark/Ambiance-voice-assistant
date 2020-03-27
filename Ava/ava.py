@@ -201,7 +201,7 @@ class Ava(object):
 
             if isinstance(tokens_tokens, str):
                 tokens_tokens = word_tokenize(tokens_tokens)
-                
+
             if isinstance(tokens_tokens, (tuple, list)):
                 tokens_tokens = [x.lower() for x in tokens_tokens]
 
