@@ -32,6 +32,7 @@ setuptools.setup(
       'pydub~=0.23',
       'PyAudio~=0.2',
       'spacy~=2.2',
+      "wikipedia==1.4.0"
    ],
    entry_points={
       'console_scripts': [

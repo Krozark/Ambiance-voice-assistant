@@ -151,6 +151,8 @@ class Ava(object):
         self._factory.register("Action:TTS", "Ava.action.TTSAction")
         self._factory.register("Action:WebBrowser", "Ava.action.WebBrowserAction")
         self._factory.register("Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
+        self._factory.register("Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")
+        self._factory.register("Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")
         # Workers
 
     def _load_pipeline(self, data):
@@ -199,7 +201,8 @@ class Ava(object):
 
             if isinstance(tokens_tokens, str):
                 tokens_tokens = word_tokenize(tokens_tokens)
-            elif isinstance(tokens_tokens, (tuple, list)):
+                
+            if isinstance(tokens_tokens, (tuple, list)):
                 tokens_tokens = [x.lower() for x in tokens_tokens]
 
             self.register(tokens_tokens, obj, token_regex=token_regex)

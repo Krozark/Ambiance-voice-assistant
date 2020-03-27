@@ -51,8 +51,6 @@ class CacheWorker(IOxThread, Cache):
         self._tokens.append(token)
         while self._tokens:
             while True:
-                import time
-                time.sleep(5)
                 results, token = self._process_tokens()
                 if token is None:
                     break

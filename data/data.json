@@ -1,7 +1,7 @@
 {
     "pipeline": {
         "kwargs": {
-            "audio_input": false,
+            "audio_input": true,
             "debug_audio": false,
             "debug_tts": false,
             "token_strategy": 0
@@ -16,54 +16,6 @@
     },
     "register": [
         {
-            "tokens": {
-                "tokens": ["1", "$search"],
-                "regex": {
-                    "$search": {
-                        "regex": "\\d",
-                        "multiple": true
-                    }
-                }
-            },
-            "type": {
-                "type": "Action:TTS",
-                "args": "1 $search={search}"
-            }
-        }
-    ],
-    "_comment": [
-        {
-            "tokens": "coucou",
-            "type": {
-                "type": "Action:TTS",
-                "args": "Tu veux voir ma bite ?"
-            }
-        },
-        {
-            "tokens": {
-                "tokens": ["cherche", "sur", "internet", "$search"],
-                "regex": {
-                    "$search": "\\w+"
-                }
-            },
-            "type": "Action:WebBrowserSearch"
-        },
-        {
-            "tokens": {
-                "tokens": ["cherche", "sur", "duckduckgo", "$sentence"],
-                "regex": {
-                    "$sentence": {
-                        "regex": "\\w+",
-                        "multiple": true
-                    }
-                }
-            },
-            "type": {
-                "type": "Action:TTS",
-                "args": "Derien."
-            }
-        },
-        {
             "tokens": "Ava",
             "type": {
                 "type": "TTS",
@@ -71,19 +23,33 @@
             }
         },
         {
-            "tokens": ["Merci"],
+            "tokens": "Merci",
             "type": {
                 "type": "Action:TTS",
                 "args": "Derien."
             }
         },
-         {
+        {
             "tokens": {
                 "tokens": "Comment tu t'appelles"
             },
             "type": {
                 "type": "Action:TTS",
                 "args": "Mon nom est Ambiance voice assistant, ou Ava."
+            }
+        },
+        {
+            "tokens": "Qui t'a créé",
+            "type": {
+                "type": "Action:TTS",
+                "args": "Maxime Barbier"
+            }
+        },
+        {
+            "tokens": "Qui est maxime barbier",
+            "type": {
+                "type": "Action:TTS",
+                "args": "Mon créateur."
             }
         },
         {
@@ -103,53 +69,52 @@
             }
         },
         {
-            "tokens": ["Ouvre", "wikipedia"],
-            "type": {
-                "type": "Action:WebBrowser",
-                "kwargs": {
-                 "url":  "https://www.wikipedia.org/"
-                }
-            }
-        },
-        {
-            "tokens": "Qui t'a créé",
-            "type": {
-                "type": "Action:TTS",
-                "args": "Maxime Barbier"
-            }
-        },
-        {
-            "tokens": "Qui est maxime barbier",
-            "type": {
-                "type": "Action:TTS",
-                "args": "Mon créateur."
-            }
-        },
-        {
-            "tokens": "camion",
-            "type": {
-                "type": "Action:TTS",
-                "args": "pouette pouette!"
-            }
-        },
-        {
-            "tokens": "1 2 3",
-            "type": {
-                "type": "Action:TTS",
-                "args": "Soleil!"
-            }
-        },
-        {
             "tokens": {
-                "tokens": ["cherche", "sur", "duckduckgo", "$search"],
+                "tokens": ["affiche", "sur", "internet", "$search"],
                 "regex": {
                     "$search": {
-                        "regex": "\\w+",
-                        "number": -1
+                        "regex":"\\w+",
+                        "multiple": true
                     }
                 }
             },
             "type": "Action:WebBrowserSearch"
+        },
+        {
+            "tokens": {
+                "tokens": ["affiche", "sur", "wikipedia", "$search"],
+                "regex": {
+                    "$search": {
+                        "regex":"\\w+",
+                        "multiple": true
+                    }
+                }
+            },
+            "type": "Action:WikipediaSearch"
+        },
+        {
+            "tokens": {
+                "tokens": ["cherche", "sur", "wikipédia", "$search"],
+                "regex": {
+                    "$search": {
+                        "regex":"\\w+",
+                        "multiple": true
+                    }
+                }
+            },
+            "type": "Action:WikipediaSearchTTS"
+        },
+        {
+            "tokens": {
+                "tokens": ["c'est", "quoi", "$search"],
+                "regex": {
+                    "$search": {
+                        "regex":"\\w+",
+                        "multiple": true
+                    }
+                }
+            },
+            "type": "Action:WikipediaSearchTTS"
         }
     ]
 }

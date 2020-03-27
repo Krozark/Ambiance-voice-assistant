@@ -7,10 +7,8 @@
 # Que veux-tu faire ?
 # Il est quelle heure ?
 # Ouvre wikipedia
-# cherche sur internet bannane
-# cherche sur duckduckgo bannane au chocolat
-
-
-1 2 3 4 5 a
+# affiche sur internet bannane
+# affiche sur wikipédia banane au chocolat
+cherche sur wikipédia banane au chocolat
 
 

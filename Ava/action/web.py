@@ -1,8 +1,12 @@
 import logging
 import webbrowser
 
+import wikipedia
+
+from Ava import config
 from Ava.core import (
-    Action
+    Action,
+    TTSMixin
 )
 
 logger = logging.getLogger(__name__)
@@ -28,3 +32,33 @@ class WebBrowserSearchAction(Action):
         search =  search or self._search or ""
         base_url = base_url or self._base_url
         webbrowser.open_new_tab(self._base_url + search)
+
+
+class WikipediaSearchAction(Action, TTSMixin):
+    def __init__(self, *args, search=None, sentences=2, **kwargs):
+        super().__init__(*args, name=search, **kwargs)
+        self._search = search
+        self._sentences = sentences
+
+    def _do_trigger(self, *args, search=None, sentences=None, **kwargs) -> None:
+        search =  search or self._search or ""
+        sentences = sentences or self._sentences or 2
+        wikipedia.set_lang(config.LANGUAGES_INFORMATION_CURRENT["wikipedia"])
+        key = wikipedia.search(search, results=1)
+        if key:
+            webbrowser.open_new_tab(wikipedia.page(key[0]).url)
+
+
+class WikipediaSearchTTSAction(Action, TTSMixin):
+    def __init__(self, *args, search=None, sentences=2, **kwargs):
+        super().__init__(*args, name=search, **kwargs)
+        self._search = search
+        self._sentences = sentences
+
+    def _do_trigger(self, *args, search=None, sentences=None, **kwargs) -> None:
+        search =  search or self._search or ""
+        sentences = sentences or self._sentences or 2
+        wikipedia.set_lang(config.LANGUAGES_INFORMATION_CURRENT["wikipedia"])
+        key = wikipedia.search(search, results=1)
+        if key:
+            self.say(wikipedia.summary(key[0], sentences=sentences))

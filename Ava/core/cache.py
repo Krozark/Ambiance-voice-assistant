@@ -57,7 +57,10 @@ class _RegexNodeStruct(object):
         return re.match(self._regex_compiled, token)
 
     def __str__(self, depth=0):
-        return "%s(%s)" % (self.name, self.regex_str)
+        r = "%s(%s)" % (self.name, self.regex_str)
+        if self.regex_multiple:
+            r += "*"
+        return r
 
 
 class _CacheNodeData(object):

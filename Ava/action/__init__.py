@@ -9,5 +9,7 @@ from .text import (
 )
 from .web import (
     WebBrowserAction,
-    WebBrowserSearchAction
+    WebBrowserSearchAction,
+    WikipediaSearchTTSAction,
+    WikipediaSearchAction,
 )
