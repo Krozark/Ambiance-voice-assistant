@@ -17,6 +17,7 @@ python -m spacy download fr_core_news_md
 ```
 python setup.py install
 python -m spacy download fr_core_news_md
+apt install mbrola-fr1 # or change voices in data/data.json
 ```
 
 

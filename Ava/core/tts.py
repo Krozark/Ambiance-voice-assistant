@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 def _get_engine():
     engine = ESpeakNG()
     engine.voice = config.LANGUAGES_INFORMATION_CURRENT["voice"]
-    engine.pitch = 32
-    engine.speed = 100
+    #engine.pitch = 32
+    engine.speed = 135
     return engine
 
 
