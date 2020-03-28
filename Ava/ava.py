@@ -24,6 +24,7 @@ from Ava.worker import (
     TokenizerLemmaWorker,
     CacheWorker,
 )
+from json_include import build_json
 
 logger = logging.getLogger(__name__)
 
@@ -43,10 +44,9 @@ class Ava(object):
     def load_from_file(self, filename=None):
         if filename is None:
             filename = config.LANGUAGES_INFORMATION_CURRENT["data-file"]
-
-        with open(filename, "rt") as f:
-            data = json.loads(f.read())
-            self.load(data)
+        data = build_json(filename)
+        logger.debug("Load json data: %s", json.dumps(data, indent=2))
+        self.load(data)
 
     def load(self, data):
         self._load_pipeline(data.get("pipeline"))

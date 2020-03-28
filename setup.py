@@ -21,9 +21,10 @@ setuptools.setup(
    keywords="ambiance voice assistant",
    packages=setuptools.find_packages(),
    classifiers=[
-        "Programming Language :: Python :: 3",
-         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-        "Operating System :: OS Independent",
+      "Programming Language :: Python",
+      "Programming Language :: Python :: 3",
+      "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+      "Operating System :: OS Independent",
     ],
    install_requires=[
       'nltk~=3.4',
@@ -32,12 +33,13 @@ setuptools.setup(
       'pydub~=0.23',
       'PyAudio~=0.2',
       'spacy~=2.2',
-      "wikipedia==1.4.0"
+      "wikipedia>=1.4",
+      "krozark-json-include>=3.1"
    ],
    entry_points={
       'console_scripts': [
         'ava = Ava.__main__:main',
       ],
    },
-   python_requires='>=3.7',
+   python_requires='>=3.6',
 )
