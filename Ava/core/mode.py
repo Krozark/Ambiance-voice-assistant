@@ -2,7 +2,6 @@ import logging
 from typing import List, Union, Dict
 
 from .action import ActionList, Action
-from .common import WithAva
 from .cache import CacheResult, Cache
 
 logger = logging.getLogger(__name__)
@@ -31,9 +30,8 @@ class ModeResult:
         return False
 
 
-class Mode(WithAva):
-    def __init__(self, ava, enter_tokens, enter_action, exit_tokens, exit_action):
-        WithAva.__init__(self, ava)
+class Mode(object):
+    def __init__(self, enter_tokens, enter_action, exit_tokens, exit_action):
         self._is_active = False
         self._enter_tokens = enter_tokens
         self._enter_action = enter_action
@@ -51,14 +49,18 @@ class Mode(WithAva):
         return self._node.register(tokens, action, token_regex)
 
     def get(self, tokens) -> List:
-        if self._is_active:
-            check = self._check_tokens(self._exit_tokens, tokens, self._exit_action)
-        else:
+        res = []
+        if self._is_active is False:
             check = self._check_tokens(self._enter_tokens, tokens, self._enter_action)
-
-        if check is not None:
-            return [check]
-        return self._node.get(tokens)
+            if check is not None:
+                res.append(check)
+        else:
+            check = self._check_tokens(self._exit_tokens, tokens, self._exit_action)
+            if check is not None:
+                res.append(check)
+            else:
+                res = self._node.get(tokens)
+        return res
 
     def _check_tokens(self, my_tokens, other_tokens, action):
         my_len = len(my_tokens)
