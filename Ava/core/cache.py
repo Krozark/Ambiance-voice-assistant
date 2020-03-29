@@ -1,7 +1,7 @@
 import logging
 import re
-from typing import List, Tuple, Union, Dict
 from collections import defaultdict
+from typing import List, Union, Dict
 
 from .action import ActionList, Action
 
@@ -18,6 +18,7 @@ class CacheResult(object):
         return self.action is None
 
     def __gt__(self, other):
+        from .mode import ModeResult
         """
         Sort by:
         length, deeper, len(kwargs)
@@ -26,6 +27,9 @@ class CacheResult(object):
         """
         if other is None:
             return True
+
+        if isinstance(other, ModeResult):
+            return False
 
         if other.length < self.length:
             return True
@@ -133,14 +137,11 @@ class _CacheNodeData(object):
 class Cache(object):
     def __init__(self):
         self._root = _CacheNodeData()
-        self.__max_depth = 0
 
     def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str]=None) -> None:
         assert isinstance(action, (Action, ActionList))
         token_regex = token_regex or dict()
         logger.debug("Register %s to action '%s', token_regex=%s", tokens, action, token_regex)
-
-        self.__max_depth = max(self.__max_depth, len(tokens))
         self._root.register(tokens, action, token_regex)
 
     def get(self, tokens) -> List[CacheResult]:
@@ -150,8 +151,5 @@ class Cache(object):
         logger.debug("Found %s results for tokens %s => %s", len(results), tokens, ["<%s>" % x for x in results])
         return results
 
-    def get_depth(self):
-        return self.__max_depth
-
-    def __str__(self):
-        return self._root.__str__()
+    def __str__(self, depth=0):
+        return "  " * depth + self._root.__str__(depth=depth)

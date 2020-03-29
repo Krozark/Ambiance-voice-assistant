@@ -1,13 +1,10 @@
 import logging
 
+from .common import WithAva
+
 logger = logging.getLogger(__name__)
 
 
-class Worker(object):
+class Worker(WithAva):
     def __init__(self, ava, **kwargs):
-        self._ava = ava
-        ava.add_worker(self)
-
-    @property
-    def ava(self):
-        return self._ava
+        WithAva.__init__(self, ava)

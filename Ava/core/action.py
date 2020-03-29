@@ -1,4 +1,5 @@
 import logging
+from .common import WithAva
 
 logger = logging.getLogger(__name__)
 
@@ -16,16 +17,12 @@ class ActionList(list):
         return "\n".join([i.__str__() for i in self])
 
 
-class Action(object):
+class Action(WithAva):
     def __init__(self, ava, *args, name=None, _python=None, **kwargs):
-        self._ava = ava
+        WithAva.__init__(self, ava)
         self._name = name
         self._python = self._get_python(_python)
         self._trigger_kwargs = dict()
-
-    @property
-    def ava(self):
-        return self._ava
 
     def _get_python(self, data):
         if not data:
