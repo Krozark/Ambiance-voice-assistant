@@ -10,8 +10,11 @@ from .audio import (
 from .cache import (
     CacheWorker
 )
+from .mode import (
+    ModeWorker
+)
 from .text import (
-    #LoggerWorker,
+    # LoggerWorker,
     TTSWorker,
     FileReaderWorker,
     NormalizerWorker

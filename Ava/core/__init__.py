@@ -34,3 +34,6 @@ from .tts import (
 from .worker import (
     Worker
 )
+from .mode import (
+    Mode
+)

@@ -52,6 +52,9 @@
       "...": "include(include/types.json)"
     },
     "register": [
+
+    ],
+    "_register": [
         {
             "tokens": "Ava",
             "type": {

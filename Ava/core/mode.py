@@ -8,9 +8,11 @@ logger = logging.getLogger(__name__)
 
 
 class ModeResult:
-    def __init__(self, len, action):
+    def __init__(self, len, action, mode):
         self.length = len
         self.action = action
+        self.mode = mode
+        self.kwargs = {}
 
     def if_deeper(self):
         return self.action is None
@@ -29,6 +31,9 @@ class ModeResult:
                 return self.if_deeper()
         return False
 
+    def __str__(self):
+        return "length=%s, action=%s, mode=%s" % (self.length, self.action, self.mode)
+
 
 class Mode(object):
     def __init__(self, enter_tokens, enter_action, exit_tokens, exit_action):
@@ -39,11 +44,16 @@ class Mode(object):
         self._exit_action = exit_action
         self._node = Cache()
 
-    def enter(self):
-        self._is_active = True
+    def toggle(self, seq=None):
+        self._is_active = not self._is_active
+        if seq:
+            if self._is_active:
+                logger.debug("Entering in Mode %s", self._enter_tokens)
+                seq.append(self)
+            else:
+                logger.debug("Exiting mode %s", self._enter_tokens)
+                seq.pop()
 
-    def exit(self):
-        self._is_active = False
 
     def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str] = None) -> None:
         return self._node.register(tokens, action, token_regex)
@@ -53,11 +63,11 @@ class Mode(object):
         if self._is_active is False:
             check = self._check_tokens(self._enter_tokens, tokens, self._enter_action)
             if check is not None:
-                res.append(check)
+                res = [check]
         else:
             check = self._check_tokens(self._exit_tokens, tokens, self._exit_action)
             if check is not None:
-                res.append(check)
+                res = [check]
             else:
                 res = self._node.get(tokens)
         return res
@@ -66,10 +76,11 @@ class Mode(object):
         my_len = len(my_tokens)
         other_len = len(other_tokens)
         i = 0
-
-        for i in range(0, min(my_len, other_len)):
+        while i < min(my_len, other_len):
             if my_tokens[i] != other_tokens[i]:
                 return None
+            i += 1
+
         if i == my_len:
-            return ModeResult(i, action)
-        return ModeResult(i, None)
+            return ModeResult(i, action, self)
+        return ModeResult(i, None, self)

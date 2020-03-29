@@ -1,14 +1,14 @@
-# Ava ?
-# Coucou !
+Ava ?
+Coucou !
+merci
+
 # Qui t'a créé ?
 # Qui est Maxime Barbier ?
 # Camion
 # 1 2 3
 # Que veux-tu faire ?
 # Il est quelle heure ?
-# Ouvre wikipedia
+Ouvre wikipedia
 # affiche sur internet bannane
 # affiche sur wikipédia banane au chocolat
-cherche sur wikipédia banane au chocolat
-
-
+# cherche sur wikipédia banane au chocolat

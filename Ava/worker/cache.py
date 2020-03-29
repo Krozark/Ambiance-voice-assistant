@@ -32,6 +32,11 @@ class CacheWorker(Worker, IOxThread, Cache):
                     logger.debug("Impossible to get new token")
         return results, token
 
+    def _get_action(self, result):
+        action = result.action
+        action.set_trigger_kwargs(result.kwargs)
+        return action
+
     def _process_results(self, results):
         action = None
         if results:
@@ -42,8 +47,7 @@ class CacheWorker(Worker, IOxThread, Cache):
                     result = results.pop()
                 self._tokens = self._tokens[result.length:]
                 logger.debug("Find action '%s'", result)
-                action = result.action
-                action.set_trigger_kwargs(result.kwargs)
+                action = self._get_action(result)
             except IndexError:
                 pass
         return action

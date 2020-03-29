@@ -14,8 +14,8 @@ class Config(object):
                 self._languages = value
             elif key == "api-keys":
                 self._api_keys = value
-            elif key == "logging":
-                logging.config.dictConfig(value)
+            # elif key == "logging":
+            #     logging.config.dictConfig(value)
             else:
                 self.set(key, value)
 

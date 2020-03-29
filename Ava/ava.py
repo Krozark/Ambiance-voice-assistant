@@ -23,7 +23,8 @@ from Ava.worker import (
     TokenizerSimpleWorker,
     TokenizerStemWorker,
     TokenizerLemmaWorker,
-    CacheWorker
+    CacheWorker,
+    ModeWorker
 )
 from json_include import build_json
 
@@ -41,8 +42,15 @@ class Ava(object):
         self.config = Config()
         self._workers = []
         self._factory = factory
-        self._cache = CacheWorker(self)
+        self._cache = ModeWorker(self)
+        #self._cache = CacheWorker(self)
         self._register_defaults()
+
+        from Ava.core import Mode
+        from Ava.action import TTSAction
+        self._cache.add_mode(
+            Mode(["ava"], TTSAction(self, "Oui ?"), ["merci"], TTSAction(self, "Derien"))
+        )
 
     def load_from_file(self, filename=None):
         if filename is None:
@@ -56,8 +64,8 @@ class Ava(object):
         if config_data:
             self.config.load(config_data)
 
-        self._load_pipeline(data.get("pipeline"))
         self._load_types(data.get("types"))
+        self._load_pipeline(data.get("pipeline"))
         self._load_register(data.get("register"))
 
 
