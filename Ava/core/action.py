@@ -17,10 +17,15 @@ class ActionList(list):
 
 
 class Action(object):
-    def __init__(self, *args, name=None, _python=None, **kwargs):
+    def __init__(self, ava, *args, name=None, _python=None, **kwargs):
+        self._ava = ava
         self._name = name
         self._python = self._get_python(_python)
         self._trigger_kwargs = dict()
+
+    @property
+    def ava(self):
+        return self._ava
 
     def _get_python(self, data):
         if not data:

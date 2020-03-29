@@ -11,7 +11,7 @@ from .cache import (
     CacheWorker
 )
 from .text import (
-    LoggerWorker,
+    #LoggerWorker,
     TTSWorker,
     FileReaderWorker,
     NormalizerWorker

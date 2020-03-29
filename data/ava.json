@@ -1,4 +1,50 @@
 {
+    "config": {
+        "languages": {
+            "current": "fr",
+            "fr": {
+                "recognition": "fr-FR",
+                "voice": "french-mbrola-4",
+                "nltk": "french",
+                "input-file": "data/text-francais-utf8.txt",
+                "spacy": "fr_core_news_md",
+                "wikipedia": "fr"
+            }
+        },
+        "api-keys": {
+            "google_recognition": null
+        },
+        "logging": {
+            "version": 1,
+            "disable_existing_loggers": true,
+            "formatters": {
+                "brief": {
+                    "format": "%(message)s"
+                },
+                "console_formatter": {
+                    "format": "-- %(asctime)s [%(name)s:l.%(lineno)d][%(levelname)s] - %(message)s"
+                }
+            },
+            "handlers": {
+                "console":{
+                    "level":"DEBUG",
+                    "class":"logging.StreamHandler",
+                    "formatter": "console_formatter",
+                    "stream": "ext://sys.stdout"
+                }
+            },
+            "loggers": {
+                "Ava": {
+                    "handlers": ["console"],
+                    "level": "DEBUG",
+                    "propapate": true
+                }
+            }
+        },
+        "debug": {
+            "audio_as_text": false
+        }
+    },
     "pipeline": {
         "...": "include(include/pipeline.json)"
     },

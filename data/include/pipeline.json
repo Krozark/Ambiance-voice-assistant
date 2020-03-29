@@ -1,7 +1,7 @@
 {
     "kwargs": {
         "audio_input": false,
-        "debug_audio": false,
+        "debug_audio": true,
         "debug_tts": false,
         "token_strategy": 0
     }

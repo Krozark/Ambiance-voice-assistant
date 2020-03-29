@@ -4,14 +4,16 @@ from typing import Union
 from Ava.core import (
     ActionList,
     IOxThread,
-    Cache
+    Cache,
+    Worker
 )
 
 logger = logging.getLogger(__name__)
 
 
-class CacheWorker(IOxThread, Cache):
-    def __init__(self):
+class CacheWorker(Worker, IOxThread, Cache):
+    def __init__(self, ava, **kwargs):
+        Worker.__init__(self, ava, **kwargs)
         IOxThread.__init__(self)
         Cache.__init__(self)
         self._tokens = []

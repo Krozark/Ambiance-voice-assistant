@@ -7,24 +7,31 @@ from nltk.tokenize import word_tokenize
 
 from Ava import config
 from Ava.core import (
-    IOxThread
+    IOxThread,
+    Worker
 )
 
 logger = logging.getLogger(__name__)
 
 
-class TokenizerSimpleWorker(IOxThread):
+class TokenizerSimpleWorker(Worker, IOxThread):
+    def __init__(self, ava, **kwargs):
+        Worker.__init__(self, ava, **kwargs)
+        IOxThread.__init__(self)
+
     def _process_input_data(self, text: str) -> List[str]:
         for token in word_tokenize(text):
             logger.debug("TokenizerWorker create token %s", token)
             yield token
 
 
-class TokenizerLemmaWorker(IOxThread):
-    def __init__(self):
-        super().__init__()
+class TokenizerLemmaWorker(Worker, IOxThread):
+    def __init__(self, ava, **kwargs):
+        Worker.__init__(self, ava, **kwargs)
+        IOxThread.__init__(self)
+
         logger.info("Loading spacy data. Please wait, this could take a moment...")
-        self._nlp = spacy.load(config.LANGUAGES_INFORMATION_CURRENT["spacy"])
+        self._nlp = spacy.load(ava.config.language_data["spacy"])
         logger.info("Spacy loaded")
 
     def _process_input_data(self, data: str) -> List[str]:
@@ -34,10 +41,11 @@ class TokenizerLemmaWorker(IOxThread):
             yield token.lemma_
 
 
-class TokenizerStemWorker(IOxThread):
-    def __init__(self):
-        super().__init__()
-        self._stemmer = SnowballStemmer(config.LANGUAGES_INFORMATION_CURRENT["nltk"])
+class TokenizerStemWorker(Worker, IOxThread):
+    def __init__(self, ava, **kwargs):
+        Worker.__init__(self, ava, **kwargs)
+        IOxThread.__init__(self)
+        self._stemmer = SnowballStemmer(ava.config.language_data["nltk"])
 
     def _process_input_data(self, data: str) -> str:
         words = word_tokenize(data)

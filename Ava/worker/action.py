@@ -1,12 +1,17 @@
 import logging
 from Ava.core import (
     IThread,
+    Worker
 )
 
 logger = logging.getLogger(__name__)
 
 
-class ActionWorker(IThread):
+class ActionWorker(Worker, IThread):
+    def __init__(self, ava, **kwargs):
+        Worker.__init__(self, ava, **kwargs)
+        IThread.__init__(self)
+
     def _process_input_data(self, action) -> None:
         try:
             action.trigger()

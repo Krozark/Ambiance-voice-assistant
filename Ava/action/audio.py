@@ -12,12 +12,12 @@ logger = logging.getLogger(__name__)
 
 
 class AudioFilePlayerAction(Action):
-    def __init__(self, filename, *args, **kwargs):
+    def __init__(self, ava, filename, *args, **kwargs):
+        Action.__init__(self, ava, *args, name=filename, **kwargs)
         self._filename = filename
-        super().__init__(*args, name=filename, **kwargs)
 
     def _do_trigger(self, **kwargs) -> None:
-        if config.DEBUG_AUDIO_AS_TEXT:
+        if self.ava.config.get("audio_as_text"):
             logger.info("Play file %s", self._filename)
         else:
             audio = AudioSegment.from_file(self._filename)

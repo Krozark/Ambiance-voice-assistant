@@ -9,6 +9,9 @@ from .cache import (
     Cache,
     CacheResult
 )
+from .config import (
+    Config
+)
 from .factory import (
     Factory,
     factory,
@@ -27,4 +30,7 @@ from .thread import (
 )
 from .tts import (
     TTSMixin
+)
+from .worker import (
+    Worker
 )
