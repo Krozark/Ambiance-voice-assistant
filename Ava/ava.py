@@ -24,7 +24,7 @@ from Ava.worker import (
     TokenizerStemWorker,
     TokenizerLemmaWorker,
     CacheWorker,
-    ModeWorker
+    ModWorker
 )
 from json_include import build_json
 
@@ -42,15 +42,15 @@ class Ava(object):
         self.config = Config()
         self._workers = []
         self._factory = factory
-        self._cache = ModeWorker(self)
-        #self._cache = CacheWorker(self)
+        self._cache = ModWorker(self)
+        self._cache = CacheWorker(self)
         self._register_defaults()
 
-        from Ava.core import Mode
-        from Ava.action import TTSAction
-        self._cache.add_mode(
-            Mode(["ava"], TTSAction(self, "Oui ?"), ["merci"], TTSAction(self, "Derien"))
-        )
+        # from Ava.core import Mod
+        # from Ava.action import TTSAction
+        # self._cache.add_mod(
+        #     Mod(["ava"], TTSAction(self, "Oui ?"), ["merci"], TTSAction(self, "Derien"))
+        # )
 
     def load_from_file(self, filename=None):
         if filename is None:
@@ -155,11 +155,11 @@ class Ava(object):
     def _register_defaults(self):
         # Actions
         #self._factory.register("Action:AudioFIlePlayer", "Ava.action.AudioFilePlayerAction",)
-        self._factory.register("Action:TTS", "Ava.action.TTSAction")
-        self._factory.register("Action:WebBrowser", "Ava.action.WebBrowserAction")
-        self._factory.register("Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
-        self._factory.register("Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")
-        self._factory.register("Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")
+        self._factory.register("Ava:Action:TTS", "Ava.action.TTSAction")
+        self._factory.register("Ava:Action:WebBrowser", "Ava.action.WebBrowserAction")
+        self._factory.register("Ava:Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
+        self._factory.register("Ava:Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")
+        self._factory.register("Ava:Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")
         # Workers
 
     def _load_pipeline(self, data):

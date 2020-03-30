@@ -18,7 +18,6 @@ class CacheResult(object):
         return self.action is None
 
     def __gt__(self, other):
-        from .mode import ModeResult
         """
         Sort by:
         length, deeper, len(kwargs)
@@ -28,7 +27,7 @@ class CacheResult(object):
         if other is None:
             return True
 
-        if isinstance(other, ModeResult):
+        if not isinstance(other, CacheResult):
             return False
 
         if other.length < self.length:
@@ -67,7 +66,7 @@ class _RegexNodeStruct(object):
         return r
 
 
-class _CacheNodeData(object):
+class CacheNodeData(object):
     def __init__(self):
         self._leaf = ActionList()
         self._nodes = dict()
@@ -106,7 +105,7 @@ class _CacheNodeData(object):
         else:
             token = tokens[0]
             if token not in token_regex:
-                self._nodes.setdefault(token, _CacheNodeData())
+                self._nodes.setdefault(token, CacheNodeData())
                 node = self._nodes.get(token)
             else:
                 for regex_struct in self._node_regex:
@@ -114,7 +113,7 @@ class _CacheNodeData(object):
                         node = regex_struct.node
                         break
                 else:
-                    self._node_regex.append(_RegexNodeStruct(token, token_regex[token], _CacheNodeData()))
+                    self._node_regex.append(_RegexNodeStruct(token, token_regex[token], CacheNodeData()))
                     node = self._node_regex[-1].node
             node.register(tokens[1:], action, token_regex)
 
@@ -136,7 +135,7 @@ class _CacheNodeData(object):
 
 class Cache(object):
     def __init__(self):
-        self._root = _CacheNodeData()
+        self._root = CacheNodeData()
 
     def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str]=None) -> None:
         assert isinstance(action, (Action, ActionList))

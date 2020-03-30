@@ -2,16 +2,20 @@ import logging
 from typing import List, Union, Dict
 
 from .action import ActionList, Action
-from .cache import CacheResult, Cache
+from .cache import (
+    CacheResult,
+    Cache,
+    CacheNodeData
+)
 
 logger = logging.getLogger(__name__)
 
 
-class ModeResult:
-    def __init__(self, len, action, mode):
+class ModResult:
+    def __init__(self, len, action, mod):
         self.length = len
         self.action = action
-        self.mode = mode
+        self.mod = mod
         self.kwargs = {}
 
     def if_deeper(self):
@@ -32,17 +36,13 @@ class ModeResult:
         return False
 
     def __str__(self):
-        return "length=%s, action=%s, mode=%s" % (self.length, self.action, self.mode)
+        return "length=%s, action=%s, mod=%s" % (self.length, self.action, self.mod)
 
 
-class Mode(object):
-    def __init__(self, enter_tokens, enter_action, exit_tokens, exit_action):
+class Mod(CacheNodeData):
+    def __init__(self, enter, exit):
+        CacheNodeData.__init__(self)
         self._is_active = False
-        self._enter_tokens = enter_tokens
-        self._enter_action = enter_action
-        self._exit_tokens = exit_tokens
-        self._exit_action = exit_action
-        self._node = Cache()
 
     def toggle(self, seq=None):
         self._is_active = not self._is_active
@@ -51,12 +51,11 @@ class Mode(object):
                 logger.debug("Entering in Mode %s", self._enter_tokens)
                 seq.append(self)
             else:
-                logger.debug("Exiting mode %s", self._enter_tokens)
+                logger.debug("Exiting mod %s", self._enter_tokens)
                 seq.pop()
 
-
-    def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str] = None) -> None:
-        return self._node.register(tokens, action, token_regex)
+    # def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str] = None) -> None:
+    #     return self._node.register(tokens, action, token_regex)
 
     def get(self, tokens) -> List:
         res = []
@@ -69,7 +68,7 @@ class Mode(object):
             if check is not None:
                 res = [check]
             else:
-                res = self._node.get(tokens)
+                res = super().get(tokens)
         return res
 
     def _check_tokens(self, my_tokens, other_tokens, action):
@@ -82,5 +81,5 @@ class Mode(object):
             i += 1
 
         if i == my_len:
-            return ModeResult(i, action, self)
-        return ModeResult(i, None, self)
+            return ModResult(i, action, self)
+        return ModResult(i, None, self)

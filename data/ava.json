@@ -4,7 +4,7 @@
             "current": "fr",
             "fr": {
                 "recognition": "fr-FR",
-                "voice": "french-mbrola-4",
+                "voice": "french-mbrola-1",
                 "nltk": "french",
                 "input-file": "data/text-francais-utf8.txt",
                 "spacy": "fr_core_news_md",
@@ -26,16 +26,18 @@
                 }
             },
             "handlers": {
-                "console":{
-                    "level":"DEBUG",
-                    "class":"logging.StreamHandler",
+                "console": {
+                    "level": "DEBUG",
+                    "class": "logging.StreamHandler",
                     "formatter": "console_formatter",
                     "stream": "ext://sys.stdout"
                 }
             },
             "loggers": {
                 "Ava": {
-                    "handlers": ["console"],
+                    "handlers": [
+                        "console"
+                    ],
                     "level": "DEBUG",
                     "propapate": true
                 }
@@ -49,53 +51,85 @@
         "...": "include(include/pipeline.json)"
     },
     "types": {
-      "...": "include(include/types.json)"
+        "...": "include(include/types.json)"
     },
-    "register": [
-
+    "register_mod": [
+        {
+            "tokens": "Ava",
+            "type": {
+                "type": "Ava:Mod",
+                "kwargs": {
+                    "enter": {
+                        "tokens": "Ava",
+                        "type": {
+                            "type": "Action:TTS",
+                            "args": "Oui?"
+                        }
+                    },
+                    "exit": {
+                        "tokens": "Merci",
+                        "type": {
+                            "type": "Action:TTS",
+                            "args": "Derien"
+                        }
+                    }
+                }
+            },
+            "register": [
+            ]
+        }
     ],
-    "_register": [
+    "register": [
         {
             "tokens": "Ava",
             "type": {
                 "type": "TTS",
-                "args": "Oui?"
+                "args": "Qu'est ce que je peux faire ?"
+            }
+        },
+        {
+            "tokens": "Coucou",
+            "type": {
+                "type": "TTS",
+                "args": "Salut !"
             }
         },
         {
             "tokens": "Merci",
             "type": {
-                "type": "Action:TTS",
-                "args": "Derien."
+                "type": "Ava:Action:TTS",
+                "args": "C'est un plaisir."
             }
-        },
+        }
+    ],
+    "_register": [
         {
             "tokens": {
                 "tokens": "Comment tu t'appelles"
             },
             "type": {
-                "type": "Action:TTS",
+                "type": "Ava:Action:TTS",
                 "args": "Mon nom est Ambiance voice assistant, ou Ava."
             }
         },
         {
             "tokens": "Qui t'a créé",
             "type": {
-                "type": "Action:TTS",
+                "type": "Ava:Action:TTS",
                 "args": "Maxime Barbier"
             }
         },
         {
             "tokens": "Qui est maxime barbier",
             "type": {
-                "type": "Action:TTS",
+                "type": "Ava:Action:TTS",
                 "args": "Mon créateur."
             }
         },
         {
             "tokens": "Il est quelle heure",
             "type": {
-                "type": "Action:TTS",
+                "type": "Ava:Action:TTS",
                 "args": "Il est {now.tm_hour} heure {now.tm_min} minutes{suffix}.",
                 "kwargs": {
                     "_python": [
@@ -118,7 +152,7 @@
                     }
                 }
             },
-            "type": "Action:WebBrowserSearch"
+            "type": "Ava:Action:WebBrowserSearch"
         },
         {
             "tokens": {
@@ -130,7 +164,7 @@
                     }
                 }
             },
-            "type": "Action:WikipediaSearch"
+            "type": "Ava:Action:WikipediaSearch"
         },
         {
             "tokens": {
@@ -142,7 +176,7 @@
                     }
                 }
             },
-            "type": "Action:WikipediaSearchTTS"
+            "type": "Ava:Action:WikipediaSearchTTS"
         },
         {
             "tokens": {
@@ -154,7 +188,7 @@
                     }
                 }
             },
-            "type": "Action:WikipediaSearchTTS"
+            "type": "Ava:Action:WikipediaSearchTTS"
         }
     ]
 }
