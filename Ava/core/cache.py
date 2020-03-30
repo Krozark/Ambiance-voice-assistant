@@ -138,9 +138,8 @@ class Cache(object):
         self._root = CacheNodeData()
 
     def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str]=None) -> None:
-        assert isinstance(action, (Action, ActionList))
         token_regex = token_regex or dict()
-        logger.debug("Register %s to action '%s', token_regex=%s", tokens, action, token_regex)
+        logger.debug("Register tokens '%s' to '%s', token_regex=%s", tokens, action, token_regex)
         self._root.register(tokens, action, token_regex)
 
     def get(self, tokens) -> List[CacheResult]:

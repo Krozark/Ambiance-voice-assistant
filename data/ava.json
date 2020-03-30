@@ -53,7 +53,7 @@
     "types": {
         "...": "include(include/types.json)"
     },
-    "register_mod": [
+    "register": [
         {
             "tokens": "Ava",
             "type": {
@@ -62,14 +62,14 @@
                     "enter": {
                         "tokens": "Ava",
                         "type": {
-                            "type": "Action:TTS",
+                            "type": "Ava:Action:TTS",
                             "args": "Oui?"
                         }
                     },
-                    "exit": {
+                    "exit":  {
                         "tokens": "Merci",
                         "type": {
-                            "type": "Action:TTS",
+                            "type": "Ava:Action:TTS",
                             "args": "Derien"
                         }
                     }
@@ -79,7 +79,7 @@
             ]
         }
     ],
-    "register": [
+    "register2": [
         {
             "tokens": "Ava",
             "type": {

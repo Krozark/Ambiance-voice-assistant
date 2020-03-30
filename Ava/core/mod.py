@@ -7,6 +7,7 @@ from .cache import (
     Cache,
     CacheNodeData
 )
+from .utils import get_register
 
 logger = logging.getLogger(__name__)
 
@@ -40,9 +41,18 @@ class ModResult:
 
 
 class Mod(CacheNodeData):
-    def __init__(self, enter, exit):
+    def __init__(self, ava, enter, exit):
         CacheNodeData.__init__(self)
         self._is_active = False
+        self.regex_kwargs = dict()
+
+        if not isinstance(enter, (list, tuple)):
+            enter = [enter]
+        enter_action, enter_tokens, enter_regex, enter_data = get_register(ava, enter)[0]
+
+        if not isinstance(exit, (list, tuple)):
+            exit = [exit]
+        #exit_action, exit_tokens, exit_regex, exit_data = get_register(ava, [exit])[0]
 
     def toggle(self, seq=None):
         self._is_active = not self._is_active
@@ -57,8 +67,9 @@ class Mod(CacheNodeData):
     # def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str] = None) -> None:
     #     return self._node.register(tokens, action, token_regex)
 
-    def get(self, tokens) -> List:
-        res = []
+    def get(self, tokens, depth=0, kwargs=None, results=None) -> List:
+        results = results or []
+        kwargs = kwargs or {}
         if self._is_active is False:
             check = self._check_tokens(self._enter_tokens, tokens, self._enter_action)
             if check is not None:
@@ -69,7 +80,7 @@ class Mod(CacheNodeData):
                 res = [check]
             else:
                 res = super().get(tokens)
-        return res
+        return results
 
     def _check_tokens(self, my_tokens, other_tokens, action):
         my_len = len(my_tokens)
@@ -83,3 +94,8 @@ class Mod(CacheNodeData):
         if i == my_len:
             return ModResult(i, action, self)
         return ModResult(i, None, self)
+
+    def __str__(self, depth=0):
+        r = "  " * depth + "[Mod]\n"
+        r += super().__str__(depth=depth + 1)
+        return r
