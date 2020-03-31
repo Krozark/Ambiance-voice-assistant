@@ -1,6 +1,6 @@
 Ava ?
 Coucou !
-merci
+# merci
 
 # Qui t'a créé ?
 # Qui est Maxime Barbier ?

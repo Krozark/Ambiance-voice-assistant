@@ -100,22 +100,48 @@ class CacheNodeData(object):
             results.append(CacheResult(depth, self._leaf, kwargs))
 
     def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str]) -> None:
+        logger.debug("Register %s", tokens)
         if not tokens:
+            assert isinstance(action, (ActionList, Action))
             self._leaf.append(action)
         else:
             token = tokens[0]
+            replace = False
+            if len(tokens) == 1 and isinstance(action, CacheNodeData):
+                replace = True
+
             if token not in token_regex:
-                self._nodes.setdefault(token, CacheNodeData())
+                if replace:
+                    node = self._nodes.get(token)
+                    action.merge(node)
+                    self._nodes[token] = action
+                else:
+                    self._nodes.setdefault(token, CacheNodeData())
                 node = self._nodes.get(token)
             else:
                 for regex_struct in self._node_regex:
                     if regex_struct.name == token:
                         node = regex_struct.node
+                        if replace:
+                            action.merge(node)
+                            regex_struct.node = action
+                            node = action
                         break
                 else:
-                    self._node_regex.append(_RegexNodeStruct(token, token_regex[token], CacheNodeData()))
+                    new = action if replace else CacheNodeData()
+                    self._node_regex.append(_RegexNodeStruct(token, token_regex[token], new))
                     node = self._node_regex[-1].node
-            node.register(tokens[1:], action, token_regex)
+
+            if not replace:
+                node.register(tokens[1:], action, token_regex)
+
+    def merge(self, other):
+        if other is None:
+            return
+        assert isinstance(other, CacheNodeData)
+        self._leaf += other._leaf
+        self._nodes.update(other._nodes)
+        self._node_regex += other._node_regex
 
     def __str__(self, depth=0):
         r = ""
@@ -137,7 +163,8 @@ class Cache(object):
     def __init__(self):
         self._root = CacheNodeData()
 
-    def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str]=None) -> None:
+    def register(self, tokens: List[str], action: Union[Action, ActionList, CacheNodeData], token_regex: Dict[str, str]=None) -> None:
+        assert isinstance(action, (Action, ActionList, CacheNodeData))
         token_regex = token_regex or dict()
         logger.debug("Register tokens '%s' to '%s', token_regex=%s", tokens, action, token_regex)
         self._root.register(tokens, action, token_regex)

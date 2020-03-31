@@ -51,3 +51,12 @@ class Action(WithAva):
         if self._name:
             r += " ("+ self._name + ")"
         return r
+
+
+class CallbackAction(Action):
+    def __init__(self, ava, callback, *args, **kwargs):
+        Action.__init__(self, ava, *args, **kwargs)
+        self._func = callback
+
+    def _do_trigger(self, **kwargs) -> None:
+        self._func(self)

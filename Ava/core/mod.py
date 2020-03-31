@@ -1,22 +1,24 @@
 import logging
 from typing import List, Union, Dict
 
-from .action import ActionList, Action
+from .action import ActionList, Action, CallbackAction
 from .cache import (
     CacheResult,
     Cache,
     CacheNodeData
 )
-from .utils import get_register
+from .utils import (
+    get_register,
+    WithAva
+)
 
 logger = logging.getLogger(__name__)
 
 
 class ModResult:
-    def __init__(self, len, action, mod):
+    def __init__(self, len, action):
         self.length = len
         self.action = action
-        self.mod = mod
         self.kwargs = {}
 
     def if_deeper(self):
@@ -37,65 +39,52 @@ class ModResult:
         return False
 
     def __str__(self):
-        return "length=%s, action=%s, mod=%s" % (self.length, self.action, self.mod)
+        return "length=%s, action=%s" % (self.length, self.action)
 
 
-class Mod(CacheNodeData):
+class Mod(CacheNodeData, WithAva):
     def __init__(self, ava, enter, exit):
         CacheNodeData.__init__(self)
+        WithAva.__init__(self, ava)
         self._is_active = False
         self.regex_kwargs = dict()
+        self._non_active_nodes = CacheNodeData()
 
         if not isinstance(enter, (list, tuple)):
             enter = [enter]
         enter_action, enter_tokens, enter_regex, enter_data = get_register(ava, enter)[0]
+        enter_action = ActionList([enter_action, CallbackAction(ava, self.activate, name="Activating mod")])
+        self._non_active_nodes.register(enter_tokens, enter_action, token_regex=enter_regex)
 
         if not isinstance(exit, (list, tuple)):
             exit = [exit]
-        #exit_action, exit_tokens, exit_regex, exit_data = get_register(ava, [exit])[0]
+        exit_action, exit_tokens, exit_regex, exit_data = get_register(ava, exit)[0]
+        exit_action = ActionList([exit_action, CallbackAction(ava, self.deactivate, name="Deactivating mod")])
+        self.register(exit_tokens, exit_action, token_regex=exit_regex)
 
-    def toggle(self, seq=None):
-        self._is_active = not self._is_active
-        if seq:
-            if self._is_active:
-                logger.debug("Entering in Mode %s", self._enter_tokens)
-                seq.append(self)
-            else:
-                logger.debug("Exiting mod %s", self._enter_tokens)
-                seq.pop()
+    def activate(self, action):
+        logger.debug("Activating mod %s", self)
+        self.regex_kwargs = action._trigger_kwargs.copy()
+        self._is_active = True
+        self.ava._cache._mod_stack.append(self)
 
-    # def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str] = None) -> None:
-    #     return self._node.register(tokens, action, token_regex)
+    def deactivate(self, action):
+        logger.debug("Deactivating mod %s", self)
+        self._is_active = False
+        self.ava._cache._mod_stack.pop()
 
     def get(self, tokens, depth=0, kwargs=None, results=None) -> List:
-        results = results or []
-        kwargs = kwargs or {}
-        if self._is_active is False:
-            check = self._check_tokens(self._enter_tokens, tokens, self._enter_action)
-            if check is not None:
-                res = [check]
+        if self._is_active:
+            assert results is None and kwargs is None
+            results = []
+            super().get(tokens, depth, self.regex_kwargs.copy(), results)
+            return results
         else:
-            check = self._check_tokens(self._exit_tokens, tokens, self._exit_action)
-            if check is not None:
-                res = [check]
-            else:
-                res = super().get(tokens)
-        return results
-
-    def _check_tokens(self, my_tokens, other_tokens, action):
-        my_len = len(my_tokens)
-        other_len = len(other_tokens)
-        i = 0
-        while i < min(my_len, other_len):
-            if my_tokens[i] != other_tokens[i]:
-                return None
-            i += 1
-
-        if i == my_len:
-            return ModResult(i, action, self)
-        return ModResult(i, None, self)
+            assert kwargs is not None and results is not None
+            self._non_active_nodes.get(tokens, depth, kwargs, results)
 
     def __str__(self, depth=0):
-        r = "  " * depth + "[Mod]\n"
+        r = "  " * depth + "[Mod]"
+        r += self._non_active_nodes.__str__(depth=depth + 1) + "\n"
         r += super().__str__(depth=depth + 1)
         return r

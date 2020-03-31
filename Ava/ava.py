@@ -44,8 +44,8 @@ class Ava(object):
         self.config = Config()
         self._workers = []
         self._factory = factory
-        #self._cache = ModWorker(self)
-        self._cache = CacheWorker(self)
+        self._cache = ModWorker(self)
+        #self._cache = CacheWorker(self)
         self._register_defaults()
         self.tokenizer = word_tokenize
 

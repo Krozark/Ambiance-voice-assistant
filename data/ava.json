@@ -43,9 +43,7 @@
                 }
             }
         },
-        "debug": {
-            "audio_as_text": false
-        }
+        "audio_as_text": false
     },
     "pipeline": {
         "...": "include(include/pipeline.json)"
@@ -55,12 +53,12 @@
     },
     "register": [
         {
-            "tokens": "Ava",
+            "tokens": "test",
             "type": {
                 "type": "Ava:Mod",
                 "kwargs": {
                     "enter": {
-                        "tokens": "Ava",
+                        "tokens": "",
                         "type": {
                             "type": "Ava:Action:TTS",
                             "args": "Oui?"
