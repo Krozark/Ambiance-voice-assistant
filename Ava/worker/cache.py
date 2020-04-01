@@ -1,5 +1,4 @@
 import logging
-import collections
 from typing import Union
 
 from Ava.core import (

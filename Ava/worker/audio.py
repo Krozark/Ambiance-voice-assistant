@@ -6,13 +6,12 @@ import speech_recognition
 from pydub import AudioSegment
 from pydub.playback import play
 
-from Ava import config
 from Ava.core import (
     IOThread,
     OThread,
     IThread,
     RecognizerBase,
-Worker
+    Worker
 )
 
 logger = logging.getLogger(__name__)

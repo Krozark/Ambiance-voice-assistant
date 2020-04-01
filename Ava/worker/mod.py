@@ -1,11 +1,5 @@
 import logging
 
-from Ava.core import (
-    ActionList
-)
-from Ava.core.mod import (
-    ModResult
-)
 from Ava.worker.cache import CacheWorker
 
 logger = logging.getLogger(__name__)
@@ -22,10 +16,3 @@ class ModWorker(CacheWorker):
         else:
             results = super().get(tokens)
         return results
-
-    # def _get_action(self, result):
-    #     action = result.action
-    #     action.set_trigger_kwargs(result.kwargs)
-    #     if isinstance(result, ModResult):
-    #         result.mod.toggle(self._mod_stack)
-    #     return action

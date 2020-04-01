@@ -1,4 +1,5 @@
 import logging
+
 from .utils import WithAva
 
 logger = logging.getLogger(__name__)
@@ -35,21 +36,20 @@ class Action(WithAva):
         raise NotImplemented()
 
     def set_trigger_kwargs(self, kwargs) -> None:
-        self._trigger_kwargs = {key.replace("$", ""): " ".join(value) for key, value in kwargs.items()}
+        self._trigger_kwargs = kwargs.copy()
 
     def trigger(self) -> None:
+        kwargs = {key.replace("$", ""): " ".join(value) for key, value in self._trigger_kwargs.items()}
         if self._python:
-            g = {}
-            l = self._trigger_kwargs.copy()
-            exec(self._python, g, l)
-            self._trigger_kwargs.update(l)
-        logger.debug("Trigger Action '%s' with kwargs=%s", self, self._trigger_kwargs)
-        self._do_trigger(**self._trigger_kwargs)
+            glob = {}
+            exec(self._python, glob, kwargs)
+        logger.debug("Trigger Action '%s' with kwargs=%s", self, kwargs)
+        self._do_trigger(**kwargs)
 
     def __str__(self):
         r = self.__class__.__name__
         if self._name:
-            r += " ("+ self._name + ")"
+            r += " (" + self._name + ")"
         return r
 
 

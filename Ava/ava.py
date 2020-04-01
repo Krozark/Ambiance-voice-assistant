@@ -5,6 +5,7 @@ import os
 import time
 
 from nltk.tokenize import word_tokenize
+from functools import partial
 
 from Ava import config
 from Ava.core import (
@@ -47,13 +48,15 @@ class Ava(object):
         self._cache = ModWorker(self)
         #self._cache = CacheWorker(self)
         self._register_defaults()
-        self.tokenizer = word_tokenize
 
         # from Ava.core import Mod
         # from Ava.action import TTSAction
         # self._cache.add_mod(
         #     Mod(["ava"], TTSAction(self, "Oui ?"), ["merci"], TTSAction(self, "Derien"))
         # )
+
+    def tokenize(self, text):
+        return word_tokenize(text, language=self.config.language_data["nltk"])
 
     def load_from_file(self, filename=None):
         if filename is None:

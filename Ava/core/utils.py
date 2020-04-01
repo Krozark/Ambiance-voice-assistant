@@ -11,6 +11,7 @@ class WithAva(object):
     def ava(self):
         return self._ava
 
+
 def get_register(ava, data_list):
     res = []
     for data in data_list:
@@ -34,11 +35,11 @@ def get_register(ava, data_list):
         tokens_tokens = data["tokens"]
         token_regex = dict()
         if isinstance(tokens_tokens, dict):
-            token_regex = tokens_tokens.get("regex")
+            token_regex = tokens_tokens.get("regex") or token_regex
             tokens_tokens = tokens_tokens.get("tokens", {})
         # normalize tokens
         if isinstance(tokens_tokens, str):
-            tokens_tokens = ava.tokenizer(tokens_tokens)
+            tokens_tokens = ava.tokenize(tokens_tokens)
         if isinstance(tokens_tokens, (tuple, list)):
             tokens_tokens = [x.lower() for x in tokens_tokens]
 
@@ -49,8 +50,8 @@ def load_register(ava, data_list, target):
     for obj, tokens, token_regex, data in get_register(ava, data_list):
         logger.debug("register to '%s' => %s", target, obj)
         # recurse if needed
-        for other in data.get("register", []):
+        other = data.get("register", [])
+        if other:
             load_register(ava, other, obj)
-
         # register
         target.register(tokens, obj, token_regex=token_regex)

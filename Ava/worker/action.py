@@ -1,4 +1,5 @@
 import logging
+
 from Ava.core import (
     IThread,
     Worker

@@ -83,6 +83,7 @@ class CacheNodeData(object):
                 self._nodes[token].get(tokens[1:], depth + 1, kwargs, results)
             except KeyError:
                 pass
+
             for regex_struct in self._node_regex:
                 if regex_struct.match(token):
                     copy = kwargs.copy()
@@ -100,7 +101,6 @@ class CacheNodeData(object):
             results.append(CacheResult(depth, self._leaf, kwargs))
 
     def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str]) -> None:
-        logger.debug("Register %s", tokens)
         if not tokens:
             assert isinstance(action, (ActionList, Action))
             self._leaf.append(action)
@@ -171,7 +171,8 @@ class Cache(object):
 
     def get(self, tokens) -> List[CacheResult]:
         results = []
-        self._root.get(tokens, 0,  defaultdict(list), results)
+        kwargs = defaultdict(list)
+        self._root.get(tokens, 0,  kwargs, results)
         results = sorted(results)
         logger.debug("Found %s results for tokens %s => %s", len(results), tokens, ["<%s>" % x for x in results])
         return results

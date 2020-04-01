@@ -1,10 +1,10 @@
 import logging
-from typing import List, Union, Dict
+from collections import defaultdict
+from typing import List
 
-from .action import ActionList, Action, CallbackAction
+from .action import ActionList, CallbackAction
 from .cache import (
     CacheResult,
-    Cache,
     CacheNodeData
 )
 from .utils import (
@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class ModResult:
-    def __init__(self, len, action):
-        self.length = len
+    def __init__(self, length, action):
+        self.length = length
         self.action = action
         self.kwargs = {}
 
@@ -47,7 +47,7 @@ class Mod(CacheNodeData, WithAva):
         CacheNodeData.__init__(self)
         WithAva.__init__(self, ava)
         self._is_active = False
-        self.regex_kwargs = dict()
+        self.regex_kwargs = defaultdict(list)
         self._non_active_nodes = CacheNodeData()
 
         if not isinstance(enter, (list, tuple)):
@@ -63,15 +63,17 @@ class Mod(CacheNodeData, WithAva):
         self.register(exit_tokens, exit_action, token_regex=exit_regex)
 
     def activate(self, action):
-        logger.debug("Activating mod %s", self)
-        self.regex_kwargs = action._trigger_kwargs.copy()
-        self._is_active = True
-        self.ava._cache._mod_stack.append(self)
+        if (self.ava._cache._mod_stack and self.ava._cache._mod_stack[-1] is not self) or not self.ava._cache._mod_stack:
+            self.regex_kwargs = action._trigger_kwargs.copy()
+            self._is_active = True
+            logger.debug("Activating mod %s with kwargs=%s", self, self.regex_kwargs)
+            self.ava._cache._mod_stack.append(self)
 
     def deactivate(self, action):
-        logger.debug("Deactivating mod %s", self)
-        self._is_active = False
-        self.ava._cache._mod_stack.pop()
+        if self.ava._cache._mod_stack[-1] is self:
+            logger.debug("Deactivating mod %s", self)
+            self._is_active = False
+            self.ava._cache._mod_stack.pop()
 
     def get(self, tokens, depth=0, kwargs=None, results=None) -> List:
         if self._is_active:

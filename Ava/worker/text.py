@@ -3,7 +3,6 @@ import time
 
 import nltk
 
-from Ava import config
 from Ava.core import (
     IThread,
     OThread,
