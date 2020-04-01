@@ -2,15 +2,13 @@ import logging
 
 from espeakng import ESpeakNG
 
-from Ava import config
-
 logger = logging.getLogger(__name__)
 
 
 def _get_engine():
     engine = ESpeakNG()
     #engine.pitch = 32
-    engine.speed = 135
+    engine.speed = 125
     return engine
 
 

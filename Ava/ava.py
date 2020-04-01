@@ -5,12 +5,14 @@ import os
 import time
 
 from nltk.tokenize import word_tokenize
+from functools import partial
 
 from Ava import config
 from Ava.core import (
     factory as global_factory,
     Config
 )
+from Ava.core.utils import load_register
 from Ava.worker import (
     MicrophoneWorker,
     AudioToFileWorker,
@@ -24,7 +26,7 @@ from Ava.worker import (
     TokenizerStemWorker,
     TokenizerLemmaWorker,
     CacheWorker,
-    ModeWorker
+    ModWorker
 )
 from json_include import build_json
 
@@ -32,6 +34,7 @@ logger = logging.getLogger(__name__)
 
 
 class Ava(object):
+
     class TokenStrategy(enum.Enum):
         simple = 1
         lemma = 2
@@ -42,15 +45,18 @@ class Ava(object):
         self.config = Config()
         self._workers = []
         self._factory = factory
-        self._cache = ModeWorker(self)
+        self._cache = ModWorker(self)
         #self._cache = CacheWorker(self)
         self._register_defaults()
 
-        from Ava.core import Mode
-        from Ava.action import TTSAction
-        self._cache.add_mode(
-            Mode(["ava"], TTSAction(self, "Oui ?"), ["merci"], TTSAction(self, "Derien"))
-        )
+        # from Ava.core import Mod
+        # from Ava.action import TTSAction
+        # self._cache.add_mod(
+        #     Mod(["ava"], TTSAction(self, "Oui ?"), ["merci"], TTSAction(self, "Derien"))
+        # )
+
+    def tokenize(self, text):
+        return word_tokenize(text, language=self.config.language_data["nltk"])
 
     def load_from_file(self, filename=None):
         if filename is None:
@@ -153,13 +159,15 @@ class Ava(object):
         self._cache >> action
 
     def _register_defaults(self):
+        # Mod
+        self._factory.register("Ava:Mod", "Ava.core.mod.Mod")
         # Actions
         #self._factory.register("Action:AudioFIlePlayer", "Ava.action.AudioFilePlayerAction",)
-        self._factory.register("Action:TTS", "Ava.action.TTSAction")
-        self._factory.register("Action:WebBrowser", "Ava.action.WebBrowserAction")
-        self._factory.register("Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
-        self._factory.register("Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")
-        self._factory.register("Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")
+        self._factory.register("Ava:Action:TTS", "Ava.action.TTSAction")
+        self._factory.register("Ava:Action:WebBrowser", "Ava.action.WebBrowserAction")
+        self._factory.register("Ava:Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
+        self._factory.register("Ava:Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")
+        self._factory.register("Ava:Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")
         # Workers
 
     def _load_pipeline(self, data):
@@ -185,37 +193,9 @@ class Ava(object):
             self._factory.register(alias, t, args, kwargs)
 
     def _load_register(self, data_list):
-        for data in data_list:
-            logger.debug("register data %s", data)
-            # get object
-            type_type = data["type"]
-            type_args = []
-            type_kwargs = None
-            if isinstance(type_type, dict):
-                type_args = type_type.get("args")
-                if type_args is not None and not isinstance(type_args, (list, tuple)):
-                    type_args = [type_args]
-                type_kwargs = type_type.get("kwargs")
-                type_type = type_type["type"]
-            type_args = [self, *type_args]
-            obj = self._factory.construct(type_type, args=type_args, kwargs=type_kwargs)
+        load_register(self, data_list, self)
 
-            # tokens
-            tokens_tokens = data["tokens"]
-            token_regex = dict()
-            if isinstance(tokens_tokens, dict):
-                token_regex = tokens_tokens.get("regex")
-                tokens_tokens = tokens_tokens.get("tokens", {})
-
-            if isinstance(tokens_tokens, str):
-                tokens_tokens = word_tokenize(tokens_tokens)
-
-            if isinstance(tokens_tokens, (tuple, list)):
-                tokens_tokens = [x.lower() for x in tokens_tokens]
-
-            self.register(tokens_tokens, obj, token_regex=token_regex)
-
-    def __str__(self):
+    def dump(self):
         r = "[Ava]\n"
         r += "[Factory]\n%s\n" % ("\n".join(["  " + x for x in self._factory.__str__().split("\n")]))
         r += self._cache.__str__()

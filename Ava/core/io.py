@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 QueueClass = Queue
 EmptyException = Empty
 
+
 class DuplicateOutputQueue(object):
     """
     Class tha internally manage a pool of Queue(). Each time an item is put()

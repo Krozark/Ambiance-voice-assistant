@@ -56,7 +56,7 @@ class TokenizerStemWorker(Worker, IOxThread):
 
 #import spacy
 #
-#nlp = spacy.load("en_core_web_md")  # make sure to use larger model!
+#nlp = spacy.load("en_core_web_md")  # make sure to use larger modl!
 #tokens = nlp("dog cat banana")
 #
 #for token1 in tokens:

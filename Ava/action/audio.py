@@ -3,7 +3,6 @@ import logging
 from pydub import AudioSegment
 from pydub.playback import play
 
-from Ava import config
 from Ava.core import (
     Action
 )

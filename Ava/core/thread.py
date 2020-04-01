@@ -1,5 +1,6 @@
-from threading import Thread as _Thread
 import logging
+from threading import Thread as _Thread
+
 from .io import (
     WithOutput,
     WithInput,

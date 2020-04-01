@@ -43,7 +43,7 @@ class Factory(object):
         )
 
     def get(self, key):
-        return self._mapping.get(key)
+        return self._mapping[key]
 
     def construct(self, key, args=None, kwargs=None):
         args = args or tuple()

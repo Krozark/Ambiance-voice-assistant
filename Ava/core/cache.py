@@ -18,7 +18,6 @@ class CacheResult(object):
         return self.action is None
 
     def __gt__(self, other):
-        from .mode import ModeResult
         """
         Sort by:
         length, deeper, len(kwargs)
@@ -28,7 +27,7 @@ class CacheResult(object):
         if other is None:
             return True
 
-        if isinstance(other, ModeResult):
+        if not isinstance(other, CacheResult):
             return False
 
         if other.length < self.length:
@@ -67,7 +66,7 @@ class _RegexNodeStruct(object):
         return r
 
 
-class _CacheNodeData(object):
+class CacheNodeData(object):
     def __init__(self):
         self._leaf = ActionList()
         self._nodes = dict()
@@ -84,6 +83,7 @@ class _CacheNodeData(object):
                 self._nodes[token].get(tokens[1:], depth + 1, kwargs, results)
             except KeyError:
                 pass
+
             for regex_struct in self._node_regex:
                 if regex_struct.match(token):
                     copy = kwargs.copy()
@@ -102,21 +102,46 @@ class _CacheNodeData(object):
 
     def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str]) -> None:
         if not tokens:
+            assert isinstance(action, (ActionList, Action))
             self._leaf.append(action)
         else:
             token = tokens[0]
+            replace = False
+            if len(tokens) == 1 and isinstance(action, CacheNodeData):
+                replace = True
+
             if token not in token_regex:
-                self._nodes.setdefault(token, _CacheNodeData())
+                if replace:
+                    node = self._nodes.get(token)
+                    action.merge(node)
+                    self._nodes[token] = action
+                else:
+                    self._nodes.setdefault(token, CacheNodeData())
                 node = self._nodes.get(token)
             else:
                 for regex_struct in self._node_regex:
                     if regex_struct.name == token:
                         node = regex_struct.node
+                        if replace:
+                            action.merge(node)
+                            regex_struct.node = action
+                            node = action
                         break
                 else:
-                    self._node_regex.append(_RegexNodeStruct(token, token_regex[token], _CacheNodeData()))
+                    new = action if replace else CacheNodeData()
+                    self._node_regex.append(_RegexNodeStruct(token, token_regex[token], new))
                     node = self._node_regex[-1].node
-            node.register(tokens[1:], action, token_regex)
+
+            if not replace:
+                node.register(tokens[1:], action, token_regex)
+
+    def merge(self, other):
+        if other is None:
+            return
+        assert isinstance(other, CacheNodeData)
+        self._leaf += other._leaf
+        self._nodes.update(other._nodes)
+        self._node_regex += other._node_regex
 
     def __str__(self, depth=0):
         r = ""
@@ -136,17 +161,18 @@ class _CacheNodeData(object):
 
 class Cache(object):
     def __init__(self):
-        self._root = _CacheNodeData()
+        self._root = CacheNodeData()
 
-    def register(self, tokens: List[str], action: Union[Action, ActionList], token_regex: Dict[str, str]=None) -> None:
-        assert isinstance(action, (Action, ActionList))
+    def register(self, tokens: List[str], action: Union[Action, ActionList, CacheNodeData], token_regex: Dict[str, str]=None) -> None:
+        assert isinstance(action, (Action, ActionList, CacheNodeData))
         token_regex = token_regex or dict()
-        logger.debug("Register %s to action '%s', token_regex=%s", tokens, action, token_regex)
+        logger.debug("Register tokens '%s' to '%s', token_regex=%s", tokens, action, token_regex)
         self._root.register(tokens, action, token_regex)
 
     def get(self, tokens) -> List[CacheResult]:
         results = []
-        self._root.get(tokens, 0,  defaultdict(list), results)
+        kwargs = defaultdict(list)
+        self._root.get(tokens, 0,  kwargs, results)
         results = sorted(results)
         logger.debug("Found %s results for tokens %s => %s", len(results), tokens, ["<%s>" % x for x in results])
         return results

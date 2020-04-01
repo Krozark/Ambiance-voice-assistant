@@ -10,6 +10,7 @@ languages by changing LANGUAGE and LANGUAGES_INFORMATION variables to conf.py
 ```
 pip install ambiance-voice-assistant
 python -m spacy download fr_core_news_md
+apt install mbrola-fr1
 ```
 
 ## Fom source

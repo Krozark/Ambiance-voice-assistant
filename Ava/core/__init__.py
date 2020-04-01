@@ -21,6 +21,9 @@ from .io import (
     WithOutput,
     WithInputOutput
 )
+from .mod import (
+    Mod
+)
 from .thread import (
     Thread,
     IThread,
@@ -33,7 +36,4 @@ from .tts import (
 )
 from .worker import (
     Worker
-)
-from .mode import (
-    Mode
 )

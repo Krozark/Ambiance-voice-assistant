@@ -1,6 +1,6 @@
 import logging
 
-from .common import WithAva
+from .utils import WithAva
 
 logger = logging.getLogger(__name__)
 

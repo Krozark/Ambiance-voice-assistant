@@ -4,7 +4,7 @@
             "current": "fr",
             "fr": {
                 "recognition": "fr-FR",
-                "voice": "french-mbrola-4",
+                "voice": "french-mbrola-1",
                 "nltk": "french",
                 "input-file": "data/text-francais-utf8.txt",
                 "spacy": "fr_core_news_md",
@@ -14,7 +14,7 @@
         "api-keys": {
             "google_recognition": null
         },
-        "logging": {
+        "_logging": {
             "version": 1,
             "disable_existing_loggers": true,
             "formatters": {
@@ -26,135 +26,144 @@
                 }
             },
             "handlers": {
-                "console":{
-                    "level":"DEBUG",
-                    "class":"logging.StreamHandler",
+                "console": {
+                    "level": "DEBUG",
+                    "class": "logging.StreamHandler",
                     "formatter": "console_formatter",
                     "stream": "ext://sys.stdout"
                 }
             },
             "loggers": {
                 "Ava": {
-                    "handlers": ["console"],
+                    "handlers": [
+                        "console"
+                    ],
                     "level": "DEBUG",
                     "propapate": true
                 }
             }
         },
-        "debug": {
-            "audio_as_text": false
-        }
+        "audio_as_text": false
     },
     "pipeline": {
         "...": "include(include/pipeline.json)"
     },
     "types": {
-      "...": "include(include/types.json)"
+        "...": "include(include/types.json)"
     },
     "register": [
-
-    ],
-    "_register": [
         {
             "tokens": "Ava",
             "type": {
-                "type": "TTS",
-                "args": "Oui?"
-            }
-        },
-        {
-            "tokens": "Merci",
-            "type": {
-                "type": "Action:TTS",
-                "args": "Derien."
-            }
-        },
-        {
-            "tokens": {
-                "tokens": "Comment tu t'appelles"
-            },
-            "type": {
-                "type": "Action:TTS",
-                "args": "Mon nom est Ambiance voice assistant, ou Ava."
-            }
-        },
-        {
-            "tokens": "Qui t'a créé",
-            "type": {
-                "type": "Action:TTS",
-                "args": "Maxime Barbier"
-            }
-        },
-        {
-            "tokens": "Qui est maxime barbier",
-            "type": {
-                "type": "Action:TTS",
-                "args": "Mon créateur."
-            }
-        },
-        {
-            "tokens": "Il est quelle heure",
-            "type": {
-                "type": "Action:TTS",
-                "args": "Il est {now.tm_hour} heure {now.tm_min} minutes{suffix}.",
+                "type": "Ava:Mod",
                 "kwargs": {
-                    "_python": [
-                        "import time",
-                        "now = time.localtime()",
-                        "suffix=\"\"",
-                        "if now.tm_hour >= 18 and now.tm_hour < 21:",
-                        " suffix=\", l'heure de l'appero!\""
-                    ]
-                }
-            }
-        },
-        {
-            "tokens": {
-                "tokens": ["affiche", "sur", "internet", "$search"],
-                "regex": {
-                    "$search": {
-                        "regex":"\\w+",
-                        "multiple": true
+                    "enter": {
+                        "tokens": "",
+                        "type": {
+                            "type": "Ava:Action:TTS",
+                            "args": "Oui?"
+                        }
+                    },
+                    "exit":  {
+                        "tokens": "Merci",
+                        "type": {
+                            "type": "Ava:Action:TTS",
+                            "args": "Derien."
+                        }
                     }
                 }
             },
-            "type": "Action:WebBrowserSearch"
-        },
-        {
-            "tokens": {
-                "tokens": ["affiche", "sur", "wikipedia", "$search"],
-                "regex": {
-                    "$search": {
-                        "regex":"\\w+",
-                        "multiple": true
-                    }
+            "register": [
+                {
+                    "tokens": {
+                        "tokens": ["cherche", "sur", "wikipédia", "$search"],
+                        "regex": {
+                            "$search": {
+                                "regex":"\\w+",
+                                "multiple": true
+                            }
+                        }
+                    },
+                    "type": "Ava:Action:WikipediaSearchTTS"
                 }
-            },
-            "type": "Action:WikipediaSearch"
-        },
-        {
-            "tokens": {
-                "tokens": ["cherche", "sur", "wikipédia", "$search"],
-                "regex": {
-                    "$search": {
-                        "regex":"\\w+",
-                        "multiple": true
+            ],
+            "_register": [
+                {
+                    "tokens": {
+                        "tokens": "Comment tu t'appelles"
+                    },
+                    "type": {
+                        "type": "Ava:Action:TTS",
+                        "args": "Mon nom est Ambiance voice assistant, ou Ava."
                     }
-                }
-            },
-            "type": "Action:WikipediaSearchTTS"
-        },
-        {
-            "tokens": {
-                "tokens": ["c'est", "quoi", "$search"],
-                "regex": {
-                    "$search": {
-                        "regex":"\\w+",
-                        "multiple": true
+                },
+                {
+                    "tokens": "Qui t'a créé",
+                    "type": {
+                        "type": "Ava:Action:TTS",
+                        "args": "Maxime Barbier"
                     }
+                },
+                {
+                    "tokens": "Qui est maxime barbier",
+                    "type": {
+                        "type": "Ava:Action:TTS",
+                        "args": "Mon créateur."
+                    }
+                },
+                {
+                    "tokens": "Il est quelle heure",
+                    "type": {
+                        "type": "Ava:Action:TTS",
+                        "args": "Il est {now.tm_hour} heure {now.tm_min} minutes{suffix}.",
+                        "kwargs": {
+                            "_python": [
+                                "import time",
+                                "now = time.localtime()",
+                                "suffix=\"\"",
+                                "if now.tm_hour >= 18 and now.tm_hour < 21:",
+                                " suffix=\", l'heure de l'appero!\""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "tokens": {
+                        "tokens": ["affiche", "sur", "internet", "$search"],
+                        "regex": {
+                            "$search": {
+                                "regex":"\\w+",
+                                "multiple": true
+                            }
+                        }
+                    },
+                    "type": "Ava:Action:WebBrowserSearch"
+                },
+                {
+                    "tokens": {
+                        "tokens": ["affiche", "sur", "wikipédia", "$search"],
+                        "regex": {
+                            "$search": {
+                                "regex":"\\w+",
+                                "multiple": true
+                            }
+                        }
+                    },
+                    "type": "Ava:Action:WikipediaSearch"
+                },
+                {
+                    "tokens": {
+                        "tokens": ["c'est", "quoi", "$search"],
+                        "regex": {
+                            "$search": {
+                                "regex":"\\w+",
+                                "multiple": true
+                            }
+                        }
+                    },
+                    "type": "Ava:Action:WikipediaSearchTTS"
                 }
-            },
-            "type": "Action:WikipediaSearchTTS"
+            ]
         }
     ]
 }
