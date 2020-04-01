@@ -76,20 +76,6 @@
             "register": [
                 {
                     "tokens": {
-                        "tokens": ["cherche", "sur", "wikipédia", "$search"],
-                        "regex": {
-                            "$search": {
-                                "regex":"\\w+",
-                                "multiple": true
-                            }
-                        }
-                    },
-                    "type": "Ava:Action:WikipediaSearchTTS"
-                }
-            ],
-            "_register": [
-                {
-                    "tokens": {
                         "tokens": "Comment tu t'appelles"
                     },
                     "type": {
@@ -154,6 +140,18 @@
                 {
                     "tokens": {
                         "tokens": ["c'est", "quoi", "$search"],
+                        "regex": {
+                            "$search": {
+                                "regex":"\\w+",
+                                "multiple": true
+                            }
+                        }
+                    },
+                    "type": "Ava:Action:WikipediaSearchTTS"
+                },
+                {
+                    "tokens": {
+                        "tokens": ["cherche", "sur", "wikipédia", "$search"],
                         "regex": {
                             "$search": {
                                 "regex":"\\w+",
