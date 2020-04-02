@@ -1,5 +1,6 @@
 Ava ?
 répète un deux trois
+merci pour tout
 merci
 au revoir
 
@@ -8,8 +9,6 @@ au revoir
 
 # Qui t'a créé ?
 # Qui est Maxime Barbier ?
-# Camion
-# 1 2 3
 # Que veux-tu faire ?
 # Il est quelle heure ?
 # Ouvre wikipedia

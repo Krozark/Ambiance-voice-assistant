@@ -47,7 +47,7 @@
     },
     "pipeline": {
             "kwargs": {
-            "audio_input": false,
+            "audio_input": true,
             "debug_audio": false,
             "debug_tts": false,
             "token_strategy": 0
@@ -58,7 +58,7 @@
     },
     "register": [
         {
-            "tokens": "Ava",
+            "tokens": "ordinateur",
             "type": {
                 "type": "Ava:Mod",
                 "kwargs": {
@@ -91,7 +91,7 @@
                     },
                     "type": {
                         "type": "Ava:Action:TTS",
-                        "args": "répète {search}"
+                        "args": "Je répète : {search}"
                     }
                 },
                 {

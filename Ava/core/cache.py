@@ -17,31 +17,33 @@ class CacheResult(object):
     def if_deeper(self):
         return self.action is None
 
+    def regex_len(self):
+        return sum([len(value) for key, value in self.kwargs.items()])
+
+    def length_no_regex(self):
+        return self.length - self.regex_len()
+
     def __gt__(self, other):
-        """
-        Sort by:
-        length, deeper, len(kwargs)
-        :param other:
-        :return:
-        """
         if other is None:
             return True
 
-        if not isinstance(other, CacheResult):
-            return False
-
-        if other.length < self.length:
+        if self.length > other.length:
             return True
-        elif other.length == self.length:
-            if self.if_deeper() == other.if_deeper():
-                if len(self.kwargs) < len(other.kwargs):
-                    return True
-            else:
-                return self.if_deeper()
+        if other.length == self.length:
+            regex_len_self = self.length_no_regex()
+            regex_len_other = other.length_no_regex()
+            if regex_len_self > regex_len_other:
+                return True
+            if regex_len_self == regex_len_other:
+                if self.if_deeper() == other.if_deeper():
+                    if self.regex_len() < other.regex_len():
+                        return True
+                else:
+                    return self.if_deeper()
         return False
 
     def __str__(self):
-        return "length=%s, action=%s, regex=%s" % (self.length, self.action, self.kwargs.items())
+        return "length=%s, regex_len=%s, action=%s, regex=%s" % (self.length, self.regex_len(), self.action, self.kwargs.items(), )
 
 
 class _RegexNodeStruct(object):

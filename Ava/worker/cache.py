@@ -21,12 +21,12 @@ class CacheWorker(Worker, IOxThread, Cache):
     def _process_tokens(self):
         logger.debug("Precessing tokens %s", self._tokens)
         results = self.get(self._tokens)
+        results = sorted(results)
         logger.debug("Found %s results for tokens %s => %s", len(results), self._tokens, ["<%s>" % x for x in results])
         token = None
         if not results:
             self._tokens.pop(0)
         else:
-            results = sorted(results)
             if results[-1].if_deeper():
                 logger.debug("Try to get a new token")
                 token = self.input_pop(timeout=1)
