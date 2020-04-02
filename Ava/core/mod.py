@@ -4,7 +4,6 @@ from typing import List
 
 from .action import ActionList, CallbackAction
 from .cache import (
-    CacheResult,
     CacheNodeData
 )
 from .utils import (
@@ -13,33 +12,6 @@ from .utils import (
 )
 
 logger = logging.getLogger(__name__)
-
-
-class ModResult:
-    def __init__(self, length, action):
-        self.length = length
-        self.action = action
-        self.kwargs = {}
-
-    def if_deeper(self):
-        return self.action is None
-
-    def __gt__(self, other):
-        if other is None:
-            return True
-
-        if isinstance(other, CacheResult):
-            return True
-
-        if other.length < self.length:
-            return True
-        elif other.length == self.length:
-            if self.if_deeper() == other.if_deeper():
-                return self.if_deeper()
-        return False
-
-    def __str__(self):
-        return "length=%s, action=%s" % (self.length, self.action)
 
 
 class Mod(CacheNodeData, WithAva):

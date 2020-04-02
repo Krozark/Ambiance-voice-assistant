@@ -48,6 +48,7 @@ class Ava(object):
         self._cache = ModWorker(self)
         #self._cache = CacheWorker(self)
         self._register_defaults()
+        self._running = False
 
         # from Ava.core import Mod
         # from Ava.action import TTSAction
@@ -81,17 +82,22 @@ class Ava(object):
     def add_worker(self, worker) -> None:
         self._workers.append(worker)
 
+    def stop(self):
+        self._running = False
+        for w in self._workers:
+            w.stop()
+
     def run(self):
+        self._running = True
         for w in self._workers:
             w.start()
         try:
-            while True:
+            while self._running :
                 time.sleep(0.1)
         except KeyboardInterrupt:
             logger.info("Stopping. Please wait...")
 
-        for w in self._workers:
-            w.stop()
+        self.stop()
 
         for w in self._workers:
             w.join()
@@ -163,6 +169,7 @@ class Ava(object):
         self._factory.register("Ava:Mod", "Ava.core.mod.Mod")
         # Actions
         #self._factory.register("Action:AudioFIlePlayer", "Ava.action.AudioFilePlayerAction",)
+        self._factory.register("Ava:Action:Stop", "Ava.action.AvaStopAction")
         self._factory.register("Ava:Action:TTS", "Ava.action.TTSAction")
         self._factory.register("Ava:Action:WebBrowser", "Ava.action.WebBrowserAction")
         self._factory.register("Ava:Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")

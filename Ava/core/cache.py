@@ -173,8 +173,6 @@ class Cache(object):
         results = []
         kwargs = defaultdict(list)
         self._root.get(tokens, 0,  kwargs, results)
-        results = sorted(results)
-        logger.debug("Found %s results for tokens %s => %s", len(results), tokens, ["<%s>" % x for x in results])
         return results
 
     def __str__(self, depth=0):

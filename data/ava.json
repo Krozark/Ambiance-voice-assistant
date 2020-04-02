@@ -46,7 +46,12 @@
         "audio_as_text": false
     },
     "pipeline": {
-        "...": "include(include/pipeline.json)"
+            "kwargs": {
+            "audio_input": false,
+            "debug_audio": false,
+            "debug_tts": false,
+            "token_strategy": 0
+        }
     },
     "types": {
         "...": "include(include/types.json)"
@@ -162,6 +167,10 @@
                     "type": "Ava:Action:WikipediaSearchTTS"
                 }
             ]
+        },
+        {
+            "tokens": "au revoir",
+            "type": "Ava:Action:Stop"
         }
     ]
 }
