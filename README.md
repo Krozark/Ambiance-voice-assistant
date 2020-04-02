@@ -1,7 +1,9 @@
 # Ambiance-voice-assistant
 The aim of this project is to create a assistant that auto trigger ambiance change controlling by voice.
 The current configuration is for French but you can easily change it to other
-languages by changing LANGUAGE and LANGUAGES_INFORMATION variables to conf.py
+languages by changing language informations in data/ava.json 
+
+
 
 # Installation
 
@@ -35,3 +37,7 @@ python -m Ava
 # or
 Ava
 ```
+
+## Configure the actions
+
+Please edit data/ava.json to customize the actions to make with specifique sentences.
