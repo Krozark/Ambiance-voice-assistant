@@ -81,6 +81,36 @@
             "register": [
                 {
                     "tokens": {
+                        "tokens": ["répète", "$search"],
+                        "regex": {
+                            "$search": {
+                                "regex":"\\w+",
+                                "multiple": true
+                            }
+                        }
+                    },
+                    "type": {
+                        "type": "Ava:Action:TTS",
+                        "args": "répète {search}"
+                    }
+                },
+                {
+                    "tokens": {
+                        "tokens": ["$search"],
+                        "regex": {
+                            "$search": {
+                                "regex":"\\w+",
+                                "multiple": true
+                            }
+                        }
+                    },
+                    "type": {
+                        "type": "Ava:Action:TTS",
+                        "args": "J'ai pas compris: {search}"
+                    }
+                },
+                {
+                    "tokens": {
                         "tokens": "Comment tu t'appelles"
                     },
                     "type": {

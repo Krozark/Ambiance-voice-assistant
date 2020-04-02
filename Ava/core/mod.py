@@ -49,9 +49,11 @@ class Mod(CacheNodeData, WithAva):
 
     def get(self, tokens, depth=0, kwargs=None, results=None) -> List:
         if self._is_active:
-            assert results is None and kwargs is None
-            results = []
-            super().get(tokens, depth, self.regex_kwargs.copy(), results)
+            if results is None:
+                results = []
+            if kwargs is None:
+                kwargs = self.regex_kwargs.copy()
+            super().get(tokens, depth, kwargs, results)
             return results
         else:
             assert kwargs is not None and results is not None
