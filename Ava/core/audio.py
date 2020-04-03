@@ -19,7 +19,7 @@ class RecognizerBase(object):
         return recognizer
 
     def adjust_for_ambient_noise(self, source) -> None:
-        logging.info("A moment of silence, please...")
+        logger.info("A moment of silence, please...")
         self._recognizer.adjust_for_ambient_noise(source, duration=2)
         logger.info("Set minimum energy threshold = '%s'", self.get_energy_threshold())
 

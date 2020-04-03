@@ -1,8 +1,8 @@
 Ava ?
+ordinateur ?
 répète un deux trois
 merci pour tout
 merci
-au revoir
 
 # Coucou !
 # merci
@@ -16,3 +16,5 @@ au revoir
 # affiche sur wikipédia banane au chocolat
 # cherche sur wikipédia banane
 # cherche sur wikipédia banane au chocolat
+
+au revoir

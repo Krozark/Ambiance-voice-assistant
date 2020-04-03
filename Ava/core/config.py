@@ -2,6 +2,9 @@ import logging
 import logging.config
 
 
+logger = logging.getLogger(__name__)
+
+
 class Config(object):
     def __init__(self):
         self._languages = {}

@@ -34,7 +34,8 @@ setuptools.setup(
       'PyAudio~=0.2',
       'spacy~=2.2',
       "wikipedia>=1.4",
-      "krozark-json-include>=3.1"
+      "krozark-json-include>=3.1",
+      "Unidecode>=1.1",
    ],
    entry_points={
       'console_scripts': [

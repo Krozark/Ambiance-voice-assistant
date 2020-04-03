@@ -38,12 +38,12 @@ class Mod(CacheNodeData, WithAva):
         if (self.ava._cache._mod_stack and self.ava._cache._mod_stack[-1] is not self) or not self.ava._cache._mod_stack:
             self.regex_kwargs = action._trigger_kwargs.copy()
             self._is_active = True
-            logger.debug("Activating mod %s with kwargs=%s", self, self.regex_kwargs)
+            logger.debug("Activating mod with kwargs=%s", self.regex_kwargs)
             self.ava._cache._mod_stack.append(self)
 
     def deactivate(self, action):
         if self.ava._cache._mod_stack[-1] is self:
-            logger.debug("Deactivating mod %s", self)
+            logger.debug("Deactivating mod")
             self._is_active = False
             self.ava._cache._mod_stack.pop()
 

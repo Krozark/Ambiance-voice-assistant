@@ -3,9 +3,8 @@ import json
 import logging
 import os
 import time
-
+from unidecode import unidecode
 from nltk.tokenize import word_tokenize
-from functools import partial
 
 from Ava import config
 from Ava.core import (
@@ -25,7 +24,6 @@ from Ava.worker import (
     TokenizerSimpleWorker,
     TokenizerStemWorker,
     TokenizerLemmaWorker,
-    CacheWorker,
     ModWorker
 )
 from json_include import build_json
@@ -46,18 +44,14 @@ class Ava(object):
         self._workers = []
         self._factory = factory
         self._cache = ModWorker(self)
-        #self._cache = CacheWorker(self)
-        self._register_defaults()
         self._running = False
 
-        # from Ava.core import Mod
-        # from Ava.action import TTSAction
-        # self._cache.add_mod(
-        #     Mod(["ava"], TTSAction(self, "Oui ?"), ["merci"], TTSAction(self, "Derien"))
-        # )
+        self._register_defaults()
 
     def tokenize(self, text):
-        return word_tokenize(text, language=self.config.language_data["nltk"])
+        # text = unidecode(text)
+        tokens = word_tokenize(text, language=self.config.language_data["nltk"])
+        return tokens
 
     def load_from_file(self, filename=None):
         if filename is None:
@@ -154,10 +148,6 @@ class Ava(object):
             tokenizer = TokenizerSimpleWorker(self)
 
         normalizer >> tokenizer
-
-        # p = LoggerWorker(level=logging.INFO)
-        # self.add_worker(p)
-        # tokenizer >> p
 
         tokenizer >> self._cache
 

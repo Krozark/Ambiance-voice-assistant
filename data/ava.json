@@ -14,7 +14,7 @@
         "api-keys": {
             "google_recognition": null
         },
-        "_logging": {
+        "logging": {
             "version": 1,
             "disable_existing_loggers": true,
             "formatters": {
@@ -22,7 +22,8 @@
                     "format": "%(message)s"
                 },
                 "console_formatter": {
-                    "format": "-- %(asctime)s [%(name)s:l.%(lineno)d][%(levelname)s] - %(message)s"
+                    "format": "[%(asctime)s][%(name)s:l.%(lineno)d][%(levelname)s] - %(message)s",
+                     "datefmt": "%Y-%m-%d %H:%M:%S"
                 }
             },
             "handlers": {
@@ -43,11 +44,11 @@
                 }
             }
         },
-        "audio_as_text": false
+        "audio_as_text": true
     },
     "pipeline": {
             "kwargs": {
-            "audio_input": true,
+            "audio_input": false,
             "debug_audio": false,
             "debug_tts": false,
             "token_strategy": 0

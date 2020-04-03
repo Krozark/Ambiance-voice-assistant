@@ -48,7 +48,6 @@ def get_register(ava, data_list):
 
 def load_register(ava, data_list, target):
     for obj, tokens, token_regex, data in get_register(ava, data_list):
-        logger.debug("register to '%s' => %s", target, obj)
         # recurse if needed
         other = data.get("register", [])
         if other:
