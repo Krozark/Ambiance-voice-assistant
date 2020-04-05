@@ -41,6 +41,7 @@ class Action(WithAva):
     def trigger(self) -> None:
         kwargs = {key.replace("r_", ""): " ".join(value) for key, value in self._trigger_kwargs.items()}
         if self._python:
+            logger.debug("Executing python with kwargs=%s", kwargs)
             glob = {}
             exec(self._python, glob, kwargs)
         logger.debug("Trigger Action '%s' with kwargs=%s", self, kwargs)

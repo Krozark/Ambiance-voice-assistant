@@ -1,8 +1,11 @@
 Ava ?
-ordinateur ?
-répète un deux trois
-merci pour tout
-merci
+# ordinateur ?
+#répète un deux trois
+#merci pour tout
+#merci
+#quel temps il fait
+#quel temps il fait à Brest
+quel temps il fait à Rennes après demain
 
 # Coucou !
 # merci

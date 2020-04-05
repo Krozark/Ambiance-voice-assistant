@@ -13,3 +13,6 @@ from .web import (
     WikipediaSearchTTSAction,
     WikipediaSearchAction,
 )
+from .weather import (
+    WeatherAction
+)

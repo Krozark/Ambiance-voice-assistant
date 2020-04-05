@@ -48,7 +48,7 @@
     },
     "pipeline": {
             "kwargs": {
-            "audio_input": true,
+            "audio_input": false,
             "debug_audio": false,
             "debug_tts": false,
             "token_strategy": 0
@@ -201,7 +201,69 @@
                         "type": "Ava:Action:TTS",
                         "args": "J'ai pas compris: {search}"
                     }
+                },
+                {
+                    "tokens": [
+                        "Quel temps il fait",
+                        "c'est quoi la météo"
+                    ],
+                    "type" : {
+                        "type": "Ava:Action:Weather",
+                        "kwargs": {
+                            "city": "Rennes",
+                            "day": 0
+                        }
+                    }
+                },
+                {
+                    "tokens": {
+                        "tokens": [
+                            "Quel temps il fait à r_city",
+                            "c'est quoi la météo à r_city"
+                        ],
+                        "regex": {
+                            "r_city": "\\w+"
+                        }
+                    },
+                    "type" : {
+                        "type": "Ava:Action:Weather",
+                        "kwargs": {
+                            "city": "Rennes",
+                            "day": 0
+                        }
+                    }
+                },
+                {
+                    "tokens": {
+                        "tokens": [
+                            "Quel temps il fait à r_city r_day",
+                            "C'est quoi la météo à r_city r_day"
+                        ],
+                        "regex": {
+                            "r_city": "\\w+",
+                            "r_day": {
+                                "regex": "\\w+",
+                                "multiple": true
+                            }
+                        }
+                    },
+                    "type" : {
+                        "type": "Ava:Action:Weather",
+                        "kwargs": {
+                            "city": "Rennes",
+                            "day": 0,
+                            "_python": [
+                                "res = 0",
+                                "if day == 'demain':",
+                                "    res = 1",
+                                "elif day == 'après demain':",
+                                " res = 2",
+                                "day = res"
+                            ]
+                        }
+                    }
                 }
+
             ]
         },
         {

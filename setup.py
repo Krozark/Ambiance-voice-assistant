@@ -35,6 +35,7 @@ setuptools.setup(
       'spacy~=2.2',
       "wikipedia>=1.4",
       "krozark-json-include>=3.1",
+      "krozark_meteofrance>=0.3.9",
       "Unidecode>=1.1",
    ],
    entry_points={

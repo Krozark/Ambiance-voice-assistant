@@ -165,6 +165,8 @@ class Ava(object):
         self._factory.register("Ava:Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
         self._factory.register("Ava:Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")
         self._factory.register("Ava:Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")
+        self._factory.register("Ava:Action:Weather", "Ava.action.WeatherAction")
+
         # Workers
 
     def _load_pipeline(self, data):

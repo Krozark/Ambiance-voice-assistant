@@ -33,7 +33,7 @@ class WebBrowserSearchAction(Action):
         webbrowser.open_new_tab(base_url + search)
 
 
-class WikipediaSearchAction(Action, TTSMixin):
+class WikipediaSearchAction(Action):
     def __init__(self, ava, *args, search=None, **kwargs):
         Action.__init__(self, ava, *args, name=search, **kwargs)
         self._search = search
