@@ -61,7 +61,8 @@
         {
             "tokens": [
                 "Ava",
-                "ordinateur"
+                "ordinateur",
+                "Ambiance voice assistant"
             ],
             "type": {
                 "type": "Ava:Mod",
