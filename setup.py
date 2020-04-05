@@ -16,7 +16,7 @@ setuptools.setup(
    long_description_content_type="text/markdown",
    license="GNU GPL3",
    author='Maxime Barbier',
-   author_email='maxime@maxime-barbier.fr',
+   author_email='maxime.barbier1991+ava@gmail.com',
    url="https://github.com/Krozark/Ambiance-voice-assistant",
    keywords="ambiance voice assistant",
    packages=setuptools.find_packages(),
