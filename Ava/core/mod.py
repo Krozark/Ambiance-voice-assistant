@@ -26,13 +26,15 @@ class Mod(CacheNodeData, WithAva):
             enter = [enter]
         enter_action, enter_tokens, enter_regex, enter_data = get_register(ava, enter)[0]
         enter_action = ActionList([enter_action, CallbackAction(ava, self.activate, name="Activating mod")])
-        self._non_active_nodes.register(enter_tokens, enter_action, token_regex=enter_regex)
+        for tokens in enter_tokens:
+            self._non_active_nodes.register(tokens, enter_action, token_regex=enter_regex)
 
         if not isinstance(exit, (list, tuple)):
             exit = [exit]
         exit_action, exit_tokens, exit_regex, exit_data = get_register(ava, exit)[0]
         exit_action = ActionList([exit_action, CallbackAction(ava, self.deactivate, name="Deactivating mod")])
-        self.register(exit_tokens, exit_action, token_regex=exit_regex)
+        for tokens in exit_tokens:
+            self.register(tokens, exit_action, token_regex=exit_regex)
 
     def activate(self, action):
         if (self.ava._cache._mod_stack and self.ava._cache._mod_stack[-1] is not self) or not self.ava._cache._mod_stack:

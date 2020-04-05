@@ -9,7 +9,7 @@ def main():
     ava = Ava_class()
     ava.load_from_file()
 
-    logger.info("%s", ava.dump())
+    print(ava.dump())
     ava.run()
 
 if  __name__ == "__main__":

@@ -40,4 +40,4 @@ Ava
 
 ## Configure the actions
 
-Please edit data/ava.json to customize the actions to make with specifique sentences.
+Please edit data/ava.json to customize the actions to make with specifics sentences.

@@ -39,7 +39,7 @@ class Action(WithAva):
         self._trigger_kwargs = kwargs.copy()
 
     def trigger(self) -> None:
-        kwargs = {key.replace("$", ""): " ".join(value) for key, value in self._trigger_kwargs.items()}
+        kwargs = {key.replace("r_", ""): " ".join(value) for key, value in self._trigger_kwargs.items()}
         if self._python:
             glob = {}
             exec(self._python, glob, kwargs)

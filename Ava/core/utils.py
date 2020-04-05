@@ -11,6 +11,21 @@ class WithAva(object):
     def ava(self):
         return self._ava
 
+def get_tokens(ava, tokens):
+    token_regex = dict()
+    if isinstance(tokens, dict):
+        token_regex = tokens.get("regex") or token_regex
+        tokens = tokens.get("tokens", "")
+    # normalize tokens
+    if isinstance(tokens, str):
+        tokens = [tokens]
+    res = []
+    for sentence in tokens:
+        if isinstance(sentence, str):
+            sentence = ava.tokenize(sentence)
+        res.append([x.lower() for x in sentence])
+    return res, token_regex
+
 
 def get_register(ava, data_list):
     res = []
@@ -32,25 +47,17 @@ def get_register(ava, data_list):
         obj = ava._factory.construct(type_type, args=args, kwargs=kwargs)
 
         # tokens
-        tokens_tokens = data["tokens"]
-        token_regex = dict()
-        if isinstance(tokens_tokens, dict):
-            token_regex = tokens_tokens.get("regex") or token_regex
-            tokens_tokens = tokens_tokens.get("tokens", {})
-        # normalize tokens
-        if isinstance(tokens_tokens, str):
-            tokens_tokens = ava.tokenize(tokens_tokens)
-        if isinstance(tokens_tokens, (tuple, list)):
-            tokens_tokens = [x.lower() for x in tokens_tokens]
-
-        res.append((obj, tokens_tokens, token_regex, data))
+        tokens_sentences, token_regex = get_tokens(ava, data.get("tokens", ""))
+        res.append((obj, tokens_sentences, token_regex, data))
     return res
 
 def load_register(ava, data_list, target):
-    for obj, tokens, token_regex, data in get_register(ava, data_list):
+    for obj, tokens_sentences, token_regex, data in get_register(ava, data_list):
+        logger.debug("obj=%s, tokens_sentences=%s, token_regex=%s, data=%s", obj, tokens_sentences, token_regex, data)
         # recurse if needed
         other = data.get("register", [])
         if other:
             load_register(ava, other, obj)
         # register
-        target.register(tokens, obj, token_regex=token_regex)
+        for tokens in tokens_sentences:
+            target.register(tokens, obj, token_regex=token_regex)

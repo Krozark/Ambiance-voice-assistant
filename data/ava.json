@@ -41,21 +41,14 @@
                     ],
                     "level": "DEBUG",
                     "propapate": true
-                },
-                "_Ava.core": {
-                    "handlers": [
-                        "console"
-                    ],
-                    "level": "INFO",
-                    "propapate": true
                 }
             }
         },
-        "audio_as_text": true
+        "audio_as_text": false
     },
     "pipeline": {
             "kwargs": {
-            "audio_input": false,
+            "audio_input": true,
             "debug_audio": false,
             "debug_tts": false,
             "token_strategy": 0
@@ -66,12 +59,14 @@
     },
     "register": [
         {
-            "tokens": "ordinateur",
+            "tokens": [
+                "Ava",
+                "ordinateur"
+            ],
             "type": {
                 "type": "Ava:Mod",
                 "kwargs": {
                     "enter": {
-                        "tokens": "",
                         "type": {
                             "type": "Ava:Action:TTS",
                             "args": "Oui?"
@@ -89,9 +84,9 @@
             "register": [
                 {
                     "tokens": {
-                        "tokens": ["répète", "$search"],
+                        "tokens": "répète r_search",
                         "regex": {
-                            "$search": {
+                            "r_search": {
                                 "regex":"\\w+",
                                 "multiple": true
                             }
@@ -103,45 +98,41 @@
                     }
                 },
                 {
-                    "tokens": {
-                        "tokens": ["$search"],
-                        "regex": {
-                            "$search": {
-                                "regex":"\\w+",
-                                "multiple": true
-                            }
-                        }
-                    },
-                    "type": {
-                        "type": "Ava:Action:TTS",
-                        "args": "J'ai pas compris: {search}"
-                    }
-                },
-                {
-                    "tokens": {
-                        "tokens": "Comment tu t'appelles"
-                    },
+
+                    "tokens": [
+                        "Comment tu t'appelles",
+                        "C'est quoi ton nom",
+                        "tu es qui",
+                        "qui est tu"
+                    ],
                     "type": {
                         "type": "Ava:Action:TTS",
                         "args": "Mon nom est Ambiance voice assistant, ou Ava."
                     }
                 },
                 {
-                    "tokens": "Qui t'a créé",
+                    "tokens": [
+                        "Qui t'a créé",
+                        "qui t'a fait"
+                    ],
                     "type": {
                         "type": "Ava:Action:TTS",
-                        "args": "Maxime Barbier"
+                        "args": "C'est Maxime Barbier qui m'a crée"
                     }
                 },
                 {
                     "tokens": "Qui est maxime barbier",
                     "type": {
                         "type": "Ava:Action:TTS",
-                        "args": "Mon créateur."
+                        "args": "c'est mon créateur."
                     }
                 },
                 {
-                    "tokens": "Il est quelle heure",
+                    "tokens": [
+                        "Il est quelle heure",
+                        "Quelle heure il est",
+                        "c'est quelle heure"
+                    ],
                     "type": {
                         "type": "Ava:Action:TTS",
                         "args": "Il est {now.tm_hour} heure {now.tm_min} minutes{suffix}.",
@@ -158,9 +149,9 @@
                 },
                 {
                     "tokens": {
-                        "tokens": ["affiche", "sur", "internet", "$search"],
+                        "tokens": "affiche sur internet r_search",
                         "regex": {
-                            "$search": {
+                            "r_search": {
                                 "regex":"\\w+",
                                 "multiple": true
                             }
@@ -170,9 +161,9 @@
                 },
                 {
                     "tokens": {
-                        "tokens": ["affiche", "sur", "wikipédia", "$search"],
+                        "tokens": "affiche sur wikipédia r_search",
                         "regex": {
-                            "$search": {
+                            "r_search": {
                                 "regex":"\\w+",
                                 "multiple": true
                             }
@@ -182,9 +173,12 @@
                 },
                 {
                     "tokens": {
-                        "tokens": ["c'est", "quoi", "$search"],
+                        "tokens": [
+                            "c'est quoi r_search",
+                            "cherche sur wikipédia r_search"
+                        ],
                         "regex": {
-                            "$search": {
+                            "r_search": {
                                 "regex":"\\w+",
                                 "multiple": true
                             }
@@ -194,15 +188,18 @@
                 },
                 {
                     "tokens": {
-                        "tokens": ["cherche", "sur", "wikipédia", "$search"],
+                        "tokens": "r_search",
                         "regex": {
-                            "$search": {
+                            "r_search": {
                                 "regex":"\\w+",
                                 "multiple": true
                             }
                         }
                     },
-                    "type": "Ava:Action:WikipediaSearchTTS"
+                    "type": {
+                        "type": "Ava:Action:TTS",
+                        "args": "J'ai pas compris: {search}"
+                    }
                 }
             ]
         },
