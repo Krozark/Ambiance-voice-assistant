@@ -41,6 +41,13 @@
                     ],
                     "level": "DEBUG",
                     "propapate": true
+                },
+                "_Ava.core": {
+                    "handlers": [
+                        "console"
+                    ],
+                    "level": "INFO",
+                    "propapate": true
                 }
             }
         },
