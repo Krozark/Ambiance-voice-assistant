@@ -28,7 +28,7 @@ apt install mbrola-fr1 # or change voices in data/data.json
 ## No install
 
 ```
-python Ava/ava.py
+python Ava/
 ```
 
 ## With install
