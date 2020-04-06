@@ -48,7 +48,7 @@
     },
     "pipeline": {
             "kwargs": {
-            "audio_input": false,
+            "audio_input": true,
             "debug_audio": false,
             "debug_tts": false,
             "token_strategy": 0
@@ -104,7 +104,7 @@
                         "Comment tu t'appelles",
                         "C'est quoi ton nom",
                         "tu es qui",
-                        "qui est tu"
+                        "qui es tu"
                     ],
                     "type": {
                         "type": "Ava:Action:TTS",
@@ -114,7 +114,9 @@
                 {
                     "tokens": [
                         "Qui t'a créé",
-                        "qui t'a fait"
+                        "qui t'a fait",
+                        "c'est qui ton créateur",
+                        "qui est ton créateur"
                     ],
                     "type": {
                         "type": "Ava:Action:TTS",
@@ -122,7 +124,10 @@
                     }
                 },
                 {
-                    "tokens": "Qui est maxime barbier",
+                    "tokens": [
+                        "Qui est maxime barbier",
+                        "c'est qui maxime barbier"
+                    ],
                     "type": {
                         "type": "Ava:Action:TTS",
                         "args": "c'est mon créateur."
@@ -150,7 +155,10 @@
                 },
                 {
                     "tokens": {
-                        "tokens": "affiche sur internet r_search",
+                        "tokens": [
+                            "affiche sur internet r_search",
+                            "ouvre un onglet r_search"
+                        ],
                         "regex": {
                             "r_search": {
                                 "regex":"\\w+",
@@ -203,39 +211,14 @@
                     }
                 },
                 {
-                    "tokens": [
-                        "Quel temps il fait",
-                        "c'est quoi la météo"
-                    ],
-                    "type" : {
-                        "type": "Ava:Action:Weather",
-                        "kwargs": {
-                            "city": "Rennes",
-                            "day": 0
-                        }
-                    }
-                },
-                {
                     "tokens": {
                         "tokens": [
+                            "Quel temps il fait",
+                            "c'est quoi la météo",
+                            "Quel temps il fait r_day",
+                            "C'est quoi la météo r_day",
                             "Quel temps il fait à r_city",
-                            "c'est quoi la météo à r_city"
-                        ],
-                        "regex": {
-                            "r_city": "\\w+"
-                        }
-                    },
-                    "type" : {
-                        "type": "Ava:Action:Weather",
-                        "kwargs": {
-                            "city": "Rennes",
-                            "day": 0
-                        }
-                    }
-                },
-                {
-                    "tokens": {
-                        "tokens": [
+                            "c'est quoi la météo à r_city",
                             "Quel temps il fait à r_city r_day",
                             "C'est quoi la météo à r_city r_day"
                         ],
@@ -251,15 +234,7 @@
                         "type": "Ava:Action:Weather",
                         "kwargs": {
                             "city": "Rennes",
-                            "day": 0,
-                            "_python": [
-                                "res = 0",
-                                "if day == 'demain':",
-                                "    res = 1",
-                                "elif day == 'après demain':",
-                                " res = 2",
-                                "day = res"
-                            ]
+                            "day": 0
                         }
                     }
                 }

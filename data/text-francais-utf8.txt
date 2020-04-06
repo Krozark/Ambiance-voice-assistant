@@ -2,10 +2,13 @@ Ava ?
 # ordinateur ?
 #répète un deux trois
 #merci pour tout
-#merci
 #quel temps il fait
+#quel temps il fait demain
+#quel temps il fait après demain
+#quel temps il fait dans 2 jours
 #quel temps il fait à Brest
-quel temps il fait à Rennes après demain
+#quel temps il fait à Rennes demain
+#quel temps il fait à Rennes mardi
 
 # Coucou !
 # merci
@@ -20,4 +23,5 @@ quel temps il fait à Rennes après demain
 # cherche sur wikipédia banane
 # cherche sur wikipédia banane au chocolat
 
+merci
 au revoir
