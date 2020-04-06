@@ -46,7 +46,7 @@ class WeatherAction(Action, TTSMixin):
             logger.debug("Weather data for city=%s day=%s: %s", city, day, data)
             day_str= "aujourd'hui" if day == 0 else "dans %s jours" % day
 
-            msg = "La météo à %s pour %s: " % (data["name"], day_str)
+            msg = "La météo à %s pour %s. " % (data["name"], day_str)
             weather = data["forecast"][day]
 
             if day == 0:

@@ -10,7 +10,6 @@ Ava ?
 #quel temps il fait à Rennes demain
 #quel temps il fait à Rennes mardi
 
-# Coucou !
 # merci
 
 # Qui t'a créé ?
