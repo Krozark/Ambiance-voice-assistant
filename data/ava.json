@@ -61,6 +61,7 @@
         {
             "tokens": [
                 "Ava",
+                "ça va",
                 "ordinateur",
                 "Ambiance voice assistant"
             ],
@@ -197,30 +198,19 @@
                 },
                 {
                     "tokens": {
-                        "tokens": "r_search",
-                        "regex": {
-                            "r_search": {
-                                "regex":"\\w+",
-                                "multiple": true
-                            }
-                        }
-                    },
-                    "type": {
-                        "type": "Ava:Action:TTS",
-                        "args": "J'ai pas compris: {search}"
-                    }
-                },
-                {
-                    "tokens": {
                         "tokens": [
                             "Quel temps il fait",
                             "c'est quoi la météo",
+                            "il fait quel temps",
                             "Quel temps il fait r_day",
                             "C'est quoi la météo r_day",
+                            "il fait quel temps r_day",
                             "Quel temps il fait à r_city",
                             "c'est quoi la météo à r_city",
+                            "il fait quel temps à r_city",
                             "Quel temps il fait à r_city r_day",
-                            "C'est quoi la météo à r_city r_day"
+                            "C'est quoi la météo à r_city r_day",
+                            "il fait quel temps à r_city r_day"
                         ],
                         "regex": {
                             "r_city": "\\w+",
@@ -244,6 +234,21 @@
         {
             "tokens": "au revoir",
             "type": "Ava:Action:Stop"
+        },
+        {
+            "tokens": {
+                "tokens": "r_search",
+                "regex": {
+                    "r_search": {
+                        "regex":"\\w+",
+                        "multiple": true
+                    }
+                }
+            },
+            "type": {
+                "type": "Ava:Action:TTS",
+                "args": "J'ai pas compris: {search}"
+            }
         }
     ]
 }
