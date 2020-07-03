@@ -3,8 +3,10 @@ import json
 import logging
 import os
 import time
-from unidecode import unidecode
+
+from json_include import build_json
 from nltk.tokenize import word_tokenize
+from sound_player import SoundPlayer
 
 from Ava import config
 from Ava.core import (
@@ -26,7 +28,6 @@ from Ava.worker import (
     TokenizerLemmaWorker,
     ModWorker
 )
-from json_include import build_json
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,7 @@ class Ava(object):
         self._workers = []
         self._factory = factory
         self._cache = ModWorker(self)
+        self._player = SoundPlayer()
         self._running = False
 
         self._register_defaults()
@@ -69,7 +71,6 @@ class Ava(object):
         self._load_pipeline(data.get("pipeline"))
         self._load_register(data.get("register"))
 
-
     def register(self, tokens, action, token_regex=None) -> None:
         self._cache.register(tokens, action, token_regex=token_regex)
 
@@ -78,6 +79,7 @@ class Ava(object):
 
     def stop(self):
         self._running = False
+        self._player.stop()
         for w in self._workers:
             w.stop()
 
@@ -85,6 +87,7 @@ class Ava(object):
         self._running = True
         for w in self._workers:
             w.start()
+        self._player.play()
         try:
             while self._running :
                 time.sleep(0.1)
@@ -158,7 +161,7 @@ class Ava(object):
         # Mod
         self._factory.register("Ava:Mod", "Ava.core.mod.Mod")
         # Actions
-        #self._factory.register("Action:AudioFIlePlayer", "Ava.action.AudioFilePlayerAction",)
+        self._factory.register("Action:AudioFilePlayer", "Ava.action.AudioFilePlayerAction",)
         self._factory.register("Ava:Action:Stop", "Ava.action.AvaStopAction")
         self._factory.register("Ava:Action:TTS", "Ava.action.TTSAction")
         self._factory.register("Ava:Action:WebBrowser", "Ava.action.WebBrowserAction")

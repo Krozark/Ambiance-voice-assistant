@@ -36,6 +36,7 @@ setuptools.setup(
       "wikipedia>=1.4",
       "krozark-json-include>=3.1",
       "krozark_meteofrance>=0.3.9",
+      "sound-player",
       "Unidecode>=1.1",
    ],
    entry_points={
