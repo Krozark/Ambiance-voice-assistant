@@ -1,5 +1,6 @@
 from .audio import (
-    AudioFilePlayerAction
+    AudioFilePlayerAction,
+    AudioStopAction
 )
 from .ava import (
     AvaStopAction

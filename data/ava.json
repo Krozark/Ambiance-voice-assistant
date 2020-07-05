@@ -46,6 +46,22 @@
         },
         "audio_as_text": false
     },
+    "sound-player": {
+        "background": {
+            "concurency": 1,
+            "replace": true,
+            "loop": 0
+        },
+        "ambiance": {
+            "concurency": 5,
+            "replace": true,
+            "loop": 0
+        },
+        "effect": {
+            "concurency": 10,
+            "replace": true
+        }
+    },
     "pipeline": {
             "kwargs": {
             "text_input": "console",

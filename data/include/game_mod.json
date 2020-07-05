@@ -1,5 +1,5 @@
 {
-    "tokens": "active le mode jeu",
+    "tokens": "mode jeu",
     "type": {
         "type": "Ava:Mod",
         "kwargs": {
@@ -11,20 +11,24 @@
             },
             "exit":  {
                 "tokens": "partie terminé",
-                "type": {
-                    "type": "Ava:Action:TTS",
-                    "args": "mode jeu désactivé"
-                }
+                "type": "Ava:Action:AudioStop"
             }
         }
     },
     "register" : [
         {
-            "tokens": "musique",
+            "tokens": [
+                "entrez dans la forêt",
+                "arrivez dans une foret"
+            ],
             "type": {
-                "type": "Action:AudioFilePlayer",
-                "args": "/home/mba/Documents/git/Ambiance-voice-assistant/data/music.ogg"
+                "type": "Ava:Action:AudioFilePlayer",
+                "args": "data/music/ambiance/forest.mp3",
+                "kwargs": {
+                    "playlist": "ambiance"
+                }
             }
+
         }
     ]
 }

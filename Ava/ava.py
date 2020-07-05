@@ -71,6 +71,7 @@ class Ava(object):
         self._load_types(data.get("types"))
         self._load_pipeline(data.get("pipeline"))
         self._load_register(data.get("register"))
+        self._load_sound_player(data.get("sound-player", {}))
 
     def register(self, tokens, action, token_regex=None) -> None:
         self._cache.register(tokens, action, token_regex=token_regex)
@@ -166,7 +167,8 @@ class Ava(object):
         # Mod
         self._factory.register("Ava:Mod", "Ava.core.mod.Mod")
         # Actions
-        self._factory.register("Action:AudioFilePlayer", "Ava.action.AudioFilePlayerAction",)
+        self._factory.register("Ava:Action:AudioFilePlayer", "Ava.action.AudioFilePlayerAction",)
+        self._factory.register("Ava:Action:AudioStop", "Ava.action.AudioStopAction",)
         self._factory.register("Ava:Action:Stop", "Ava.action.AvaStopAction")
         self._factory.register("Ava:Action:TTS", "Ava.action.TTSAction")
         self._factory.register("Ava:Action:WebBrowser", "Ava.action.WebBrowserAction")
@@ -201,6 +203,16 @@ class Ava(object):
 
     def _load_register(self, data_list):
         load_register(self, data_list, self)
+
+    def _load_sound_player(self, data):
+        for key, value in data.items():
+            for key2, value2 in value.items():
+                if key2 == "concurency":
+                    self._player._playlists[key].set_concurency(int(value2))
+                elif key2 == "replace":
+                    self._player._playlists[key].set_replace(bool(value2))
+                elif key2 == "loop":
+                    self._player._playlists[key].set_loop(int(value2))
 
     def dump(self):
         r = "[Ava]\n"
