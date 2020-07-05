@@ -1,0 +1,30 @@
+{
+    "tokens": "active le mode jeu",
+    "type": {
+        "type": "Ava:Mod",
+        "kwargs": {
+            "enter": {
+                "type": {
+                    "type": "Ava:Action:TTS",
+                    "args": "Mode de jeu activé"
+                }
+            },
+            "exit":  {
+                "tokens": "partie terminé",
+                "type": {
+                    "type": "Ava:Action:TTS",
+                    "args": "mode jeu désactivé"
+                }
+            }
+        }
+    },
+    "register" : [
+        {
+            "tokens": "musique",
+            "type": {
+                "type": "Action:AudioFilePlayer",
+                "args": "/home/mba/Documents/git/Ambiance-voice-assistant/data/music.ogg"
+            }
+        }
+    ]
+}

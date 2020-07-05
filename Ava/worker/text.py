@@ -74,13 +74,10 @@ class ConsoleReaderWorker(Worker, OThread):
 
     def run(self) -> None:
         while self._is_running:
-            logger.debug("Type your sentence:\n>")
+            logger.info("Type your sentence:\n>")
             sentence = input()
-            if sentence == "exit":
-                self.ava.stop()
-            else:
-                for i in self.get_sentences(sentence):
-                    self.output_push(i)
+            for i in self.get_sentences(sentence):
+                self.output_push(i)
 
 
 class NormalizerWorker(Worker, IOThread):
