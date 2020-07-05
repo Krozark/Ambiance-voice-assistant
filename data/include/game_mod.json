@@ -21,14 +21,22 @@
                 "entrez dans la forêt",
                 "arrivez dans une foret"
             ],
-            "type": {
-                "type": "Ava:Action:AudioFilePlayer",
-                "args": "data/music/ambiance/forest.mp3",
-                "kwargs": {
-                    "playlist": "ambiance"
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": "data/music/ambiance/forest.mp3",
+                    "kwargs": {
+                        "playlist": "ambiance"
+                    }
+                },
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": "data/music/effect/Splash-Ploor.mp3",
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
                 }
-            }
-
+            ]
         }
     ]
 }

@@ -34,23 +34,36 @@ def get_register(ava, data_list):
         logger.debug("Parsing data: %s", data)
         # get object
         type_type = data["type"]
-        args = [ava]
-        kwargs = None
-        # if not isinstance(type_type_list, list):
-        #     type_type_list = [type_type_list]
-        # objs = ActionList()
-        # for type_type in type_type_list:
-        if isinstance(type_type, dict):
-            type_args = type_type.get("args", None)
-            if type_args is not None:
-                if isinstance(type_args, (list, tuple)):
-                    args += type_args
-                else:
-                    args.append(type_args)
-            kwargs = type_type.get("kwargs", None)
-            type_type = type_type["type"]
-        obj = ava._factory.construct(type_type, args=args, kwargs=kwargs)
-            # objs.append(obj)
+        if isinstance(type_type, list):
+            obj = ActionList()
+            for t in type_type:
+                args = [ava]
+                kwargs = None
+                if isinstance(t, dict):
+                    type_args = t.get("args", None)
+                    if type_args is not None:
+                        if isinstance(type_args, (list, tuple)):
+                            args += type_args
+                        else:
+                            args.append(type_args)
+                    kwargs = t.get("kwargs", None)
+                    t = t["type"]
+                obj.append(
+                    ava._factory.construct(t, args=args, kwargs=kwargs)
+                )
+        else:
+            args = [ava]
+            kwargs = None
+            if isinstance(type_type, dict):
+                type_args = type_type.get("args", None)
+                if type_args is not None:
+                    if isinstance(type_args, (list, tuple)):
+                        args += type_args
+                    else:
+                        args.append(type_args)
+                kwargs = type_type.get("kwargs", None)
+                type_type = type_type["type"]
+            obj = ava._factory.construct(type_type, args=args, kwargs=kwargs)
 
         # tokens
         tokens_sentences, token_regex = get_tokens(ava, data.get("tokens", ""))
@@ -67,4 +80,5 @@ def load_register(ava, data_list, target):
             load_register(ava, other, obj)
         # register
         for tokens in tokens_sentences:
+            print("**************", target)
             target.register(tokens, obj, token_regex=token_regex)
