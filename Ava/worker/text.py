@@ -63,6 +63,26 @@ class FileReaderWorker(Worker, OThread):
             current = (current + 1) % len(self._sentences)
 
 
+class ConsoleReaderWorker(Worker, OThread):
+    def __init__(self, ava, **kwargs):
+        Worker.__init__(self, ava, **kwargs)
+        OThread.__init__(self)
+
+    def get_sentences(self, sentence: str) -> list:
+        s = nltk.sent_tokenize(sentence, self.ava.config.language_data["nltk"])
+        return s
+
+    def run(self) -> None:
+        while self._is_running:
+            logger.debug("Type your sentence:\n>")
+            sentence = input()
+            if sentence == "exit":
+                self.ava.stop()
+            else:
+                for i in self.get_sentences(sentence):
+                    self.output_push(i)
+
+
 class NormalizerWorker(Worker, IOThread):
     def __init__(self, ava, **kwargs):
         Worker.__init__(self, ava, **kwargs)

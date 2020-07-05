@@ -26,7 +26,8 @@ from Ava.worker import (
     TokenizerSimpleWorker,
     TokenizerStemWorker,
     TokenizerLemmaWorker,
-    ModWorker
+    ModWorker,
+    ConsoleReaderWorker
 )
 
 logger = logging.getLogger(__name__)
@@ -99,14 +100,16 @@ class Ava(object):
         for w in self._workers:
             w.join()
 
-    def create_pipeline(self, audio_input=True, debug_audio=False, debug_tts=False, token_strategy=TokenStrategy.simple):
+    def create_pipeline(self, text_input=True, debug_audio=False, debug_tts=False, token_strategy=TokenStrategy.simple):
         """
-        (if audio_input)
+        (if text_input == audio)
         MicrophoneWorker --+-- (if debug_audio) --> AudioToFileWorker -> AudioFilePlayerWorker
                            |
                            +--> STTWorker as text_source -->
-        (else)
+        (elif text_input == "file")
         FileReaderWorker as text_source -->
+        (else)
+        ConsoleReaderWorker as text_source -->
         (end if)
 
 
@@ -120,7 +123,7 @@ class Ava(object):
 
         tokenizer--> CacheWorker --> ActionWorker
         """
-        if audio_input:
+        if text_input == "audio":
             audio_source = MicrophoneWorker(self)
             if debug_audio:
                 save_to_file = AudioToFileWorker("debug_audio")
@@ -129,12 +132,14 @@ class Ava(object):
 
             text_source = STTWorker(self)
             audio_source >> text_source
-        else:
+        elif text_input == "file":
             text_source = FileReaderWorker(
                 self,
                 os.path.join(self.config.language_data["input-file"]),
                 timedelta=3
             )
+        else:
+            text_source = ConsoleReaderWorker(self)
 
         if debug_tts:
             tss = TTSWorker(self)
@@ -174,7 +179,7 @@ class Ava(object):
 
     def _load_pipeline(self, data):
         kwargs = dict(
-            audio_input=False,
+            text_input="console",
             debug_audio=False,
             debug_tts=False,
             token_strategy=Ava.TokenStrategy.simple,

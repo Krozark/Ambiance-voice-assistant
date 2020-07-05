@@ -17,7 +17,8 @@ from .text import (
     # LoggerWorker,
     TTSWorker,
     FileReaderWorker,
-    NormalizerWorker
+    NormalizerWorker,
+    ConsoleReaderWorker
 )
 from .token import (
     TokenizerSimpleWorker,

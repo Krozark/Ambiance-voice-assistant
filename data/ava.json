@@ -48,7 +48,7 @@
     },
     "pipeline": {
             "kwargs": {
-            "audio_input": true,
+            "text_input": "console",
             "debug_audio": false,
             "debug_tts": false,
             "token_strategy": 0
