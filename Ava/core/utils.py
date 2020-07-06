@@ -80,5 +80,4 @@ def load_register(ava, data_list, target):
             load_register(ava, other, obj)
         # register
         for tokens in tokens_sentences:
-            print("**************", target)
             target.register(tokens, obj, token_regex=token_regex)

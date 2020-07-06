@@ -1,5 +1,8 @@
 {
-    "tokens": "mode jeu",
+    "tokens": [
+        "active le mode de jeu",
+        "active le mode jeu"
+    ],
     "type": {
         "type": "Ava:Mod",
         "kwargs": {
@@ -10,8 +13,14 @@
                 }
             },
             "exit":  {
-                "tokens": "partie terminé",
-                "type": "Ava:Action:AudioStop"
+                "tokens": "partie terminée",
+                "type": [
+                    "Ava:Action:AudioStop",
+                    {
+                        "type": "Ava:Action:TTS",
+                        "args": "Mode de jeu terminé"
+                    }
+                ]
             }
         }
     },
@@ -19,12 +28,17 @@
         {
             "tokens": [
                 "entrez dans la forêt",
-                "arrivez dans une foret"
+                "entrez dans une forêt",
+                "arrivez dans une forêt"
             ],
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/music/ambiance/forest.mp3",
+                    "args": [
+                        "data/music/ambiance/forest-1.mp3",
+                        "data/music/ambiance/forest-2.mp3",
+                        "data/music/ambiance/forest-3.mp3"
+                    ],
                     "kwargs": {
                         "playlist": "ambiance"
                     }

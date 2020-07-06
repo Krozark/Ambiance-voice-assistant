@@ -24,7 +24,9 @@ class Mod(CacheNodeData, WithAva):
 
         if not isinstance(enter, (list, tuple)):
             enter = [enter]
-        enter_action, enter_tokens, enter_regex, enter_data = get_register(ava, enter)[0]
+        enter_registration = get_register(ava, enter)
+        print("*********************", enter_registration)
+        enter_action, enter_tokens, enter_regex, enter_data = enter_registration[0]
         enter_action = ActionList([enter_action, CallbackAction(ava, self.activate, name="Activating mod")])
         for tokens in enter_tokens:
             self._non_active_nodes.register(tokens, enter_action, token_regex=enter_regex)

@@ -1,5 +1,5 @@
 import logging
-
+import random
 from pydub import AudioSegment
 from sound_player import Sound
 
@@ -12,18 +12,20 @@ logger = logging.getLogger(__name__)
 
 class AudioFilePlayerAction(Action):
     def __init__(self, ava, filename, *args, playlist=None, loop=None, **kwargs):
-        Action.__init__(self, ava, *args, name=filename, **kwargs)
-        self._filename = filename
+        filenames = [filename, *args]
+        Action.__init__(self, ava, name=", ".join(filenames), **kwargs)
+        self._filenames = filenames
         self._playlist = playlist
         self._loop = loop
 
     def _do_trigger(self, playlist=None, loop=None, **kwargs) -> None:
         playlist = playlist or self._playlist
         loop = loop or self._loop
+        filename = random.choice(self._filenames)
         if self.ava.config.get("audio_as_text"):
-            logger.info("Play file %s to playlist %s", self._filename, playlist)
+            logger.info("Play file %s to playlist %s", filename, playlist)
         else:
-            audio = AudioSegment.from_file(self._filename)
+            audio = AudioSegment.from_file(filename)
             sound = Sound(audio)
             if loop != 1:
                 sound.set_loop(loop)

@@ -47,13 +47,13 @@
         "audio_as_text": false
     },
     "sound-player": {
-        "background": {
+        "music": {
             "concurency": 1,
             "replace": true,
             "loop": 0
         },
         "ambiance": {
-            "concurency": 5,
+            "concurency": 1,
             "replace": true,
             "loop": 0
         },
