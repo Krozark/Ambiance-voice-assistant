@@ -26,6 +26,47 @@
     },
     "register" : [
         {
+            "token": [
+                "plus un bruit"
+            ],
+            "type": "Ava:Action:AudioStop"
+        },
+        {
+            "token": [
+                "nuit tombe sur le village",
+                "le village s'endore"
+            ],
+            "type": {
+                "type": "Ava:Action:AudioFilePlayer",
+                "args": [
+                    "data/music/ambiance/night-village-1.mp3",
+                    "data/music/ambiance/night-village-2.mp3"
+                ],
+                "kwargs": {
+                    "playlist": "ambiance"
+                }
+            }
+        },
+        {
+             "tokens": [
+                "entrez dans un village",
+                "le jour se lève sur le village",
+                "le village se lève"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/ambiance/town-1.mp3",
+                        "data/music/ambiance/town-2.mp3"
+                    ],
+                    "kwargs": {
+                        "playlist": "ambiance"
+                    }
+                }
+            ]
+        },
+        {
             "tokens": [
                 "entrez dans la forêt",
                 "entrez dans une forêt",
@@ -42,12 +83,21 @@
                     "kwargs": {
                         "playlist": "ambiance"
                     }
-                },
+                }
+            ]
+        },
+        {
+            "tokens": [
+                "dans un village en feu"
+            ],
+            "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/music/effect/Splash-Ploor.mp3",
+                    "args": [
+                        "data/music/ambiance/burning-village-1.mp3"
+                    ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "ambiance"
                     }
                 }
             ]
