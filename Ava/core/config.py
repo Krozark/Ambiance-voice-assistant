@@ -1,8 +1,15 @@
 import logging
 import logging.config
+import enum
 
 
 logger = logging.getLogger(__name__)
+
+
+class TokenStrategy(enum.Enum):
+    simple = 1
+    lemma = 2
+    stem = 3
 
 
 class Config(object):
@@ -10,9 +17,11 @@ class Config(object):
         self._languages = {}
         self._current_language = None
         self._api_keys = {}
+        self.token_strategy = TokenStrategy.simple
 
     def load(self, data):
         for key, value in data.items():
+            logger.debug("Configure %s = %s", key, value)
             if key == "languages":
                 self._current_language = value.pop("current")
                 self._languages = value

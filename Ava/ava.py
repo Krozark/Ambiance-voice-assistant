@@ -1,4 +1,3 @@
-import enum
 import json
 import logging
 import os
@@ -11,7 +10,8 @@ from sound_player import SoundPlayer
 from Ava import config
 from Ava.core import (
     factory as global_factory,
-    Config
+    Config,
+    TokenStrategy
 )
 from Ava.core.utils import load_register
 from Ava.worker import (
@@ -34,27 +34,21 @@ logger = logging.getLogger(__name__)
 
 
 class Ava(object):
-
-    class TokenStrategy(enum.Enum):
-        simple = 1
-        lemma = 2
-        stem = 3
-
     def __init__(self, factory=global_factory):
         super().__init__()
         self.config = Config()
+        self._running = False
+
         self._workers = []
         self._factory = factory
         self._cache = ModWorker(self)
         self._player = SoundPlayer()
-        self._running = False
+        self._tokenizer = None
 
         self._register_defaults()
 
     def tokenize(self, text):
-        # text = unidecode(text)
-        tokens = word_tokenize(text, language=self.config.language_data["nltk"])
-        return tokens
+        return self._tokenizer.tokenize(text)
 
     def load_from_file(self, filename=None):
         if filename is None:
@@ -101,7 +95,7 @@ class Ava(object):
         for w in self._workers:
             w.join()
 
-    def create_pipeline(self, text_input=True, debug_audio=False, debug_tts=False, token_strategy=TokenStrategy.simple):
+    def create_pipeline(self, text_input=True, debug_audio=False, debug_tts=False):
         """
         (if text_input == audio)
         MicrophoneWorker --+-- (if debug_audio) --> AudioToFileWorker -> AudioFilePlayerWorker
@@ -149,16 +143,16 @@ class Ava(object):
         normalizer = NormalizerWorker(self)
         text_source >> normalizer
 
-        if token_strategy == Ava.TokenStrategy.lemma:
-            tokenizer = TokenizerLemmaWorker(self)
-        elif token_strategy == Ava.TokenStrategy.stem:
-            tokenizer = TokenizerStemWorker(self)
+        if self.config.token_strategy == TokenStrategy.lemma.value:
+            self._tokenizer = TokenizerLemmaWorker(self)
+        elif self.config.token_strategy == TokenStrategy.stem.value:
+            self._tokenizer = TokenizerStemWorker(self)
         else:
-            tokenizer = TokenizerSimpleWorker(self)
+            self._tokenizer = TokenizerSimpleWorker(self)
 
-        normalizer >> tokenizer
+        normalizer >> self._tokenizer
 
-        tokenizer >> self._cache
+        self._tokenizer >> self._cache
 
         action = ActionWorker(self)
         self._cache >> action
@@ -183,8 +177,7 @@ class Ava(object):
         kwargs = dict(
             text_input="console",
             debug_audio=False,
-            debug_tts=False,
-            token_strategy=Ava.TokenStrategy.simple,
+            debug_tts=False
         )
         kwargs.update(data.get("kwargs", dict()))
         self.create_pipeline(**kwargs)

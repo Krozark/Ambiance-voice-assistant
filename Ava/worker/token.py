@@ -13,42 +13,47 @@ from Ava.core import (
 
 logger = logging.getLogger(__name__)
 
-
-class TokenizerSimpleWorker(Worker, IOxThread):
+class Tokenizer(Worker, IOxThread):
     def __init__(self, ava, **kwargs):
         Worker.__init__(self, ava, **kwargs)
         IOxThread.__init__(self)
 
+    def tokenize(self, text: str) -> List[str]:
+        raise NotImplementedError()
+
     def _process_input_data(self, text: str) -> List[str]:
+        for token in list(self.tokenize(text)):
+            yield token
+
+
+class TokenizerSimpleWorker(Tokenizer):
+    def tokenize(self, text: str) -> List[str]:
         for token in word_tokenize(text):
             logger.debug("TokenizerWorker create token %s", token)
             yield token
 
 
-class TokenizerLemmaWorker(Worker, IOxThread):
+class TokenizerLemmaWorker(Tokenizer):
     def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
-        IOxThread.__init__(self)
-
+        super().__init__(ava, **kwargs)
         logger.info("Loading spacy data. Please wait, this could take a moment...")
         self._nlp = spacy.load(ava.config.language_data["spacy"])
         logger.info("Spacy loaded")
 
-    def _process_input_data(self, data: str) -> List[str]:
-        doc = self._nlp(data)
+    def tokenize(self, text: str) -> List[str]:
+        doc = self._nlp(text)
         for token in doc:
             logger.debug("Lemmanize '%s' as '%s'", token, token.lemma_)
             yield token.lemma_
 
 
-class TokenizerStemWorker(Worker, IOxThread):
+class TokenizerStemWorker(Tokenizer):
     def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
-        IOxThread.__init__(self)
+        super().__init__(ava, **kwargs)
         self._stemmer = SnowballStemmer(ava.config.language_data["nltk"])
 
-    def _process_input_data(self, data: str) -> str:
-        words = word_tokenize(data)
+    def tokenize(self, text: str) -> List[str]:
+        words = word_tokenize(text)
         for w in words:
             token = self._stemmer.stem(w)
             logger.debug("Stemming '%s' as '%s'", w, token)

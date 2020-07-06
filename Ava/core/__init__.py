@@ -10,7 +10,8 @@ from .cache import (
     CacheResult
 )
 from .config import (
-    Config
+    Config,
+    TokenStrategy
 )
 from .factory import (
     Factory,

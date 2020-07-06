@@ -44,7 +44,8 @@
                 }
             }
         },
-        "audio_as_text": false
+        "audio_as_text": false,
+        "token_strategy": 2
     },
     "sound-player": {
         "music": {
@@ -66,14 +67,18 @@
             "kwargs": {
             "text_input": "console",
             "debug_audio": false,
-            "debug_tts": false,
-            "token_strategy": 0
+            "debug_tts": false
         }
     },
     "types": {
         "...": "include(include/types.json)"
     },
     "register": [
+        {
+          "...":  "include(include/game_mod.json)"
+        }
+    ],
+    "register_2": [
         {
             "tokens": [
                 "Ava",

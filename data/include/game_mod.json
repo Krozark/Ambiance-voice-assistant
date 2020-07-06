@@ -26,21 +26,15 @@
     },
     "register" : [
         {
-            "token": [
-                "plus un bruit"
-            ],
-            "type": "Ava:Action:AudioStop"
-        },
-        {
-            "token": [
+            "tokens": [
                 "nuit tombe sur le village",
                 "le village s'endore"
             ],
             "type": {
                 "type": "Ava:Action:AudioFilePlayer",
                 "args": [
-                    "data/music/ambiance/night-village-1.mp3",
-                    "data/music/ambiance/night-village-2.mp3"
+                    "data/music/ambiance/night-village-1.ogg",
+                    "data/music/ambiance/night-village-2.ogg"
                 ],
                 "kwargs": {
                     "playlist": "ambiance"
@@ -57,8 +51,8 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/ambiance/town-1.mp3",
-                        "data/music/ambiance/town-2.mp3"
+                        "data/music/ambiance/town-1.ogg",
+                        "data/music/ambiance/town-2.ogg"
                     ],
                     "kwargs": {
                         "playlist": "ambiance"
@@ -68,17 +62,17 @@
         },
         {
             "tokens": [
-                "entrez dans la forêt",
-                "entrez dans une forêt",
-                "arrivez dans une forêt"
+                "vous entrez dans la forêt",
+                "vous entrez dans une forêt",
+                "vous arrivez dans une forêt"
             ],
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/ambiance/forest-1.mp3",
-                        "data/music/ambiance/forest-2.mp3",
-                        "data/music/ambiance/forest-3.mp3"
+                        "data/music/ambiance/forest-1.ogg",
+                        "data/music/ambiance/forest-2.ogg",
+                        "data/music/ambiance/forest-3.ogg"
                     ],
                     "kwargs": {
                         "playlist": "ambiance"
@@ -88,16 +82,27 @@
         },
         {
             "tokens": [
-                "dans un village en feu"
+                "un village en feu",
+                "village est en feu"
             ],
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": [
-                        "data/music/ambiance/burning-village-1.mp3"
-                    ],
+                    "args": "data/music/ambiance/burning-village-1.ogg",
                     "kwargs": {
                         "playlist": "ambiance"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": "tombe dans l'eau",
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": "data/music/effect/splash-pool.ogg",
+                    "kwargs": {
+                        "playlist": "effect"
                     }
                 }
             ]
