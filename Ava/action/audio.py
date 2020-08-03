@@ -1,6 +1,5 @@
 import logging
 import random
-from pydub import AudioSegment
 from sound_player import Sound
 
 from Ava.core import (
@@ -25,8 +24,7 @@ class AudioFilePlayerAction(Action):
         if self.ava.config.get("audio_as_text"):
             logger.info("Play file %s to playlist %s", filename, playlist)
         else:
-            audio = AudioSegment.from_file(filename)
-            sound = Sound(audio)
+            sound = Sound(filename)
             if loop != 1:
                 sound.set_loop(loop)
             self.ava._player.enqueue(sound, playlist)

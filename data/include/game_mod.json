@@ -27,14 +27,28 @@
     "register" : [
         {
             "tokens": [
-                "nuit tombe sur le village",
-                "le village s'endore"
+                "la nuit tombe sur le village",
+                "le village s'endort"
             ],
             "type": {
                 "type": "Ava:Action:AudioFilePlayer",
                 "args": [
                     "data/music/ambiance/night-village-1.ogg",
                     "data/music/ambiance/night-village-2.ogg"
+                ],
+                "kwargs": {
+                    "playlist": "ambiance"
+                }
+            }
+        },
+        {
+            "tokens": [
+                "la nuit tombe"
+            ],
+            "type": {
+                "type": "Ava:Action:AudioFilePlayer",
+                "args": [
+                    "data/music/ambiance/night-crickets-ambience-on-rural-property.wav"
                 ],
                 "kwargs": {
                     "playlist": "ambiance"
@@ -96,11 +110,215 @@
             ]
         },
         {
+            "tokens": [
+                "bruits de pas",
+                "marche"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/human/grass_footsteps.wav",
+                        "data/music/effect/human/Womens_shoes_1.wav",
+                        "data/music/effect/human/footsteps1_lp.ogg"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": [
+                "une horloge",
+                "le tic-tac"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": "data/music/effect/objects/loopable-ticking-clock.wav",
+                    "kwargs": {
+                        "playlist": "effect",
+                        "loop": 2
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": [
+                "bruits de course",
+                "cours"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/human/running-shoes-1.wav"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
             "tokens": "tombe dans l'eau",
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/music/effect/splash-pool.ogg",
+                    "args": "data/music/effect/water/splash-pool.ogg",
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": [
+                "boie une gorgée",
+                "fini son vere"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": "data/music/effect/human/drink-sip-and-swallow.wav",
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": "tousser",
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/human/cought1.wav",
+                        "data/music/effect/human/cought2.wav",
+                        "data/music/effect/human/cought3.wav"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": "rigoler",
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/human/laught1.wav"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": "un cris",
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/human/SCREAM.wav"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": "quelqu'un te siffle",
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/human/attention-whistle.wav"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": "reprends ton souffle",
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/human/breath-female.wav",
+                        "data/music/effect/human/breath-female2.wav",
+                        "data/music/effect/human/breath-mal.wav"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": "tu sursautte",
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/human/freakedbreath.wav",
+                        "data/music/effect/human/gasp1.wav"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": "applaudi",
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/human/solo-clap.wav",
+                        "data/music/effect/human/light_applause.ogg"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": "huer",
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/human/cheers.ogg",
+                        "data/music/effect/human/boos.ogg"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": [
+                "un coq",
+                "c'est le matin",
+                "le jour se lève",
+                "le jour se lève sur le village",
+                "le village se lève"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": "/home/mba/Documents/git/Ambiance-voice-assistant/data/music/effect/animals/cockerel_early_morning.mp3",
                     "kwargs": {
                         "playlist": "effect"
                     }

@@ -3,8 +3,8 @@ import logging
 import os
 
 import speech_recognition
-from pydub import AudioSegment
-from pydub.playback import play
+
+from sound_player import Sound
 
 from Ava.core import (
     IOThread,
@@ -74,8 +74,9 @@ class AudioFilePlayerWorker(Worker, IThread):
 
     def _process_input_data(self, filename: str) -> None:
         logger.debug("Play file '%s'", filename)
-        audio = AudioSegment.from_file(filename)
-        play(audio)
+        audio = Sound(filename)
+        audio.play()
+        audio.wait()
 
 
 class STTWorker(Worker, IOThread, RecognizerBase):

@@ -65,7 +65,7 @@
     },
     "pipeline": {
             "kwargs": {
-            "text_input": "console",
+            "text_input": "audio",
             "debug_audio": false,
             "debug_tts": false
         }
@@ -73,12 +73,12 @@
     "types": {
         "...": "include(include/types.json)"
     },
-    "register": [
+    "register_2": [
         {
           "...":  "include(include/game_mod.json)"
         }
     ],
-    "register_2": [
+    "register": [
         {
             "tokens": [
                 "Ava",
