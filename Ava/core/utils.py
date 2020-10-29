@@ -1,4 +1,6 @@
 import logging
+import sys
+from os import environ
 
 logger = logging.getLogger(__name__)
 
@@ -10,6 +12,7 @@ class WithAva(object):
     @property
     def ava(self):
         return self._ava
+
 
 def get_tokens(ava, tokens):
     token_regex = dict()

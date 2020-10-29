@@ -10,14 +10,14 @@ from Ava.core import (
     IOThread,
     OThread,
     IThread,
-    RecognizerBase,
+    TTSRecognizer,
     Worker
 )
 
 logger = logging.getLogger(__name__)
 
 
-class MicrophoneWorker(Worker, OThread, RecognizerBase):
+class MicrophoneWorker(Worker, OThread, TTSRecognizer):
     """
     Class that run a task in background, on put to it's output tha audio listen
     """
@@ -26,7 +26,7 @@ class MicrophoneWorker(Worker, OThread, RecognizerBase):
     def __init__(self, ava, *args, **kwargs):
         Worker.__init__(self, ava, *args, **kwargs)
         OThread.__init__(self)
-        RecognizerBase.__init__(self)
+        TTSRecognizer.__init__(self)
         self._source = self.get_source()
 
     def get_source(self):
@@ -34,7 +34,7 @@ class MicrophoneWorker(Worker, OThread, RecognizerBase):
 
     def run(self):
         with self._source as src:
-            self.adjust_for_ambient_noise(src)
+            self.setup(src)
 
             while self._is_running:
                 logger.debug("Listen....")
@@ -79,14 +79,14 @@ class AudioFilePlayerWorker(Worker, IThread):
         audio.wait()
 
 
-class STTWorker(Worker, IOThread, RecognizerBase):
+class STTWorker(Worker, IOThread, TTSRecognizer):
     """
     Task that take a audio as input, and output the text of this audio
     """
     def __init__(self, ava, **kwargs):
         Worker.__init__(self, ava, **kwargs)
         IOThread.__init__(self)
-        RecognizerBase.__init__(self)
+        TTSRecognizer.__init__(self)
 
     def _process_input_data(self, audio):
         res = None

@@ -2,9 +2,6 @@ from .action import (
     ActionList,
     Action
 )
-from .audio import (
-    RecognizerBase
-)
 from .cache import (
     Cache,
     CacheResult
@@ -25,6 +22,9 @@ from .io import (
 from .mod import (
     Mod
 )
+from .stt import (
+    TTSRecognizer
+)
 from .thread import (
     Thread,
     IThread,
@@ -33,7 +33,8 @@ from .thread import (
     IOxThread
 )
 from .tts import (
-    TTSMixin
+    TTSMixin,
+    TTSEngine
 )
 from .worker import (
     Worker
