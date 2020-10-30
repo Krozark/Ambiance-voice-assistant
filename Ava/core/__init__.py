@@ -23,7 +23,7 @@ from .mod import (
     Mod
 )
 from .stt import (
-    TTSRecognizer
+    STTRecognizer
 )
 from .thread import (
     Thread,

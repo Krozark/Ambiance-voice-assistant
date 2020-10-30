@@ -2,10 +2,10 @@ import logging
 
 from Ava.ava import Ava as Ava_class
 
+logger = logging.getLogger(__name__)
+
 
 def main():
-    logger = logging.getLogger(__name__)
-
     ava = Ava_class()
     ava.load_from_file()
 

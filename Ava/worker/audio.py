@@ -10,23 +10,24 @@ from Ava.core import (
     IOThread,
     OThread,
     IThread,
-    TTSRecognizer,
+    STTRecognizer,
     Worker
 )
 
 logger = logging.getLogger(__name__)
 
 
-class MicrophoneWorker(Worker, OThread, TTSRecognizer):
+class MicrophoneWorker(Worker, OThread):
     """
     Class that run a task in background, on put to it's output tha audio listen
+    TODO Microphone is platform dependent
     """
     source_class = speech_recognition.Microphone
 
     def __init__(self, ava, *args, **kwargs):
         Worker.__init__(self, ava, *args, **kwargs)
         OThread.__init__(self)
-        TTSRecognizer.__init__(self)
+        self._stt = STTRecognizer()
         self._source = self.get_source()
 
     def get_source(self):
@@ -34,11 +35,11 @@ class MicrophoneWorker(Worker, OThread, TTSRecognizer):
 
     def run(self):
         with self._source as src:
-            self.setup(src)
+            self._stt.setup(src)
 
             while self._is_running:
                 logger.debug("Listen....")
-                audio = self.listen(src)
+                audio = self._stt.listen(src)
                 logger.debug("End Listen....")
                 self.output_push(audio)
         self.stop()
@@ -47,6 +48,7 @@ class MicrophoneWorker(Worker, OThread, TTSRecognizer):
 class AudioToFileWorker(Worker, IOThread):
     """
     Class that take audio as input, and save it to file. The filename is send as output
+    TODO Audio to file is platform dependent
     """
     def __init__(self, ava, path=None, **kwargs):
         Worker.__init__(self, ava, **kwargs)
@@ -66,6 +68,7 @@ class AudioToFileWorker(Worker, IOThread):
 class AudioFilePlayerWorker(Worker, IThread):
     """
     Task that take a music filename as input and play it
+    TODO Audio is platform dependent
     """
 
     def __init__(self, ava, **kwargs):
@@ -79,19 +82,23 @@ class AudioFilePlayerWorker(Worker, IThread):
         audio.wait()
 
 
-class STTWorker(Worker, IOThread, TTSRecognizer):
+class STTWorker(Worker, IOThread):
     """
     Task that take a audio as input, and output the text of this audio
+    TODO STT is platform dependent
     """
     def __init__(self, ava, **kwargs):
         Worker.__init__(self, ava, **kwargs)
         IOThread.__init__(self)
-        TTSRecognizer.__init__(self)
+        self._stt = STTRecognizer()
 
     def _process_input_data(self, audio):
         res = None
         try:
-            res = self._recognizer.recognize_google(audio, language=self.ava.config.language_data["recognition"], key=self.ava.config.api_key("GOOGLE_RECOGNITION"))
+            res = self._stt._recognizer.recognize_google(  # TODO !!!!!!!!!!!!!!!!
+                audio, language=self.ava.config.language_data["recognition"],
+                key=self.ava.config.api_key("GOOGLE_RECOGNITION")
+            )
             logger.debug("Recognize: '%s'", res)
         except speech_recognition.UnknownValueError:
             logger.debug("Google Speech Recognition could not understand audio")
