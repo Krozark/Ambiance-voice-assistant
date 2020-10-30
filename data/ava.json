@@ -50,7 +50,7 @@
             }
         },
         "audio_as_text": false,
-        "token_strategy": 2
+        "token_strategy": 1
     },
     "sound-player": {
         "music": {

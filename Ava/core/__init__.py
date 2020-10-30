@@ -9,8 +9,7 @@ from .cache import (
 )
 
 from .factory import (
-    Factory,
-    factory,
+    Factory
 )
 from .io import (
     WithInput,

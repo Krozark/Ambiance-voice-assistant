@@ -3,6 +3,9 @@ import logging
 import logging.config
 import os
 
+from Ava.core.factory import Factory
+
+
 logger = logging.getLogger(__name__)
 
 DEBUG = True
@@ -25,6 +28,7 @@ class Settings(object):
         self._api_keys = None
         self.token_strategy = None
         self.ava = None
+        self.factory = Factory()
         self.clear()
 
     def clear(self):

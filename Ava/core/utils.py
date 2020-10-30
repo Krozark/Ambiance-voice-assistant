@@ -43,7 +43,7 @@ def get_register(data_list):
                     kwargs = t.get("kwargs", None)
                     t = t["type"]
                 obj.append(
-                    settings.ava._factory.construct(t, args=args, kwargs=kwargs)
+                    settings.factory.construct(t, args=args, kwargs=kwargs)
                 )
         else:
             args = []
@@ -57,7 +57,7 @@ def get_register(data_list):
                         args.append(type_args)
                 kwargs = type_type.get("kwargs", None)
                 type_type = type_type["type"]
-            obj = settings.ava._factory.construct(type_type, args=args, kwargs=kwargs)
+            obj = settings.factory.construct(type_type, args=args, kwargs=kwargs)
 
         # tokens
         tokens_sentences, token_regex = get_tokens(data.get("tokens", ""))

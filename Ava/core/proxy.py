@@ -1,6 +1,6 @@
 import logging
-import importlib
 
+from .factory import import_string
 from .platform import platform as sys_platform
 
 logger = logging.getLogger(__name__)
@@ -12,29 +12,28 @@ class ProxyClass(object):
         self._object_class = None
         self._platform = platform
         if isinstance(facade, str):
-            mod, obj = facade.rsplit(".", 1)
-            mod = "{}.facades.{}".format(
+            s = "{}.facades.{}".format(
                 self.__module__.rsplit(".", 1)[0],
-                mod
+                facade
             )
-            mod = importlib.import_module(mod)
-            facade = getattr(mod, obj)
+            facade = import_string(s)
         self._facade_class = facade
 
     def _ensure_object_class(self):
         object_class = self._object_class
         if object_class is None:
 
-            module = "{}.platforms.{}.{}".format(
+            s = "{}.platforms.{}.{}.instance_class".format(
                 self.__module__.rsplit(".", 1)[0],
                 self._platform,
                 self._facade_class.__module__.split("facades.", 1)[-1]
             )
+            logger.warning("MODULE TO LOAD %s", s)
             try:
-                mod = importlib.import_module(module)
-                object_class = mod.instance_class()
+                instance_class = import_string(s)
+                object_class = instance_class()
             except (ImportError, AttributeError) as e:
-                logger.warning("impossible to import %s.instance_class: ", module, e)
+                logger.warning("impossible to import %s: %s", s, e)
                 object_class = self._facade_class
             self._object_class = object_class
         return object_class

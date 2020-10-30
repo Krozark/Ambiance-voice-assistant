@@ -6,9 +6,6 @@ import time
 from json_include import build_json
 from sound_player import SoundPlayer
 
-from Ava.core import (
-    factory as global_factory
-)
 from Ava.core.utils import load_register
 from Ava.settings import (
     settings,
@@ -35,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 
 class Ava(object):
-    def __init__(self, factory=global_factory):
+    def __init__(self):
         super().__init__()
         # update settings
         settings.ava = self
@@ -43,7 +40,6 @@ class Ava(object):
         self._running = False
 
         self._workers = []
-        self._factory = factory
         self._tokenizer = None
         self._cache = ModWorker()
         self._player = SoundPlayer()
@@ -161,17 +157,17 @@ class Ava(object):
 
     def _register_defaults(self):
         # Mod
-        self._factory.register("Ava:Mod", "Ava.core.mod.Mod")
+        settings.factory.register("Ava:Mod", "Ava.core.mod.Mod")
         # Actions
-        self._factory.register("Ava:Action:AudioFilePlayer", "Ava.action.AudioFilePlayerAction",)
-        self._factory.register("Ava:Action:AudioStop", "Ava.action.AudioStopAction",)
-        self._factory.register("Ava:Action:Stop", "Ava.action.AvaStopAction")
-        self._factory.register("Ava:Action:TTS", "Ava.action.TTSAction")
-        self._factory.register("Ava:Action:WebBrowser", "Ava.action.WebBrowserAction")
-        self._factory.register("Ava:Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
-        self._factory.register("Ava:Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")
-        self._factory.register("Ava:Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")
-        self._factory.register("Ava:Action:Weather", "Ava.action.WeatherAction")
+        settings.factory.register("Ava:Action:AudioFilePlayer", "Ava.action.AudioFilePlayerAction",)
+        settings.factory.register("Ava:Action:AudioStop", "Ava.action.AudioStopAction",)
+        settings.factory.register("Ava:Action:Stop", "Ava.action.AvaStopAction")
+        settings.factory.register("Ava:Action:TTS", "Ava.action.TTSAction")
+        settings.factory.register("Ava:Action:WebBrowser", "Ava.action.WebBrowserAction")
+        settings.factory.register("Ava:Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
+        settings.factory.register("Ava:Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")
+        settings.factory.register("Ava:Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")
+        settings.factory.register("Ava:Action:Weather", "Ava.action.WeatherAction")
 
         # Workers
 
@@ -194,7 +190,7 @@ class Ava(object):
                 t = value["class"]
                 args = value.get("args", args)
                 kwargs = value.get("kwargs", kwargs)
-            self._factory.register(alias, t, args, kwargs)
+            settings.factory.register(alias, t, args, kwargs)
 
     def _load_register(self, data_list):
         load_register(data_list, self)
@@ -211,6 +207,6 @@ class Ava(object):
 
     def dump(self):
         r = "[Ava]\n"
-        r += "[Factory]\n%s\n" % ("\n".join(["  " + x for x in self._factory.__str__().split("\n")]))
+        r += "[Factory]\n%s\n" % ("\n".join(["  " + x for x in settings.factory.__str__().split("\n")]))
         r += self._cache.__str__()
         return r
