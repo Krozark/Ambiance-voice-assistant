@@ -29,7 +29,6 @@ setuptools.setup(
    install_requires=[
       'nltk~=3.4',
       'SpeechRecognition~=3.8',
-      'py-espeak-ng~=0.1',
       'pydub~=0.23',
       'PyAudio~=0.2',
       'spacy~=2.2',
@@ -39,6 +38,14 @@ setuptools.setup(
       "sound-player~=0.2",
       "Unidecode>=1.1",
    ],
+   extras_require={
+      'linux': [
+         'py-espeak-ng~=0.1'
+      ],
+      'android': [
+         "pyjnius"
+      ]
+   },
    entry_points={
       'console_scripts': [
         'ava = Ava.__main__:main',

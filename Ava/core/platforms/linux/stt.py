@@ -2,12 +2,12 @@ import logging
 
 import speech_recognition
 
-from Ava.core.facades.stt import RecognizerFacade
+from Ava.core.facades.stt import STTFacade
 
 logger = logging.getLogger(__name__)
 
 
-class LinuxRecognizer(RecognizerFacade):
+class LinuxSTT(STTFacade):
     """
     Mixin for class that use recognizer
     @TODO make a android version of this
@@ -36,4 +36,4 @@ class LinuxRecognizer(RecognizerFacade):
 
 
 def instance_class():
-    return LinuxRecognizer
+    return LinuxSTT

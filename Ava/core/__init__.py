@@ -23,9 +23,7 @@ from .io import (
 from .mod import (
     Mod
 )
-from .stt import (
-    STTRecognizer
-)
+from .stt import STTMixin
 from .thread import (
     Thread,
     IThread,
@@ -33,10 +31,7 @@ from .thread import (
     IOThread,
     IOxThread
 )
-from .tts import (
-    TTSMixin,
-    TTSEngine
-)
+from .tts import TTSMixin
 from .worker import (
     Worker
 )

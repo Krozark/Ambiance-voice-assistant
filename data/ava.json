@@ -4,11 +4,16 @@
             "current": "fr",
             "fr": {
                 "recognition": "fr-FR",
-                "voice": "french-mbrola-1",
                 "nltk": "french",
                 "input-file": "data/text-francais-utf8.txt",
                 "spacy": "fr_core_news_md",
-                "wikipedia": "fr"
+                "wikipedia": "fr",
+                "linux": {
+                    "tts": "french-mbrola-1"
+                },
+                "android": {
+                    "tts": "FRANCE"
+                }
             }
         },
         "api-keys": {

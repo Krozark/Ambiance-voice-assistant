@@ -10,19 +10,23 @@ languages by changing language informations in data/ava.json
 ## From pypi
 
 ```
-pip install ambiance-voice-assistant
-python -m spacy download fr_core_news_md
-apt install mbrola-fr1
+pip install ambiance-voice-assistant[linux] # for linux
+pip install ambiance-voice-assistant[android] # for android
 ```
 
 ## Fom source
 
 ```
-python setup.py install
-python -m spacy download fr_core_news_md
-apt install mbrola-fr1 # or change voices in data/data.json
+python setup.py install .[linux] # for linux
+python setup.py install .[android] # for android
 ```
 
+## Requirements for linux
+
+```
+python -m spacy download fr_core_news_md
+apt install mbrola-fr1 # or change voices in data/ava.json
+```
 
 # Run
 ## No install

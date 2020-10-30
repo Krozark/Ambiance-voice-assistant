@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class RecognizerFacade(object):
+class STTFacade(object):
     """
     Mixin for class that use recognizer
     """

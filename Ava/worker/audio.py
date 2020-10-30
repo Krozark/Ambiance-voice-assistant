@@ -10,14 +10,14 @@ from Ava.core import (
     IOThread,
     OThread,
     IThread,
-    STTRecognizer,
+    STTMixin,
     Worker
 )
 
 logger = logging.getLogger(__name__)
 
 
-class MicrophoneWorker(Worker, OThread):
+class MicrophoneWorker(Worker, OThread, STTMixin):
     """
     Class that run a task in background, on put to it's output tha audio listen
     TODO Microphone is platform dependent
@@ -27,7 +27,7 @@ class MicrophoneWorker(Worker, OThread):
     def __init__(self, ava, *args, **kwargs):
         Worker.__init__(self, ava, *args, **kwargs)
         OThread.__init__(self)
-        self._stt = STTRecognizer()
+        STTMixin.__init__(self.ava)
         self._source = self.get_source()
 
     def get_source(self):
@@ -35,11 +35,9 @@ class MicrophoneWorker(Worker, OThread):
 
     def run(self):
         with self._source as src:
-            self._stt.setup(src)
-
             while self._is_running:
                 logger.debug("Listen....")
-                audio = self._stt.listen(src)
+                audio = self.listen(src)
                 logger.debug("End Listen....")
                 self.output_push(audio)
         self.stop()
@@ -82,7 +80,7 @@ class AudioFilePlayerWorker(Worker, IThread):
         audio.wait()
 
 
-class STTWorker(Worker, IOThread):
+class STTWorker(Worker, IOThread, STTMixin):
     """
     Task that take a audio as input, and output the text of this audio
     TODO STT is platform dependent
@@ -90,12 +88,13 @@ class STTWorker(Worker, IOThread):
     def __init__(self, ava, **kwargs):
         Worker.__init__(self, ava, **kwargs)
         IOThread.__init__(self)
-        self._stt = STTRecognizer()
+        STTMixin.__init__(self.ava)
 
     def _process_input_data(self, audio):
         res = None
         try:
-            res = self._stt._recognizer.recognize_google(  # TODO !!!!!!!!!!!!!!!!
+            self._ensure_engine()
+            res = self._engine_stt._recognizer.recognize_google(  # TODO !!!!!!!!!!!!!!!!
                 audio, language=self.ava.config.language_data["recognition"],
                 key=self.ava.config.api_key("GOOGLE_RECOGNITION")
             )
