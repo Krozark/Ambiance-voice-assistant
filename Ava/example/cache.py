@@ -3,11 +3,11 @@ import os
 
 from Ava import config
 from Ava.action import (
-    CallbackAction,
     AudioFilePlayerAction
 )
 from Ava.core import (
-    Cache
+    Cache,
+    CallbackAction
 )
 
 logger = logging.getLogger(__name__)

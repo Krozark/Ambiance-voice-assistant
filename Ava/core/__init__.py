@@ -1,6 +1,7 @@
 from .action import (
     ActionList,
-    Action
+    Action,
+    CallbackAction
 )
 from .cache import (
     Cache,
