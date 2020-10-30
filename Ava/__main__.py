@@ -7,10 +7,11 @@ logger = logging.getLogger(__name__)
 
 def main():
     ava = Ava_class()
-    ava.load_from_file()
 
+    ava.load_from_file()
     print(ava.dump())
     ava.run()
 
-if  __name__ == "__main__":
+
+if __name__ == "__main__":
     main()

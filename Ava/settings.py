@@ -24,6 +24,7 @@ class Settings(object):
         self._current_language = None
         self._api_keys = None
         self.token_strategy = None
+        self.ava = None
         self.clear()
 
     def clear(self):

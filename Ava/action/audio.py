@@ -11,9 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 class AudioFilePlayerAction(Action):
-    def __init__(self, ava, filename, *args, playlist=None, loop=None, **kwargs):
+    def __init__(self, filename, *args, playlist=None, loop=None, **kwargs):
         filenames = [filename, *args]
-        Action.__init__(self, ava, name=", ".join(filenames), **kwargs)
+        Action.__init__(self, name=", ".join(filenames), **kwargs)
         self._filenames = filenames
         self._playlist = playlist
         self._loop = loop
@@ -28,12 +28,12 @@ class AudioFilePlayerAction(Action):
             sound = Sound(filename)
             if loop != 1:
                 sound.set_loop(loop)
-            self.ava._player.enqueue(sound, playlist)
+            settings.ava._player.enqueue(sound, playlist)  # TODO
 
 
 class AudioStopAction(Action):
-    def __init__(self, ava, playlist=None, **kwargs):
-        Action.__init__(self, ava, name=playlist, **kwargs)
+    def __init__(self, playlist=None, **kwargs):
+        super().__init__(name=playlist, **kwargs)
         self._playlist = playlist
 
     def _do_trigger(self, playlist=None, **kwargs) -> None:
@@ -41,5 +41,5 @@ class AudioStopAction(Action):
         if settings.get("audio_as_text"):
             logger.info("Stop playlist %s", playlist)
         else:
-            self.ava._player.stop(playlist=playlist)
+            settings.ava._player.stop(playlist=playlist)
 

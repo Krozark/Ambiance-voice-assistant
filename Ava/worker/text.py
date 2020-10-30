@@ -29,8 +29,8 @@ class TTSWorker(Worker, IThread, TTSMixin):
     """
     Task that take a text as input and transform it as sound
     """
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IThread.__init__(self)
 
     def _process_input_data(self, text: str) -> None:
@@ -39,8 +39,8 @@ class TTSWorker(Worker, IThread, TTSMixin):
 
 
 class FileReaderWorker(Worker, OThread):
-    def __init__(self, ava, filename: str, timedelta: int=1, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, filename: str, timedelta: int=1, **kwargs):
+        Worker.__init__(self, **kwargs)
         OThread.__init__(self)
         self._timedelta = timedelta
         self._sentences = self.get_sentences(filename)
@@ -65,8 +65,8 @@ class FileReaderWorker(Worker, OThread):
 
 
 class ConsoleReaderWorker(Worker, OThread):
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         OThread.__init__(self)
 
     def get_sentences(self, sentence: str) -> list:
@@ -82,8 +82,8 @@ class ConsoleReaderWorker(Worker, OThread):
 
 
 class NormalizerWorker(Worker, IOThread):
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IOThread.__init__(self)
 
     def _process_input_data(self, text: str) -> str:

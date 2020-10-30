@@ -6,8 +6,8 @@ logger = logging.getLogger(__name__)
 
 
 class ModWorker(CacheWorker):
-    def __init__(self, ava, **kwargs):
-        CacheWorker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self._mod_stack = []
 
     def get(self, tokens):

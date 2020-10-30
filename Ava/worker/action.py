@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class ActionWorker(Worker, IThread):
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IThread.__init__(self)
 
     def _process_input_data(self, action) -> None:

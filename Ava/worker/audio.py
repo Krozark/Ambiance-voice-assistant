@@ -25,10 +25,10 @@ class MicrophoneWorker(Worker, OThread, STTMixin):
     """
     source_class = speech_recognition.Microphone
 
-    def __init__(self, ava, *args, **kwargs):
-        Worker.__init__(self, ava, *args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        Worker.__init__(self, *args, **kwargs)
         OThread.__init__(self)
-        STTMixin.__init__(self.ava)
+        STTMixin.__init__(self)
         self._source = self.get_source()
 
     def get_source(self):
@@ -49,8 +49,8 @@ class AudioToFileWorker(Worker, IOThread):
     Class that take audio as input, and save it to file. The filename is send as output
     TODO Audio to file is platform dependent
     """
-    def __init__(self, ava, path=None, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, path=None, **kwargs):
+        Worker.__init__(self, **kwargs)
         IOThread.__init__(self)
 
         self._path = path or ""
@@ -70,8 +70,8 @@ class AudioFilePlayerWorker(Worker, IThread):
     TODO Audio is platform dependent
     """
 
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IThread.__init__(self)
 
     def _process_input_data(self, filename: str) -> None:
@@ -86,10 +86,10 @@ class STTWorker(Worker, IOThread, STTMixin):
     Task that take a audio as input, and output the text of this audio
     TODO STT is platform dependent
     """
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IOThread.__init__(self)
-        STTMixin.__init__(self.ava)
+        STTMixin.__init__(self)
 
     def _process_input_data(self, audio):
         res = None

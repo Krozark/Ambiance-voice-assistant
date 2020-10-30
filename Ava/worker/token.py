@@ -13,9 +13,10 @@ from Ava.core import (
 
 logger = logging.getLogger(__name__)
 
+
 class Tokenizer(Worker, IOxThread):
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IOxThread.__init__(self)
 
     def tokenize(self, text: str) -> List[str]:
@@ -34,8 +35,8 @@ class TokenizerSimpleWorker(Tokenizer):
 
 
 class TokenizerLemmaWorker(Tokenizer):
-    def __init__(self, ava, **kwargs):
-        super().__init__(ava, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         logger.info("Loading spacy data. Please wait, this could take a moment...")
         self._nlp = spacy.load(settings.language_data["spacy"])
         logger.info("Spacy loaded")
@@ -48,8 +49,8 @@ class TokenizerLemmaWorker(Tokenizer):
 
 
 class TokenizerStemWorker(Tokenizer):
-    def __init__(self, ava, **kwargs):
-        super().__init__(ava, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self._stemmer = SnowballStemmer(settings.language_data["nltk"])
 
     def tokenize(self, text: str) -> List[str]:

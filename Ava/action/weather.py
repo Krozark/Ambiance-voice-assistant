@@ -32,8 +32,8 @@ def day_to_int(day, data):
 
 
 class WeatherAction(Action, TTSMixin):
-    def __init__(self, ava, *args, city=None, day=0, **kwargs):
-        Action.__init__(self, ava, *args, **kwargs)
+    def __init__(self, *args, city=None, day=0, **kwargs):
+        Action.__init__(self, *args, **kwargs)
         self._city = city
         self._day = day
 

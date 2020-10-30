@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 
 class WebBrowserAction(Action):
-    def __init__(self, ava, *args, url=None, **kwargs):
-        Action.__init__(self, ava, *args, name=url, **kwargs)
+    def __init__(self, *args, url=None, **kwargs):
+        super().__init__(*args, name=url, **kwargs)
         self._url = url
 
     def _do_trigger(self, *args, url=None, **kwargs) -> None:
@@ -23,8 +23,8 @@ class WebBrowserAction(Action):
 
 
 class WebBrowserSearchAction(Action):
-    def __init__(self, ava, *args, search=None, base_url=None, **kwargs):
-        Action.__init__(self, ava, *args, name=search, **kwargs)
+    def __init__(self, *args, search=None, base_url=None, **kwargs):
+        super().__init__(*args, name=search, **kwargs)
         self._search = search
         self._base_url = base_url or "https://duckduckgo.com/?q="
 
@@ -35,8 +35,8 @@ class WebBrowserSearchAction(Action):
 
 
 class WikipediaSearchAction(Action):
-    def __init__(self, ava, *args, search=None, **kwargs):
-        Action.__init__(self, ava, *args, name=search, **kwargs)
+    def __init__(self, *args, search=None, **kwargs):
+        super().__init__(*args, name=search, **kwargs)
         self._search = search
 
     def _do_trigger(self, *args, search=None, **kwargs) -> None:
@@ -48,8 +48,9 @@ class WikipediaSearchAction(Action):
 
 
 class WikipediaSearchTTSAction(Action, TTSMixin):
-    def __init__(self, ava, *args, search=None, sentences=2, **kwargs):
-        Action.__init__(self, ava, *args, name=search, **kwargs)
+    def __init__(self, *args, search=None, sentences=2, **kwargs):
+        Action.__init__(self, *args, name=search, **kwargs)
+        TTSMixin.__init__(self)
         self._search = search
         self._sentences = sentences
 

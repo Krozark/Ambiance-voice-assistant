@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class CacheWorker(Worker, IOxThread, Cache):
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IOxThread.__init__(self)
         Cache.__init__(self)
         self._tokens = []

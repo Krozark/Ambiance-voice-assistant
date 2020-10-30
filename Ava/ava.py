@@ -37,13 +37,16 @@ logger = logging.getLogger(__name__)
 class Ava(object):
     def __init__(self, factory=global_factory):
         super().__init__()
+        # update settings
+        settings.ava = self
+
         self._running = False
 
         self._workers = []
         self._factory = factory
-        self._cache = ModWorker(self)
-        self._player = SoundPlayer()
         self._tokenizer = None
+        self._cache = ModWorker()
+        self._player = SoundPlayer()
 
         self._register_defaults()
 
@@ -119,42 +122,41 @@ class Ava(object):
         tokenizer--> CacheWorker --> ActionWorker
         """
         if text_input == "audio":
-            audio_source = MicrophoneWorker(self)
+            audio_source = MicrophoneWorker()
             if debug_audio:
                 save_to_file = AudioToFileWorker("debug_audio")
-                play = AudioFilePlayerWorker(self)
+                play = AudioFilePlayerWorker()
                 audio_source >> (save_to_file >> play)
 
-            text_source = STTWorker(self)
+            text_source = STTWorker()
             audio_source >> text_source
         elif text_input == "file":
             text_source = FileReaderWorker(
-                self,
                 os.path.join(settings.language_data["input-file"]),
                 timedelta=3
             )
         else:
-            text_source = ConsoleReaderWorker(self)
+            text_source = ConsoleReaderWorker()
 
         if debug_tts:
-            tss = TTSWorker(self)
+            tss = TTSWorker()
             text_source >> tss
 
-        normalizer = NormalizerWorker(self)
+        normalizer = NormalizerWorker()
         text_source >> normalizer
 
         if settings.token_strategy == TokenStrategy.lemma.value:
-            self._tokenizer = TokenizerLemmaWorker(self)
+            self._tokenizer = TokenizerLemmaWorker()
         elif settings.token_strategy == TokenStrategy.stem.value:
-            self._tokenizer = TokenizerStemWorker(self)
+            self._tokenizer = TokenizerStemWorker()
         else:
-            self._tokenizer = TokenizerSimpleWorker(self)
+            self._tokenizer = TokenizerSimpleWorker()
 
         normalizer >> self._tokenizer
 
         self._tokenizer >> self._cache
 
-        action = ActionWorker(self)
+        action = ActionWorker()
         self._cache >> action
 
     def _register_defaults(self):
@@ -195,7 +197,7 @@ class Ava(object):
             self._factory.register(alias, t, args, kwargs)
 
     def _load_register(self, data_list):
-        load_register(self, data_list, self)
+        load_register(data_list, self)
 
     def _load_sound_player(self, data):
         for key, value in data.items():
