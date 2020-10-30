@@ -4,16 +4,17 @@ import os
 import time
 
 from json_include import build_json
-from nltk.tokenize import word_tokenize
 from sound_player import SoundPlayer
 
-from Ava import config
 from Ava.core import (
-    factory as global_factory,
-    Config,
-    TokenStrategy
+    factory as global_factory
 )
 from Ava.core.utils import load_register
+from Ava.settings import (
+    settings,
+    TokenStrategy,
+    DATA_PATH
+)
 from Ava.worker import (
     MicrophoneWorker,
     AudioToFileWorker,
@@ -36,7 +37,6 @@ logger = logging.getLogger(__name__)
 class Ava(object):
     def __init__(self, factory=global_factory):
         super().__init__()
-        self.config = Config()
         self._running = False
 
         self._workers = []
@@ -52,7 +52,7 @@ class Ava(object):
 
     def load_from_file(self, filename=None):
         if filename is None:
-            filename = os.path.join(config.DATA_PATH, "ava.json")
+            filename = os.path.join(DATA_PATH, "ava.json")
         data = build_json(filename)
         logger.debug("Load config data: %s", json.dumps(data, indent=2))
         self.load(data)
@@ -60,7 +60,7 @@ class Ava(object):
     def load(self, data):
         config_data = data.get("config", None)
         if config_data:
-            self.config.load(config_data)
+            settings.load(config_data)
 
         self._load_types(data.get("types"))
         self._load_pipeline(data.get("pipeline"))
@@ -130,7 +130,7 @@ class Ava(object):
         elif text_input == "file":
             text_source = FileReaderWorker(
                 self,
-                os.path.join(self.config.language_data["input-file"]),
+                os.path.join(settings.language_data["input-file"]),
                 timedelta=3
             )
         else:
@@ -143,9 +143,9 @@ class Ava(object):
         normalizer = NormalizerWorker(self)
         text_source >> normalizer
 
-        if self.config.token_strategy == TokenStrategy.lemma.value:
+        if settings.token_strategy == TokenStrategy.lemma.value:
             self._tokenizer = TokenizerLemmaWorker(self)
-        elif self.config.token_strategy == TokenStrategy.stem.value:
+        elif settings.token_strategy == TokenStrategy.stem.value:
             self._tokenizer = TokenizerStemWorker(self)
         else:
             self._tokenizer = TokenizerSimpleWorker(self)

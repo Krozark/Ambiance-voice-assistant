@@ -1,9 +1,15 @@
+import enum
 import logging
 import logging.config
-import enum
-
+import os
 
 logger = logging.getLogger(__name__)
+
+DEBUG = True
+DEBUG_AUDIO_AS_TEXT = True
+
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+DATA_PATH = os.path.join(PROJECT_PATH, "..", "data")
 
 
 class TokenStrategy(enum.Enum):
@@ -12,8 +18,15 @@ class TokenStrategy(enum.Enum):
     stem = 3
 
 
-class Config(object):
+class Settings(object):
     def __init__(self):
+        self._languages = None
+        self._current_language = None
+        self._api_keys = None
+        self.token_strategy = None
+        self.clear()
+
+    def clear(self):
         self._languages = {}
         self._current_language = None
         self._api_keys = {}
@@ -50,3 +63,6 @@ class Config(object):
 
     def set(self, attr, value):
         setattr(self, attr, value)
+
+
+settings = Settings()

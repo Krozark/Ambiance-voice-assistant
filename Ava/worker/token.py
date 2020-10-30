@@ -5,7 +5,7 @@ import spacy
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
 
-from Ava import config
+from Ava.settings import settings
 from Ava.core import (
     IOxThread,
     Worker
@@ -37,7 +37,7 @@ class TokenizerLemmaWorker(Tokenizer):
     def __init__(self, ava, **kwargs):
         super().__init__(ava, **kwargs)
         logger.info("Loading spacy data. Please wait, this could take a moment...")
-        self._nlp = spacy.load(ava.config.language_data["spacy"])
+        self._nlp = spacy.load(settings.language_data["spacy"])
         logger.info("Spacy loaded")
 
     def tokenize(self, text: str) -> List[str]:
@@ -50,7 +50,7 @@ class TokenizerLemmaWorker(Tokenizer):
 class TokenizerStemWorker(Tokenizer):
     def __init__(self, ava, **kwargs):
         super().__init__(ava, **kwargs)
-        self._stemmer = SnowballStemmer(ava.config.language_data["nltk"])
+        self._stemmer = SnowballStemmer(settings.language_data["nltk"])
 
     def tokenize(self, text: str) -> List[str]:
         words = word_tokenize(text)

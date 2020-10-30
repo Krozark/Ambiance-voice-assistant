@@ -10,6 +10,7 @@ from Ava.core import (
     TTSMixin,
     Worker
 )
+from Ava.settings import settings
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +50,7 @@ class FileReaderWorker(Worker, OThread):
             data = f.readlines()
         res = []
         for i in data:
-            s = nltk.sent_tokenize(i, self.ava.config.language_data["nltk"])
+            s = nltk.sent_tokenize(i, settings.language_data["nltk"])
             res += [x + " . " for x in s if not x.startswith("#")]  # ignore comments + add "." at the end of sentences
         return res
 
@@ -69,7 +70,7 @@ class ConsoleReaderWorker(Worker, OThread):
         OThread.__init__(self)
 
     def get_sentences(self, sentence: str) -> list:
-        s = nltk.sent_tokenize(sentence, self.ava.config.language_data["nltk"])
+        s = nltk.sent_tokenize(sentence, settings.language_data["nltk"])
         return s
 
     def run(self) -> None:

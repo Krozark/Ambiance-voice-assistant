@@ -1,15 +1,13 @@
 import logging
 
-from Ava.core.utils import (
-    WithAva
-)
+from Ava.settings import settings
 
 logger = logging.getLogger(__name__)
 
 
-class TTSFacade(WithAva):
+class TTSFacade(object):
     def say(self, text, sync=True) -> None:
-        if self.ava.config.get("audio_as_text"):
+        if settings.get("audio_as_text"):
             logger.info("TTS '%s'", text)
         else:
             self._say(text, sync=sync)

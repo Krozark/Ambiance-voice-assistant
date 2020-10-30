@@ -5,6 +5,7 @@ from jnius import autoclass
 
 from Ava.core.facades.tts import TTSFacade
 from Ava.core.platforms.android import activity
+from Ava.settings import settings
 
 logger = logging.getLogger(__name__)
 
@@ -13,9 +14,9 @@ TextToSpeech = autoclass('android.speech.tts.TextToSpeech')
 
 
 class AndroidTTSEngine(TTSFacade):
-    def __init__(self, ava):
-        super().__init__(ava)
-        lang = self.ava.config.language_data.get["android"]["tts"]
+    def __init__(self):
+        super().__init__()
+        lang = settings.language_data.get["android"]["tts"]
         local = getattr(Locale, lang)
 
         self._engine = TextToSpeech(activity, None)

@@ -7,6 +7,7 @@ from Ava.core import (
     Action,
     TTSMixin
 )
+from Ava.settings import settings
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ class WikipediaSearchAction(Action):
 
     def _do_trigger(self, *args, search=None, **kwargs) -> None:
         search =  search or self._search or ""
-        wikipedia.set_lang(self.ava.config.language_data["wikipedia"])
+        wikipedia.set_lang(settings.language_data["wikipedia"])
         key = wikipedia.search(search, results=1)
         if key:
             webbrowser.open_new_tab(wikipedia.page(key[0]).url)
@@ -55,7 +56,7 @@ class WikipediaSearchTTSAction(Action, TTSMixin):
     def _do_trigger(self, *args, search=None, sentences=None, **kwargs) -> None:
         search =  search or self._search or ""
         sentences = sentences or self._sentences or 2
-        wikipedia.set_lang(self.ava.config.language_data["wikipedia"])
+        wikipedia.set_lang(settings.language_data["wikipedia"])
         key = wikipedia.search(search, results=1)
         if key:
             self.say(wikipedia.summary(key[0], sentences=sentences))

@@ -13,6 +13,7 @@ from Ava.core import (
     STTMixin,
     Worker
 )
+from Ava.settings import settings
 
 logger = logging.getLogger(__name__)
 
@@ -95,8 +96,8 @@ class STTWorker(Worker, IOThread, STTMixin):
         try:
             self._ensure_engine()
             res = self._engine_stt._recognizer.recognize_google(  # TODO !!!!!!!!!!!!!!!!
-                audio, language=self.ava.config.language_data["recognition"],
-                key=self.ava.config.api_key("GOOGLE_RECOGNITION")
+                audio, language=settings.language_data["recognition"],
+                key=settings.api_key("GOOGLE_RECOGNITION")
             )
             logger.debug("Recognize: '%s'", res)
         except speech_recognition.UnknownValueError:
