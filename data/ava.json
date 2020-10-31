@@ -70,7 +70,7 @@
     },
     "pipeline": {
             "kwargs": {
-            "text_input": "audio",
+            "text_input": "console",
             "debug_audio": false,
             "debug_tts": false
         }

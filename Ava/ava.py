@@ -41,8 +41,10 @@ class Ava(object):
 
         self._workers = []
         self._tokenizer = None
+        self._text_source = None
         self._cache = ModWorker()
         self._player = SoundPlayer()
+
 
         self._register_defaults()
 
@@ -73,26 +75,36 @@ class Ava(object):
         self._workers.append(worker)
 
     def stop(self):
+        logger.info("Stopping Ava ...")
         self._running = False
         self._player.stop()
         for w in self._workers:
             w.stop()
+        logger.info("Stopping Ava done.")
 
-    def run(self):
+    def run(self, blocking=True):
+        logger.info("Starting Ava ...")
         self._running = True
         for w in self._workers:
             w.start()
         self._player.play()
-        try:
-            while self._running :
-                time.sleep(0.1)
-        except KeyboardInterrupt:
-            logger.info("Stopping. Please wait...")
 
-        self.stop()
+        logger.info("Starting Ava done.")
+        if blocking:
+            try:
+                while self._running :
+                    time.sleep(0.1)
+            except KeyboardInterrupt:
+                logger.info("Stopping. Please wait ...")
 
+            self.stop()
+            self.join()
+
+    def join(self):
+        logger.info("Joining Ava ...")
         for w in self._workers:
             w.join()
+        logger.info("Joining Ava done.")
 
     def create_pipeline(self, text_input=True, debug_audio=False, debug_tts=False):
         """
@@ -124,22 +136,22 @@ class Ava(object):
                 play = AudioFilePlayerWorker()
                 audio_source >> (save_to_file >> play)
 
-            text_source = STTWorker()
-            audio_source >> text_source
+            self._text_source = STTWorker()
+            audio_source >> self._text_source
         elif text_input == "file":
-            text_source = FileReaderWorker(
+            self._text_source = FileReaderWorker(
                 os.path.join(settings.language_data["input-file"]),
                 timedelta=3
             )
         else:
-            text_source = ConsoleReaderWorker()
+            self._text_source = ConsoleReaderWorker()
 
         if debug_tts:
             tss = TTSWorker()
-            text_source >> tss
+            self._text_source >> tss
 
         normalizer = NormalizerWorker()
-        text_source >> normalizer
+        self._text_source >> normalizer
 
         if settings.token_strategy == TokenStrategy.lemma.value:
             self._tokenizer = TokenizerLemmaWorker()

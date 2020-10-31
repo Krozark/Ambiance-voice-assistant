@@ -37,6 +37,7 @@ setuptools.setup(
       "krozark_meteofrance>=0.3.9",
       "sound-player~=0.2",
       "Unidecode>=1.1",
+      "kivy~=1.11"
    ],
    extras_require={
       'linux': [
