@@ -123,4 +123,7 @@ class STTWorker(Worker, IOThread, STTMixin):
 
     def _process_input_data(self, audio):
         res = self.listen(audio)
-        return res
+        if res:
+            logger.debug("Reconize: %s", res)
+            return res
+        return None

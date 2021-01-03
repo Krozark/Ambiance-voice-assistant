@@ -23,7 +23,7 @@ class STTMixin(object):
     _model = None
     _rec = None
 
-    def listen(self, source):
+    def listen(self, source, partial=False):
         self._ensure_engine()
         res = None
         if self._rec.AcceptWaveform(source):
@@ -31,7 +31,7 @@ class STTMixin(object):
             j = json.loads(data)
             res = j["text"]
             # res = alpha2digit(res, settings.language_data["vosk"])
-        else:
+        elif partial:
             data = self._rec.PartialResult()
             j = json.loads(data)
             res = j["partial"]
@@ -41,7 +41,7 @@ class STTMixin(object):
         if self._model is None:
             model_path = os.path.join(MODELS_PATH, settings.language_data["vosk"])
             if not os.path.exists(model_path):
-                print("Please download the model from https://alphacephei.com/vosk/models and unpack it as {}.".format(model_path))
+                logger.critical("Please download the model from https://alphacephei.com/vosk/models and unpack it as %s.", model_path)
                 exit(1)
             self._model = Model(model_path)
             self._rec = KaldiRecognizer(self._model, AUDIO_RATE)
