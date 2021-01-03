@@ -10,7 +10,7 @@ def import_string(dotted_path):
     last name in the path. Raise ImportError if the import failed.
     """
     try:
-        module_path, class_name = dotted_path.rsplit('.', 1)
+        module_path, attr = dotted_path.rsplit('.', 1)
     except ValueError:
         msg = "%s doesn't look like a module path" % dotted_path
         raise ImportError(msg)
@@ -18,10 +18,13 @@ def import_string(dotted_path):
     module = importlib.import_module(module_path)
 
     try:
-        return getattr(module, class_name)
-    except AttributeError:
-        msg = 'Module "%s" does not define a "%s" attribute/class' % (
-            module_path, class_name)
+        return getattr(module, attr)
+    except AttributeError as e:
+        msg = 'Module "%s" does not define a "%s" attribute/class : %s' % (
+            module_path,
+            attr,
+            e
+        )
         raise ImportError(msg)
 
 
@@ -65,9 +68,6 @@ class Factory(object):
         for k, v in self._mapping.items():
             r += "[%s]: %s, %s, %s\n" % (k, *v)
         return r
-
-
-factory = Factory()
 
 #
 # class RegisterToFactory(object):

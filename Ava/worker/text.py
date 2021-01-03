@@ -10,6 +10,7 @@ from Ava.core import (
     TTSMixin,
     Worker
 )
+from Ava.settings import settings
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +29,8 @@ class TTSWorker(Worker, IThread, TTSMixin):
     """
     Task that take a text as input and transform it as sound
     """
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IThread.__init__(self)
 
     def _process_input_data(self, text: str) -> None:
@@ -38,8 +39,8 @@ class TTSWorker(Worker, IThread, TTSMixin):
 
 
 class FileReaderWorker(Worker, OThread):
-    def __init__(self, ava, filename: str, timedelta: int=1, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, filename: str, timedelta: int=1, **kwargs):
+        Worker.__init__(self, **kwargs)
         OThread.__init__(self)
         self._timedelta = timedelta
         self._sentences = self.get_sentences(filename)
@@ -49,7 +50,7 @@ class FileReaderWorker(Worker, OThread):
             data = f.readlines()
         res = []
         for i in data:
-            s = nltk.sent_tokenize(i, self.ava.config.language_data["nltk"])
+            s = nltk.sent_tokenize(i, settings.language_data["nltk"])
             res += [x + " . " for x in s if not x.startswith("#")]  # ignore comments + add "." at the end of sentences
         return res
 
@@ -64,12 +65,12 @@ class FileReaderWorker(Worker, OThread):
 
 
 class ConsoleReaderWorker(Worker, OThread):
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         OThread.__init__(self)
 
     def get_sentences(self, sentence: str) -> list:
-        s = nltk.sent_tokenize(sentence, self.ava.config.language_data["nltk"])
+        s = nltk.sent_tokenize(sentence, settings.language_data["nltk"])
         return s
 
     def run(self) -> None:
@@ -81,8 +82,8 @@ class ConsoleReaderWorker(Worker, OThread):
 
 
 class NormalizerWorker(Worker, IOThread):
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IOThread.__init__(self)
 
     def _process_input_data(self, text: str) -> str:

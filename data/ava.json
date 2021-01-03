@@ -3,16 +3,18 @@
         "languages": {
             "current": "fr",
             "fr": {
-                "recognition": "fr-FR",
-                "voice": "french-mbrola-1",
+                "vosk": "fr",
                 "nltk": "french",
                 "input-file": "data/text-francais-utf8.txt",
                 "spacy": "fr_core_news_md",
-                "wikipedia": "fr"
+                "wikipedia": "fr",
+                "linux": {
+                    "tts": "french-mbrola-1"
+                },
+                "android": {
+                    "tts": "FRANCE"
+                }
             }
-        },
-        "api-keys": {
-            "google_recognition": null
         },
         "logging": {
             "version": 1,
@@ -45,7 +47,7 @@
             }
         },
         "audio_as_text": false,
-        "token_strategy": 2
+        "token_strategy": 1
     },
     "sound-player": {
         "music": {

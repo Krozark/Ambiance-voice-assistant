@@ -12,7 +12,7 @@ EmptyException = Empty
 
 class DuplicateOutputQueue(object):
     """
-    Class tha internally manage a pool of Queue(). Each time an item is put()
+    Class that internally manage a pool of Queue(). Each time an item is put()
     this item is put into all the queues. This is usefull to manage a single entry with multiple outputs.
     """
     def __init__(self):

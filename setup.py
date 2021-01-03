@@ -28,8 +28,6 @@ setuptools.setup(
     ],
    install_requires=[
       'nltk~=3.4',
-      'SpeechRecognition~=3.8',
-      'py-espeak-ng~=0.1',
       'pydub~=0.23',
       'PyAudio~=0.2',
       'spacy~=2.2',
@@ -38,7 +36,18 @@ setuptools.setup(
       "krozark_meteofrance>=0.3.9",
       "sound-player~=0.2",
       "Unidecode>=1.1",
+      "kivy~=1.11",
+      "vosk==0.3.15",
+      "text2num==2.2.1"
    ],
+   extras_require={
+      'linux': [
+         'py-espeak-ng~=0.1'
+      ],
+      'android': [
+         "pyjnius"
+      ]
+   },
    entry_points={
       'console_scripts': [
         'ava = Ava.__main__:main',

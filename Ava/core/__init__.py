@@ -1,21 +1,15 @@
 from .action import (
     ActionList,
-    Action
-)
-from .audio import (
-    RecognizerBase
+    Action,
+    CallbackAction
 )
 from .cache import (
     Cache,
     CacheResult
 )
-from .config import (
-    Config,
-    TokenStrategy
-)
+
 from .factory import (
-    Factory,
-    factory,
+    Factory
 )
 from .io import (
     WithInput,
@@ -25,6 +19,7 @@ from .io import (
 from .mod import (
     Mod
 )
+from .stt import STTMixin
 from .thread import (
     Thread,
     IThread,
@@ -32,9 +27,7 @@ from .thread import (
     IOThread,
     IOxThread
 )
-from .tts import (
-    TTSMixin
-)
+from .tts import TTSMixin
 from .worker import (
     Worker
 )

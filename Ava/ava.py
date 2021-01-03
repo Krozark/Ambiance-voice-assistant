@@ -4,16 +4,14 @@ import os
 import time
 
 from json_include import build_json
-from nltk.tokenize import word_tokenize
 from sound_player import SoundPlayer
 
-from Ava import config
-from Ava.core import (
-    factory as global_factory,
-    Config,
-    TokenStrategy
-)
 from Ava.core.utils import load_register
+from Ava.settings import (
+    settings,
+    TokenStrategy,
+    DATA_PATH
+)
 from Ava.worker import (
     MicrophoneWorker,
     AudioToFileWorker,
@@ -34,16 +32,18 @@ logger = logging.getLogger(__name__)
 
 
 class Ava(object):
-    def __init__(self, factory=global_factory):
+    def __init__(self):
         super().__init__()
-        self.config = Config()
+        # update settings
+        settings.ava = self
+
         self._running = False
 
         self._workers = []
-        self._factory = factory
-        self._cache = ModWorker(self)
-        self._player = SoundPlayer()
         self._tokenizer = None
+        self._text_source = None
+        self._cache = ModWorker()
+        self._player = SoundPlayer()
 
         self._register_defaults()
 
@@ -52,7 +52,7 @@ class Ava(object):
 
     def load_from_file(self, filename=None):
         if filename is None:
-            filename = os.path.join(config.DATA_PATH, "ava.json")
+            filename = os.path.join(DATA_PATH, "ava.json")
         data = build_json(filename)
         logger.debug("Load config data: %s", json.dumps(data, indent=2))
         self.load(data)
@@ -60,7 +60,7 @@ class Ava(object):
     def load(self, data):
         config_data = data.get("config", None)
         if config_data:
-            self.config.load(config_data)
+            settings.load(config_data)
 
         self._load_types(data.get("types"))
         self._load_pipeline(data.get("pipeline"))
@@ -74,26 +74,36 @@ class Ava(object):
         self._workers.append(worker)
 
     def stop(self):
+        logger.info("Stopping Ava ...")
         self._running = False
         self._player.stop()
         for w in self._workers:
             w.stop()
+        logger.info("Stopping Ava done.")
 
-    def run(self):
+    def run(self, blocking=True):
+        logger.info("Starting Ava ...")
         self._running = True
         for w in self._workers:
             w.start()
         self._player.play()
-        try:
-            while self._running :
-                time.sleep(0.1)
-        except KeyboardInterrupt:
-            logger.info("Stopping. Please wait...")
 
-        self.stop()
+        logger.info("Starting Ava done.")
+        if blocking:
+            try:
+                while self._running :
+                    time.sleep(0.1)
+            except KeyboardInterrupt:
+                logger.info("Stopping. Please wait ...")
 
+            self.stop()
+            self.join()
+
+    def join(self):
+        logger.info("Joining Ava ...")
         for w in self._workers:
             w.join()
+        logger.info("Joining Ava done.")
 
     def create_pipeline(self, text_input=True, debug_audio=False, debug_tts=False):
         """
@@ -119,57 +129,56 @@ class Ava(object):
         tokenizer--> CacheWorker --> ActionWorker
         """
         if text_input == "audio":
-            audio_source = MicrophoneWorker(self)
+            audio_source = MicrophoneWorker()
             if debug_audio:
                 save_to_file = AudioToFileWorker("debug_audio")
-                play = AudioFilePlayerWorker(self)
+                play = AudioFilePlayerWorker()
                 audio_source >> (save_to_file >> play)
 
-            text_source = STTWorker(self)
-            audio_source >> text_source
+            self._text_source = STTWorker()
+            audio_source >> self._text_source
         elif text_input == "file":
-            text_source = FileReaderWorker(
-                self,
-                os.path.join(self.config.language_data["input-file"]),
+            self._text_source = FileReaderWorker(
+                os.path.join(settings.language_data["input-file"]),
                 timedelta=3
             )
         else:
-            text_source = ConsoleReaderWorker(self)
+            self._text_source = ConsoleReaderWorker()
 
         if debug_tts:
-            tss = TTSWorker(self)
-            text_source >> tss
+            tss = TTSWorker()
+            self._text_source >> tss
 
-        normalizer = NormalizerWorker(self)
-        text_source >> normalizer
+        normalizer = NormalizerWorker()
+        self._text_source >> normalizer
 
-        if self.config.token_strategy == TokenStrategy.lemma.value:
-            self._tokenizer = TokenizerLemmaWorker(self)
-        elif self.config.token_strategy == TokenStrategy.stem.value:
-            self._tokenizer = TokenizerStemWorker(self)
+        if settings.token_strategy == TokenStrategy.lemma.value:
+            self._tokenizer = TokenizerLemmaWorker()
+        elif settings.token_strategy == TokenStrategy.stem.value:
+            self._tokenizer = TokenizerStemWorker()
         else:
-            self._tokenizer = TokenizerSimpleWorker(self)
+            self._tokenizer = TokenizerSimpleWorker()
 
         normalizer >> self._tokenizer
 
         self._tokenizer >> self._cache
 
-        action = ActionWorker(self)
+        action = ActionWorker()
         self._cache >> action
 
     def _register_defaults(self):
         # Mod
-        self._factory.register("Ava:Mod", "Ava.core.mod.Mod")
+        settings.factory.register("Ava:Mod", "Ava.core.mod.Mod")
         # Actions
-        self._factory.register("Ava:Action:AudioFilePlayer", "Ava.action.AudioFilePlayerAction",)
-        self._factory.register("Ava:Action:AudioStop", "Ava.action.AudioStopAction",)
-        self._factory.register("Ava:Action:Stop", "Ava.action.AvaStopAction")
-        self._factory.register("Ava:Action:TTS", "Ava.action.TTSAction")
-        self._factory.register("Ava:Action:WebBrowser", "Ava.action.WebBrowserAction")
-        self._factory.register("Ava:Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
-        self._factory.register("Ava:Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")
-        self._factory.register("Ava:Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")
-        self._factory.register("Ava:Action:Weather", "Ava.action.WeatherAction")
+        settings.factory.register("Ava:Action:AudioFilePlayer", "Ava.action.AudioFilePlayerAction",)
+        settings.factory.register("Ava:Action:AudioStop", "Ava.action.AudioStopAction",)
+        settings.factory.register("Ava:Action:Stop", "Ava.action.AvaStopAction")
+        settings.factory.register("Ava:Action:TTS", "Ava.action.TTSAction")
+        settings.factory.register("Ava:Action:WebBrowser", "Ava.action.WebBrowserAction")
+        settings.factory.register("Ava:Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
+        settings.factory.register("Ava:Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")
+        settings.factory.register("Ava:Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")
+        settings.factory.register("Ava:Action:Weather", "Ava.action.WeatherAction")
 
         # Workers
 
@@ -192,10 +201,10 @@ class Ava(object):
                 t = value["class"]
                 args = value.get("args", args)
                 kwargs = value.get("kwargs", kwargs)
-            self._factory.register(alias, t, args, kwargs)
+            settings.factory.register(alias, t, args, kwargs)
 
     def _load_register(self, data_list):
-        load_register(self, data_list, self)
+        load_register(data_list, self)
 
     def _load_sound_player(self, data):
         for key, value in data.items():
@@ -209,6 +218,6 @@ class Ava(object):
 
     def dump(self):
         r = "[Ava]\n"
-        r += "[Factory]\n%s\n" % ("\n".join(["  " + x for x in self._factory.__str__().split("\n")]))
+        r += "[Factory]\n%s\n" % ("\n".join(["  " + x for x in settings.factory.__str__().split("\n")]))
         r += self._cache.__str__()
         return r

@@ -1,11 +1,10 @@
 import logging
+from Ava.settings import settings
 
-from .utils import WithAva
 
 logger = logging.getLogger(__name__)
 
 
-class Worker(WithAva):
-    def __init__(self, ava, **kwargs):
-        WithAva.__init__(self, ava)
-        ava.add_worker(self)
+class Worker(object):
+    def __init__(self, **kwargs):
+        settings.ava.add_worker(self)

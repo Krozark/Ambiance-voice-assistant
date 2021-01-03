@@ -1,9 +1,23 @@
+import enum
 import logging
 import logging.config
-import enum
+import os
+
+from Ava.core.factory import Factory
 
 
 logger = logging.getLogger(__name__)
+
+DEBUG = True
+DEBUG_AUDIO_AS_TEXT = True
+
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+DATA_PATH = os.path.join(PROJECT_PATH, "..", "data")
+MODELS_PATH = os.path.join(DATA_PATH, "models")
+
+AUDIO_RATE = 16000
+AUDIO_CHUNK = 8000
+AUDIO_CHANNELS = 1
 
 
 class TokenStrategy(enum.Enum):
@@ -12,11 +26,18 @@ class TokenStrategy(enum.Enum):
     stem = 3
 
 
-class Config(object):
+class Settings(object):
     def __init__(self):
+        self._languages = None
+        self._current_language = None
+        self.token_strategy = None
+        self.ava = None
+        self.factory = Factory()
+        self.clear()
+
+    def clear(self):
         self._languages = {}
         self._current_language = None
-        self._api_keys = {}
         self.token_strategy = TokenStrategy.simple
 
     def load(self, data):
@@ -25,8 +46,6 @@ class Config(object):
             if key == "languages":
                 self._current_language = value.pop("current")
                 self._languages = value
-            elif key == "api-keys":
-                self._api_keys = value
             elif key == "logging":
                 logging.config.dictConfig(value)
             else:
@@ -42,11 +61,11 @@ class Config(object):
     def set_language_data(self, lang, data):
         self._languages[lang] = data
 
-    def api_key(self, key):
-        return self._api_keys.get(key, None)
-
     def get(self, attr):
         return getattr(self, attr, None)
 
     def set(self, attr, value):
         setattr(self, attr, value)
+
+
+settings = Settings()

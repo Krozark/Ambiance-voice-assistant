@@ -2,7 +2,8 @@ import datetime
 import logging
 import os
 
-import speech_recognition
+import pyaudio
+import wave
 
 from sound_player import Sound
 
@@ -10,36 +11,53 @@ from Ava.core import (
     IOThread,
     OThread,
     IThread,
-    RecognizerBase,
+    STTMixin,
     Worker
+)
+from Ava.settings import (
+    settings,
+    AUDIO_CHANNELS,
+    AUDIO_CHUNK,
+    AUDIO_RATE
 )
 
 logger = logging.getLogger(__name__)
 
+AUDIO_FORMAT = pyaudio.paInt16
 
-class MicrophoneWorker(Worker, OThread, RecognizerBase):
+
+_pyaudio = pyaudio.PyAudio()
+
+
+class MicrophoneWorker(Worker, OThread):
     """
     Class that run a task in background, on put to it's output tha audio listen
+    TODO Microphone is platform dependent (Not Android)
     """
-    source_class = speech_recognition.Microphone
 
-    def __init__(self, ava, *args, **kwargs):
-        Worker.__init__(self, ava, *args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        Worker.__init__(self, *args, **kwargs)
         OThread.__init__(self)
-        RecognizerBase.__init__(self)
-        self._source = self.get_source()
+        self._stream = self.get_stream()
 
-    def get_source(self):
-        return self.source_class()
+    @staticmethod
+    def get_stream():
+        stream = _pyaudio.open(
+            format=AUDIO_FORMAT,
+            channels=AUDIO_CHANNELS,
+            rate=AUDIO_RATE,
+            input=True,
+            frames_per_buffer=AUDIO_CHUNK
+        )
+        return stream
 
     def run(self):
-        with self._source as src:
-            self.adjust_for_ambient_noise(src)
-
-            while self._is_running:
-                logger.debug("Listen....")
-                audio = self.listen(src)
-                logger.debug("End Listen....")
+        self._stream.start_stream()
+        while self._is_running:
+            logger.debug("Listen....")
+            audio = self._stream.read(AUDIO_CHUNK // 2)
+            logger.debug("End Listen....")
+            if len(audio):
                 self.output_push(audio)
         self.stop()
 
@@ -47,29 +65,44 @@ class MicrophoneWorker(Worker, OThread, RecognizerBase):
 class AudioToFileWorker(Worker, IOThread):
     """
     Class that take audio as input, and save it to file. The filename is send as output
+    TODO Audio to file is platform dependent
     """
-    def __init__(self, ava, path=None, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, path=None, **kwargs):
+        Worker.__init__(self, **kwargs)
         IOThread.__init__(self)
 
         self._path = path or ""
         os.makedirs(self._path, exist_ok=True)
+        self._last_file = None
+        self._last_filename = None
 
     def _process_input_data(self, audio):
-        filename = "%s" % datetime.datetime.now()
+        now = datetime.datetime.now()
+        filename = now.strftime("%Y-%m-%d %H:%M:%S")
         p = os.path.join(self._path, filename)
-        with open(p, "wb") as f:
-            f.write(audio.get_wav_data())
-        return p
+
+        if p != self._last_filename:
+            self._last_filename = p
+            if self._last_file is not None:
+                self._last_file.close()
+            self._last_file = wave.open(p, "wb")
+            self._last_file.setnchannels(AUDIO_CHANNELS)
+            self._last_file.setsampwidth(_pyaudio.get_sample_size(AUDIO_FORMAT))
+            self._last_file.setframerate(AUDIO_RATE)
+
+            self._last_file.writeframes(audio)
+            return self._last_filename
+        return None
 
 
 class AudioFilePlayerWorker(Worker, IThread):
     """
     Task that take a music filename as input and play it
+    TODO Audio is platform dependent
     """
 
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IThread.__init__(self)
 
     def _process_input_data(self, filename: str) -> None:
@@ -79,23 +112,18 @@ class AudioFilePlayerWorker(Worker, IThread):
         audio.wait()
 
 
-class STTWorker(Worker, IOThread, RecognizerBase):
+class STTWorker(Worker, IOThread, STTMixin):
     """
     Task that take a audio as input, and output the text of this audio
     """
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IOThread.__init__(self)
-        RecognizerBase.__init__(self)
+        STTMixin.__init__(self)
 
     def _process_input_data(self, audio):
-        res = None
-        try:
-            res = self._recognizer.recognize_google(audio, language=self.ava.config.language_data["recognition"], key=self.ava.config.api_key("GOOGLE_RECOGNITION"))
-            logger.debug("Recognize: '%s'", res)
-        except speech_recognition.UnknownValueError:
-            logger.debug("Google Speech Recognition could not understand audio")
-            res = "."
-        except speech_recognition.RequestError as e:
-            logger.debug("Could not request results from Google Speech Recognition service; %s", e)
-        return res
+        res = self.listen(audio)
+        if res:
+            logger.debug("Reconize: %s", res)
+            return res
+        return None

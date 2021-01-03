@@ -1,7 +1,5 @@
 import logging
 
-from .utils import WithAva
-
 logger = logging.getLogger(__name__)
 
 
@@ -18,9 +16,9 @@ class ActionList(list):
         return "\n".join([i.__str__() for i in self])
 
 
-class Action(WithAva):
-    def __init__(self, ava, *args, name=None, _python=None, **kwargs):
-        WithAva.__init__(self, ava)
+class Action(object):
+    def __init__(self, *args, name=None, _python=None, **kwargs):
+        super().__init__()
         self._name = name
         self._python = self._get_python(_python)
         self._trigger_kwargs = dict()
@@ -55,8 +53,8 @@ class Action(WithAva):
 
 
 class CallbackAction(Action):
-    def __init__(self, ava, callback, *args, **kwargs):
-        Action.__init__(self, ava, *args, **kwargs)
+    def __init__(self, callback, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._func = callback
 
     def _do_trigger(self, **kwargs) -> None:

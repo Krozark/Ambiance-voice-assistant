@@ -1,14 +1,14 @@
 import logging
 import os
 
-from Ava import config
 from Ava.action import (
-    CallbackAction,
     AudioFilePlayerAction
 )
 from Ava.core import (
-    Cache
+    Cache,
+    CallbackAction
 )
+from Ava.settings import settings
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -21,7 +21,7 @@ action = CallbackAction(lambda: logger.info("Action: est un roman français"), n
 cache.register(slice, action)
 
 slice = "est un roman".split()
-action = AudioFilePlayerAction(os.path.join(config.DATA_PATH, "Splash-Ploor.mp3"), name="est un roman")
+action = AudioFilePlayerAction(os.path.join(settings.DATA_PATH, "Splash-Ploor.mp3"), name="est un roman")
 cache.register(slice, action)
 
 logger.debug("Cache:\n %s", cache)

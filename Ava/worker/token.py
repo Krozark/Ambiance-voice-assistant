@@ -5,7 +5,7 @@ import spacy
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
 
-from Ava import config
+from Ava.settings import settings
 from Ava.core import (
     IOxThread,
     Worker
@@ -13,9 +13,10 @@ from Ava.core import (
 
 logger = logging.getLogger(__name__)
 
+
 class Tokenizer(Worker, IOxThread):
-    def __init__(self, ava, **kwargs):
-        Worker.__init__(self, ava, **kwargs)
+    def __init__(self, **kwargs):
+        Worker.__init__(self, **kwargs)
         IOxThread.__init__(self)
 
     def tokenize(self, text: str) -> List[str]:
@@ -34,10 +35,10 @@ class TokenizerSimpleWorker(Tokenizer):
 
 
 class TokenizerLemmaWorker(Tokenizer):
-    def __init__(self, ava, **kwargs):
-        super().__init__(ava, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         logger.info("Loading spacy data. Please wait, this could take a moment...")
-        self._nlp = spacy.load(ava.config.language_data["spacy"])
+        self._nlp = spacy.load(settings.language_data["spacy"])
         logger.info("Spacy loaded")
 
     def tokenize(self, text: str) -> List[str]:
@@ -48,9 +49,9 @@ class TokenizerLemmaWorker(Tokenizer):
 
 
 class TokenizerStemWorker(Tokenizer):
-    def __init__(self, ava, **kwargs):
-        super().__init__(ava, **kwargs)
-        self._stemmer = SnowballStemmer(ava.config.language_data["nltk"])
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._stemmer = SnowballStemmer(settings.language_data["nltk"])
 
     def tokenize(self, text: str) -> List[str]:
         words = word_tokenize(text)
@@ -58,12 +59,3 @@ class TokenizerStemWorker(Tokenizer):
             token = self._stemmer.stem(w)
             logger.debug("Stemming '%s' as '%s'", w, token)
             yield token
-
-#import spacy
-#
-#nlp = spacy.load("en_core_web_md")  # make sure to use larger modl!
-#tokens = nlp("dog cat banana")
-#
-#for token1 in tokens:
-#    for token2 in tokens:
-#        print(token1.text, token2.text, token1.similarity(token2))
