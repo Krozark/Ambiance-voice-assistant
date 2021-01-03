@@ -1,7 +1,8 @@
 import logging
 from vosk import (
     Model,
-    KaldiRecognizer
+    KaldiRecognizer,
+    SetLogLevel
 )
 import os
 import json
@@ -13,6 +14,8 @@ from Ava.settings import (
 from text_to_num import alpha2digit
 
 logger = logging.getLogger(__name__)
+
+SetLogLevel(0)
 
 
 class STTMixin(object):
@@ -27,10 +30,11 @@ class STTMixin(object):
             data = self._rec.Result()
             j = json.loads(data)
             res = j["text"]
-            res = alpha2digit(res, settings.language_data["vosk"])
-        # else:
-        #     res = self._rec.PartialResult()
-        # print(res)
+            # res = alpha2digit(res, settings.language_data["vosk"])
+        else:
+            data = self._rec.PartialResult()
+            j = json.loads(data)
+            res = j["partial"]
         return res
 
     def _ensure_engine(self, source=None):
