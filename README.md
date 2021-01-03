@@ -45,6 +45,7 @@ mv vosk-model-fr-0.6-linto data/models/fr
 
 ```
 python Ava/
+python Ava/ui # for UI version
 ```
 
 ## With install
