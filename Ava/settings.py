@@ -13,6 +13,11 @@ DEBUG_AUDIO_AS_TEXT = True
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 DATA_PATH = os.path.join(PROJECT_PATH, "..", "data")
+MODELS_PATH = os.path.join(DATA_PATH, "models")
+
+AUDIO_RATE = 16000
+AUDIO_CHUNK = 8000
+AUDIO_CHANNELS = 1
 
 
 class TokenStrategy(enum.Enum):
@@ -25,7 +30,6 @@ class Settings(object):
     def __init__(self):
         self._languages = None
         self._current_language = None
-        self._api_keys = None
         self.token_strategy = None
         self.ava = None
         self.factory = Factory()
@@ -34,7 +38,6 @@ class Settings(object):
     def clear(self):
         self._languages = {}
         self._current_language = None
-        self._api_keys = {}
         self.token_strategy = TokenStrategy.simple
 
     def load(self, data):
@@ -43,8 +46,6 @@ class Settings(object):
             if key == "languages":
                 self._current_language = value.pop("current")
                 self._languages = value
-            elif key == "api-keys":
-                self._api_keys = value
             elif key == "logging":
                 logging.config.dictConfig(value)
             else:
@@ -59,9 +60,6 @@ class Settings(object):
 
     def set_language_data(self, lang, data):
         self._languages[lang] = data
-
-    def api_key(self, key):
-        return self._api_keys.get(key, None)
 
     def get(self, attr):
         return getattr(self, attr, None)

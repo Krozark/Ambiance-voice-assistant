@@ -45,7 +45,6 @@ class Ava(object):
         self._cache = ModWorker()
         self._player = SoundPlayer()
 
-
         self._register_defaults()
 
     def tokenize(self, text):

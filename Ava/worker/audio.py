@@ -2,7 +2,8 @@ import datetime
 import logging
 import os
 
-import speech_recognition
+import pyaudio
+import wave
 
 from sound_player import Sound
 
@@ -13,33 +14,50 @@ from Ava.core import (
     STTMixin,
     Worker
 )
-from Ava.settings import settings
+from Ava.settings import (
+    settings,
+    AUDIO_CHANNELS,
+    AUDIO_CHUNK,
+    AUDIO_RATE
+)
 
 logger = logging.getLogger(__name__)
 
+AUDIO_FORMAT = pyaudio.paInt16
 
-class MicrophoneWorker(Worker, OThread, STTMixin):
+
+_pyaudio = pyaudio.PyAudio()
+
+
+class MicrophoneWorker(Worker, OThread):
     """
     Class that run a task in background, on put to it's output tha audio listen
-    TODO Microphone is platform dependent
+    TODO Microphone is platform dependent (Not Android)
     """
-    source_class = speech_recognition.Microphone
 
     def __init__(self, *args, **kwargs):
         Worker.__init__(self, *args, **kwargs)
         OThread.__init__(self)
-        STTMixin.__init__(self)
-        self._source = self.get_source()
+        self._stream = self.get_stream()
 
-    def get_source(self):
-        return self.source_class()
+    @staticmethod
+    def get_stream():
+        stream = _pyaudio.open(
+            format=AUDIO_FORMAT,
+            channels=AUDIO_CHANNELS,
+            rate=AUDIO_RATE,
+            input=True,
+            frames_per_buffer=AUDIO_CHUNK
+        )
+        return stream
 
     def run(self):
-        with self._source as src:
-            while self._is_running:
-                logger.debug("Listen....")
-                audio = self.listen(src)
-                logger.debug("End Listen....")
+        self._stream.start_stream()
+        while self._is_running:
+            logger.debug("Listen....")
+            audio = self._stream.read(AUDIO_CHUNK // 2)
+            logger.debug("End Listen....")
+            if len(audio):
                 self.output_push(audio)
         self.stop()
 
@@ -55,13 +73,26 @@ class AudioToFileWorker(Worker, IOThread):
 
         self._path = path or ""
         os.makedirs(self._path, exist_ok=True)
+        self._last_file = None
+        self._last_filename = None
 
     def _process_input_data(self, audio):
-        filename = "%s" % datetime.datetime.now()
+        now = datetime.datetime.now()
+        filename = now.strftime("%Y-%m-%d %H:%M:%S")
         p = os.path.join(self._path, filename)
-        with open(p, "wb") as f:
-            f.write(audio.get_wav_data())
-        return p
+
+        if p != self._last_filename:
+            self._last_filename = p
+            if self._last_file is not None:
+                self._last_file.close()
+            self._last_file = wave.open(p, "wb")
+            self._last_file.setnchannels(AUDIO_CHANNELS)
+            self._last_file.setsampwidth(_pyaudio.get_sample_size(AUDIO_FORMAT))
+            self._last_file.setframerate(AUDIO_RATE)
+
+            self._last_file.writeframes(audio)
+            return self._last_filename
+        return None
 
 
 class AudioFilePlayerWorker(Worker, IThread):
@@ -84,7 +115,6 @@ class AudioFilePlayerWorker(Worker, IThread):
 class STTWorker(Worker, IOThread, STTMixin):
     """
     Task that take a audio as input, and output the text of this audio
-    TODO STT is platform dependent
     """
     def __init__(self, **kwargs):
         Worker.__init__(self, **kwargs)
@@ -92,17 +122,5 @@ class STTWorker(Worker, IOThread, STTMixin):
         STTMixin.__init__(self)
 
     def _process_input_data(self, audio):
-        res = None
-        try:
-            self._ensure_engine()
-            res = self._engine_stt._recognizer.recognize_google(  # TODO !!!!!!!!!!!!!!!!
-                audio, language=settings.language_data["recognition"],
-                key=settings.api_key("GOOGLE_RECOGNITION")
-            )
-            logger.debug("Recognize: '%s'", res)
-        except speech_recognition.UnknownValueError:
-            logger.debug("Google Speech Recognition could not understand audio")
-            res = "."
-        except speech_recognition.RequestError as e:
-            logger.debug("Could not request results from Google Speech Recognition service; %s", e)
+        res = self.listen(audio)
         return res

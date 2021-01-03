@@ -3,7 +3,7 @@
         "languages": {
             "current": "fr",
             "fr": {
-                "recognition": "fr-FR",
+                "vosk": "fr",
                 "nltk": "french",
                 "input-file": "data/text-francais-utf8.txt",
                 "spacy": "fr_core_news_md",
@@ -15,9 +15,6 @@
                     "tts": "FRANCE"
                 }
             }
-        },
-        "api-keys": {
-            "google_recognition": null
         },
         "logging": {
             "version": 1,

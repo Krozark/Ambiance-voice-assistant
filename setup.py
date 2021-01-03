@@ -28,7 +28,6 @@ setuptools.setup(
     ],
    install_requires=[
       'nltk~=3.4',
-      'SpeechRecognition~=3.8',
       'pydub~=0.23',
       'PyAudio~=0.2',
       'spacy~=2.2',
@@ -38,7 +37,8 @@ setuptools.setup(
       "sound-player~=0.2",
       "Unidecode>=1.1",
       "kivy~=1.11",
-      "vosk"
+      "vosk==0.3.15",
+      "text2num==2.2.1"
    ],
    extras_require={
       'linux': [

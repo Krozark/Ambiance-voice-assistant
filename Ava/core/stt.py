@@ -1,22 +1,43 @@
 import logging
-
-from Ava.core.facades.stt import STTFacade
-from .proxy import ProxyClass
+from vosk import (
+    Model,
+    KaldiRecognizer
+)
+import os
+import json
+from Ava.settings import (
+    settings,
+    MODELS_PATH,
+    AUDIO_RATE
+)
+from text_to_num import alpha2digit
 
 logger = logging.getLogger(__name__)
 
-_STTEngineClass = ProxyClass(STTFacade)
-
 
 class STTMixin(object):
-    _engine_stt = None
 
-    def listen(self, source, phrase_time_limit=5):
-        self._ensure_engine(source=source)
-        return self._engine_stt.listen(source, phrase_time_limit=phrase_time_limit)
+    _model = None
+    _rec = None
+
+    def listen(self, source):
+        self._ensure_engine()
+        res = None
+        if self._rec.AcceptWaveform(source):
+            data = self._rec.Result()
+            j = json.loads(data)
+            res = j["text"]
+            res = alpha2digit(res, settings.language_data["vosk"])
+        # else:
+        #     res = self._rec.PartialResult()
+        # print(res)
+        return res
 
     def _ensure_engine(self, source=None):
-        if self._engine_stt is None:
-            self._engine_stt = _STTEngineClass()
-            if source:
-                self._engine_stt.setup(source)
+        if self._model is None:
+            model_path = os.path.join(MODELS_PATH, settings.language_data["vosk"])
+            if not os.path.exists(model_path):
+                print("Please download the model from https://alphacephei.com/vosk/models and unpack it as {}.".format(model_path))
+                exit(1)
+            self._model = Model(model_path)
+            self._rec = KaldiRecognizer(self._model, AUDIO_RATE)
