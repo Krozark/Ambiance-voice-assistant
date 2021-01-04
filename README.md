@@ -32,13 +32,6 @@ python -m spacy download fr_core_news_md
 apt install mbrola-fr1 # or change voices in data/ava.json
 ```
 
-## Requierment for speach to text (French)
-
-```
-wget https://alphacephei.com/vosk/models/vosk-model-fr-0.6-linto.zip
-unzip vosk-model-fr-0.6-linto
-mv vosk-model-fr-0.6-linto data/models/fr
-```
 
 # Run
 ## No install
