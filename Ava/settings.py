@@ -12,8 +12,9 @@ DEBUG = True
 DEBUG_AUDIO_AS_TEXT = True
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
-DATA_PATH = os.path.join(PROJECT_PATH, "..", "data")
-MODELS_PATH = os.path.join(DATA_PATH, "models")
+DATA_PATH = os.path.abspath(os.path.join(PROJECT_PATH, "..", "data"))
+LANG_PATH = os.path.join(DATA_PATH, "lang")
+MODEL_DIRNAME = "model"
 
 AUDIO_RATE = 16000
 AUDIO_CHUNK = 8000
@@ -54,6 +55,9 @@ class Settings(object):
     @property
     def language_data(self):
         return self._languages.get(self._current_language, {})
+
+    def get_language(self):
+        return self._current_language
 
     def set_language(self, lang):
         self._current_language = lang

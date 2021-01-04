@@ -3,7 +3,7 @@
         "languages": {
             "current": "fr",
             "fr": {
-                "vosk": "fr",
+                "vosk-model": "https://alphacephei.com/vosk/models/vosk-model-fr-0.6-linto.zip",
                 "nltk": "french",
                 "input-file": "data/text-francais-utf8.txt",
                 "spacy": "fr_core_news_md",
@@ -12,7 +12,8 @@
                     "tts": "french-mbrola-1"
                 },
                 "android": {
-                    "tts": "FRANCE"
+                    "tts": "FRANCE",
+                    "vosk-model": "https://alphacephei.com/vosk/models/vosk-model-small-fr-pguyot-0.3.zip"
                 }
             }
         },
@@ -73,7 +74,11 @@
         }
     },
     "types": {
-        "...": "include(include/types.json)"
+      "TTS": {
+          "class": "Ava.action.TTSAction",
+          "args": [],
+          "kwargs": {}
+        }
     },
     "register_2": [
         {

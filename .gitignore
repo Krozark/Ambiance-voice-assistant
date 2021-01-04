@@ -133,7 +133,7 @@ dmypy.json
 
 # project
 debug_audio/
-data/models/
+data/lang/*/model/
 
 .buildozer/
 *.apk
