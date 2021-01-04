@@ -17,6 +17,9 @@ DATA_PATH = os.path.abspath(os.path.join(PROJECT_PATH, "..", "data"))
 LANG_PATH = os.path.join(DATA_PATH, "lang")
 MODEL_DIRNAME = "model"
 
+AVA_JSON_PATH = os.path.join(DATA_PATH, "ava.json")
+REGISTER_FILENAME = "register.json"
+
 AUDIO_RATE = 16000
 AUDIO_CHUNK = 8000
 AUDIO_CHANNELS = 1

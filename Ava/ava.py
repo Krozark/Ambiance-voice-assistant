@@ -10,7 +10,10 @@ from Ava.core.utils import load_register
 from Ava.settings import (
     settings,
     TokenStrategy,
-    DATA_PATH
+    DATA_PATH,
+    AVA_JSON_PATH,
+    LANG_PATH,
+    REGISTER_FILENAME
 )
 from Ava.worker import (
     MicrophoneWorker,
@@ -52,7 +55,7 @@ class Ava(object):
 
     def load_from_file(self, filename=None):
         if filename is None:
-            filename = os.path.join(DATA_PATH, "ava.json")
+            filename = AVA_JSON_PATH
         data = build_json(filename)
         logger.debug("Load config data: %s", json.dumps(data, indent=2))
         self.load(data)
@@ -64,7 +67,7 @@ class Ava(object):
 
         self._load_types(data.get("types"))
         self._load_pipeline(data.get("pipeline"))
-        self._load_register(data.get("register"))
+        self._load_register()
         self._load_sound_player(data.get("sound-player", {}))
 
     def register(self, tokens, action, token_regex=None) -> None:
@@ -203,7 +206,10 @@ class Ava(object):
                 kwargs = value.get("kwargs", kwargs)
             settings.factory.register(alias, t, args, kwargs)
 
-    def _load_register(self, data_list):
+    def _load_register(self):
+        filename = os.path.join(LANG_PATH, settings.get_language(), REGISTER_FILENAME)
+        data_list = build_json(filename)
+        logger.debug("Load registration data: %s", json.dumps(data_list, indent=2))
         load_register(data_list, self)
 
     def _load_sound_player(self, data):
