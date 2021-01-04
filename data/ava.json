@@ -4,8 +4,8 @@
             "current": "fr",
             "fr": {
                 "vosk-model": "https://alphacephei.com/vosk/models/vosk-model-fr-0.6-linto.zip",
-                "nltk": "french",
                 "input-file": "data/text-francais-utf8.txt",
+                "nltk": "french",
                 "spacy": "fr_core_news_md",
                 "wikipedia": "fr",
                 "_platform": {
