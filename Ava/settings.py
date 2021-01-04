@@ -4,6 +4,7 @@ import logging.config
 import os
 
 from Ava.core.factory import Factory
+from Ava.core.platform import platform as sys_platform
 
 
 logger = logging.getLogger(__name__)
@@ -46,7 +47,8 @@ class Settings(object):
             logger.debug("Configure %s = %s", key, value)
             if key == "languages":
                 self._current_language = value.pop("current")
-                self._languages = value
+                self._languages = self._parse_platform(value)
+                logger.debug(self._languages)
             elif key == "logging":
                 logging.config.dictConfig(value)
             else:
@@ -71,5 +73,16 @@ class Settings(object):
     def set(self, attr, value):
         setattr(self, attr, value)
 
+    def _parse_platform(self, data):
+        if isinstance(data, dict):
+            platform_value = data.pop("_platform", None)
+            if platform_value:
+                for key, value in platform_value.get(sys_platform, {}).items():
+                    data[key] = value
+
+            for key in data.keys():
+                data[key] = self._parse_platform(data[key])
+
+        return data
 
 settings = Settings()

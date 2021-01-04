@@ -8,12 +8,14 @@
                 "input-file": "data/text-francais-utf8.txt",
                 "spacy": "fr_core_news_md",
                 "wikipedia": "fr",
-                "linux": {
-                    "tts": "french-mbrola-1"
-                },
-                "android": {
-                    "tts": "FRANCE",
-                    "vosk-model": "https://alphacephei.com/vosk/models/vosk-model-small-fr-pguyot-0.3.zip"
+                "_platform": {
+                    "linux": {
+                        "tts": "french-mbrola-1"
+                    },
+                    "android": {
+                        "tts": "FRANCE",
+                        "vosk-model": "https://alphacephei.com/vosk/models/vosk-model-small-fr-pguyot-0.3.zip"
+                    }
                 }
             }
         },
