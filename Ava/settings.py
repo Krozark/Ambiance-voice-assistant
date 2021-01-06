@@ -4,6 +4,7 @@ import logging.config
 import os
 
 from Ava.core.factory import Factory
+from Ava.core.platform import platform as sys_platform
 
 
 logger = logging.getLogger(__name__)
@@ -12,8 +13,12 @@ DEBUG = True
 DEBUG_AUDIO_AS_TEXT = True
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
-DATA_PATH = os.path.join(PROJECT_PATH, "..", "data")
-MODELS_PATH = os.path.join(DATA_PATH, "models")
+DATA_PATH = os.path.abspath(os.path.join(PROJECT_PATH, "..", "data"))
+LANG_PATH = os.path.join(DATA_PATH, "lang")
+MODEL_DIRNAME = "model"
+
+AVA_JSON_PATH = os.path.join(DATA_PATH, "ava.json")
+REGISTER_FILENAME = "register.json"
 
 AUDIO_RATE = 16000
 AUDIO_CHUNK = 8000
@@ -45,7 +50,8 @@ class Settings(object):
             logger.debug("Configure %s = %s", key, value)
             if key == "languages":
                 self._current_language = value.pop("current")
-                self._languages = value
+                self._languages = self._parse_platform(value)
+                logger.debug(self._languages)
             elif key == "logging":
                 logging.config.dictConfig(value)
             else:
@@ -54,6 +60,9 @@ class Settings(object):
     @property
     def language_data(self):
         return self._languages.get(self._current_language, {})
+
+    def get_language(self):
+        return self._current_language
 
     def set_language(self, lang):
         self._current_language = lang
@@ -67,5 +76,16 @@ class Settings(object):
     def set(self, attr, value):
         setattr(self, attr, value)
 
+    def _parse_platform(self, data):
+        if isinstance(data, dict):
+            platform_value = data.pop("_platform", None)
+            if platform_value:
+                for key, value in platform_value.get(sys_platform, {}).items():
+                    data[key] = value
+
+            for key in data.keys():
+                data[key] = self._parse_platform(data[key])
+
+        return data
 
 settings = Settings()

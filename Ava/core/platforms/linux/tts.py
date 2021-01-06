@@ -14,7 +14,7 @@ class LinuxTTSEngine(TTSFacade):
         self._engine = ESpeakNG()
         # engine.pitch = 32
         self._engine.speed = 125
-        self._engine.voice = settings.language_data["linux"]["tts"]
+        self._engine.voice = settings.language_data["tts"]
 
     def _say(self, text, sync=False) -> None:
         self._engine.say(text, sync=sync)

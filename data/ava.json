@@ -3,16 +3,19 @@
         "languages": {
             "current": "fr",
             "fr": {
-                "vosk": "fr",
-                "nltk": "french",
+                "vosk-model": "https://alphacephei.com/vosk/models/vosk-model-fr-0.6-linto.zip",
                 "input-file": "data/text-francais-utf8.txt",
+                "nltk": "french",
                 "spacy": "fr_core_news_md",
                 "wikipedia": "fr",
-                "linux": {
-                    "tts": "french-mbrola-1"
-                },
-                "android": {
-                    "tts": "FRANCE"
+                "_platform": {
+                    "linux": {
+                        "tts": "french-mbrola-1"
+                    },
+                    "android": {
+                        "tts": "FRANCE",
+                        "vosk-model": "https://alphacephei.com/vosk/models/vosk-model-small-fr-pguyot-0.3.zip"
+                    }
                 }
             }
         },
@@ -73,207 +76,10 @@
         }
     },
     "types": {
-        "...": "include(include/types.json)"
-    },
-    "register_2": [
-        {
-          "...":  "include(include/game_mod.json)"
+      "TTS": {
+          "class": "Ava.action.TTSAction",
+          "args": [],
+          "kwargs": {}
         }
-    ],
-    "register": [
-        {
-            "tokens": [
-                "Ava",
-                "ça va",
-                "ordinateur",
-                "Ambiance voice assistant"
-            ],
-            "type": {
-                "type": "Ava:Mod",
-                "kwargs": {
-                    "enter": {
-                        "type": {
-                            "type": "Ava:Action:TTS",
-                            "args": "Oui?"
-                        }
-                    },
-                    "exit":  {
-                        "tokens": "Merci",
-                        "type": {
-                            "type": "Ava:Action:TTS",
-                            "args": "Derien."
-                        }
-                    }
-                }
-            },
-            "register": [
-                {
-                    "tokens": {
-                        "tokens": "répète r_search",
-                        "regex": {
-                            "r_search": {
-                                "regex":"\\w+",
-                                "multiple": true
-                            }
-                        }
-                    },
-                    "type": {
-                        "type": "Ava:Action:TTS",
-                        "args": "Je répète : {search}"
-                    }
-                },
-                {
-
-                    "tokens": [
-                        "Comment tu t'appelles",
-                        "C'est quoi ton nom",
-                        "tu es qui",
-                        "qui es tu"
-                    ],
-                    "type": {
-                        "type": "Ava:Action:TTS",
-                        "args": "Mon nom est Ambiance voice assistant, ou Ava."
-                    }
-                },
-                {
-                    "tokens": [
-                        "Qui t'a créé",
-                        "qui t'a fait",
-                        "c'est qui ton créateur",
-                        "qui est ton créateur"
-                    ],
-                    "type": {
-                        "type": "Ava:Action:TTS",
-                        "args": "C'est Maxime Barbier qui m'a crée"
-                    }
-                },
-                {
-                    "tokens": [
-                        "Qui est maxime barbier",
-                        "c'est qui maxime barbier"
-                    ],
-                    "type": {
-                        "type": "Ava:Action:TTS",
-                        "args": "c'est mon créateur."
-                    }
-                },
-                {
-                    "tokens": [
-                        "Il est quelle heure",
-                        "Quelle heure il est",
-                        "c'est quelle heure"
-                    ],
-                    "type": {
-                        "type": "Ava:Action:TTS",
-                        "args": "Il est {now.tm_hour} heure {now.tm_min} minutes{suffix}.",
-                        "kwargs": {
-                            "_python": [
-                                "import time",
-                                "now = time.localtime()",
-                                "suffix=\"\"",
-                                "if now.tm_hour >= 18 and now.tm_hour < 21:",
-                                " suffix=\", l'heure de l'appero!\""
-                            ]
-                        }
-                    }
-                },
-                {
-                    "tokens": {
-                        "tokens": [
-                            "affiche sur internet r_search",
-                            "ouvre un onglet r_search"
-                        ],
-                        "regex": {
-                            "r_search": {
-                                "regex":"\\w+",
-                                "multiple": true
-                            }
-                        }
-                    },
-                    "type": "Ava:Action:WebBrowserSearch"
-                },
-                {
-                    "tokens": {
-                        "tokens": "affiche sur wikipédia r_search",
-                        "regex": {
-                            "r_search": {
-                                "regex":"\\w+",
-                                "multiple": true
-                            }
-                        }
-                    },
-                    "type": "Ava:Action:WikipediaSearch"
-                },
-                {
-                    "tokens": {
-                        "tokens": [
-                            "c'est quoi r_search",
-                            "cherche sur wikipédia r_search"
-                        ],
-                        "regex": {
-                            "r_search": {
-                                "regex":"\\w+",
-                                "multiple": true
-                            }
-                        }
-                    },
-                    "type": "Ava:Action:WikipediaSearchTTS"
-                },
-                {
-                    "tokens": {
-                        "tokens": [
-                            "Quel temps il fait",
-                            "c'est quoi la météo",
-                            "il fait quel temps",
-                            "Quel temps il fait r_day",
-                            "C'est quoi la météo r_day",
-                            "il fait quel temps r_day",
-                            "Quel temps il fait à r_city",
-                            "c'est quoi la météo à r_city",
-                            "il fait quel temps à r_city",
-                            "Quel temps il fait à r_city r_day",
-                            "C'est quoi la météo à r_city r_day",
-                            "il fait quel temps à r_city r_day"
-                        ],
-                        "regex": {
-                            "r_city": "\\w+",
-                            "r_day": {
-                                "regex": "\\w+",
-                                "multiple": true
-                            }
-                        }
-                    },
-                    "type" : {
-                        "type": "Ava:Action:Weather",
-                        "kwargs": {
-                            "city": "Rennes",
-                            "day": 0
-                        }
-                    }
-                },
-                {
-                  "...":  "include(include/game_mod.json)"
-                }
-            ]
-        },
-        {
-            "tokens": "au revoir",
-            "type": "Ava:Action:Stop"
-        },
-        {
-            "tokens": {
-                "tokens": "r_search",
-                "regex": {
-                    "r_search": {
-                        "regex":"\\w+",
-                        "multiple": true
-                    }
-                }
-            },
-            "type": {
-                "type": "Ava:Action:TTS",
-                "args": "J'ai pas compris: {search}"
-            }
-        }
-    ]
+    }
 }

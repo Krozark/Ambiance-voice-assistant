@@ -16,7 +16,7 @@ TextToSpeech = autoclass('android.speech.tts.TextToSpeech')
 class AndroidTTSEngine(TTSFacade):
     def __init__(self):
         super().__init__()
-        lang = settings.language_data.get["android"]["tts"]
+        lang = settings.language_data.get["tts"]
         local = getattr(Locale, lang)
 
         self._engine = TextToSpeech(activity, None)

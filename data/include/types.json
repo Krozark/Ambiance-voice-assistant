@@ -1,7 +1,0 @@
-{
-  "TTS": {
-      "class": "Ava.action.TTSAction",
-      "args": [],
-      "kwargs": {}
-  }
-}
