@@ -2,7 +2,6 @@
     {
         "tokens": [
             "Ava",
-            "ça va",
             "ordinateur",
             "Ambiance voice assistant"
         ],
@@ -112,7 +111,10 @@
             },
             {
                 "tokens": {
-                    "tokens": "affiche sur wikipédia r_search",
+                    "tokens": [
+                        "affiche sur wikipédia r_search",
+                        "affiche moi sur wikipédia r_search"
+                    ],
                     "regex": {
                         "r_search": {
                             "regex":"\\w+",

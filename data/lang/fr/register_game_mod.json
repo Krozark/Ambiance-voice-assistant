@@ -176,7 +176,7 @@
         {
             "tokens": [
                 "boie une gorgée",
-                "fini son vere"
+                "fini son verre"
             ],
             "type": [
                 {
@@ -194,9 +194,9 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/cought1.wav",
-                        "data/music/effect/human/cought2.wav",
-                        "data/music/effect/human/cought3.wav"
+                        "data/music/effect/human/cough1.wav",
+                        "data/music/effect/human/cough2.wav",
+                        "data/music/effect/human/cough3.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -210,7 +210,7 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/laught1.wav"
+                        "data/music/effect/human/laugh1.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -219,7 +219,7 @@
             ]
         },
         {
-            "tokens": "un cris",
+            "tokens": "un cri",
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
@@ -263,7 +263,7 @@
             ]
         },
         {
-            "tokens": "tu sursautte",
+            "tokens": "tu sursaute",
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",

@@ -177,11 +177,11 @@ class Ava(object):
         settings.factory.register("Ava:Action:AudioStop", "Ava.action.AudioStopAction",)
         settings.factory.register("Ava:Action:Stop", "Ava.action.AvaStopAction")
         settings.factory.register("Ava:Action:TTS", "Ava.action.TTSAction")
-        settings.factory.register("Ava:Action:WebBrowser", "Ava.action.WebBrowserAction")
-        settings.factory.register("Ava:Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")
-        settings.factory.register("Ava:Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")
-        settings.factory.register("Ava:Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")
-        settings.factory.register("Ava:Action:Weather", "Ava.action.WeatherAction")
+        settings.factory.register("Ava:Action:WebBrowser", "Ava.action.WebBrowserAction")  # ?
+        settings.factory.register("Ava:Action:WebBrowserSearch", "Ava.action.WebBrowserSearchAction")  # ?
+        settings.factory.register("Ava:Action:WikipediaSearchTTS", "Ava.action.WikipediaSearchTTSAction")  # ?
+        settings.factory.register("Ava:Action:WikipediaSearch", "Ava.action.WikipediaSearchAction")  # ?
+        settings.factory.register("Ava:Action:Weather", "Ava.action.WeatherAction")  # ?
 
         # Workers
 
