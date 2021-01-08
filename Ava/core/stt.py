@@ -26,8 +26,10 @@ class STTMixin(object):
     _model = None
     _rec = None
 
-    def listen(self, source, partial=False):
+    def __init__(self):
         self._ensure_engine()
+
+    def listen(self, source, partial=False):
         res = None
         if self._rec.AcceptWaveform(source):
             data = self._rec.Result()

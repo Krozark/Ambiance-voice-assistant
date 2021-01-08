@@ -29,6 +29,7 @@ python setup.py install .[android] # for android
 ## Requirements for linux
 
 ```
+sudo apt install espeak-ng portaudio19-dev
 python -m spacy download fr_core_news_md
 apt install mbrola-fr1 # or change voices in data/ava.json
 ```

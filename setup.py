@@ -39,11 +39,11 @@ setuptools.setup(
       "sound-player~=0.2",
       "Unidecode>=1.1",
       "vosk~=0.3",
-      "text2num==2.2.1"
+      "text2num==2.2.1",
+      'py-espeak-ng~=0.1',  # linux only
    ],
    extras_require={
       'linux': [
-         'py-espeak-ng~=0.1'
       ],
       'android': [
          "kivy~=1.11",

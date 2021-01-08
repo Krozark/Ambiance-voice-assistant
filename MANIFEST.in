@@ -1,2 +1,2 @@
 recursive-include data *.json
-recursive-include data/music *.ogg *.wav
+# recursive-include data/music *.ogg *.wav
