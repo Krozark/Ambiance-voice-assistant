@@ -1,0 +1,95 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-08 18:34+0100\n"
+"PO-Revision-Date: 2021-1-8 18:55+0000\n"
+"Last-Translator: Maxime Barbier\n"
+"Language-Team: French\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: Ava/action/weather.py:30 Ava/action/weather.py:109
+msgid "today"
+msgstr "aujourd'hui"
+
+#: Ava/action/weather.py:30
+#, python-format
+msgid "in %s days"
+msgstr "dans %s jours"
+
+#: Ava/action/weather.py:40
+#, python-format
+msgid "a temperature of %s"
+msgstr "une température de %s"
+
+#: Ava/action/weather.py:47
+msgid "rain forecast at %H hOUR %M minutes "
+msgstr "pluie prévue à %H heure et %M minutes"
+
+#: Ava/action/weather.py:58
+#, python-format
+msgid "temperatures from %s to %s"
+msgstr "des températures allant de %s à %s"
+
+#: Ava/action/weather.py:63
+#, python-brace-format
+msgid ""
+"Weather forcast at {city} for {day}. {weather} with {temperature} {rain} {alert}."
+msgstr "Prévision météo de {city} pour {day}. {weather} avec {temperature} {rain} {alert}."
+
+#: Ava/action/weather.py:74
+msgid "impossible to get weather informations"
+msgstr "impossible d'obtenir les prévision météo"
+
+#: Ava/action/weather.py:84
+msgid "in (?P<day>[\\d]+) day[s]?"
+msgstr "dans (?<day>[\\d+) jour[s]?"
+
+#: Ava/action/weather.py:91
+msgid "(for )?(?P<next>next )?(?P<day>[\\w]+)"
+msgstr "((de[le|pour) )?(?P<day>[\\w]+)(?<next> prochain)?"
+
+#: Ava/action/weather.py:110
+msgid "tomorrow"
+msgstr "demain"
+
+#: Ava/action/weather.py:111
+msgid "after tomorrow"
+msgstr "après demain"
+
+#: Ava/action/weather.py:116
+msgid "monday"
+msgstr "lundi"
+
+#: Ava/action/weather.py:117
+msgid "tuesday"
+msgstr "mardi"
+
+#: Ava/action/weather.py:118
+msgid "wednesday"
+msgstr "mercredi"
+
+#: Ava/action/weather.py:119
+msgid "thursday"
+msgstr "jeudi"
+
+#: Ava/action/weather.py:120
+msgid "friday"
+msgstr "vendredi"
+
+#: Ava/action/weather.py:121
+msgid "saturday"
+msgstr "samedi"
+
+#: Ava/action/weather.py:122
+msgid "sunday"
+msgstr "dimanche"

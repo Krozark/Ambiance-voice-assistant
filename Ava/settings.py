@@ -6,6 +6,9 @@ import os
 from Ava.core.factory import Factory
 from Ava.core.platform import platform as sys_platform
 
+from Ava.translation import translator
+
+
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +42,7 @@ class Settings(object):
         self.ava = None
         self.factory = Factory()
         self.clear()
+        self.search_url = "https://duckduckgo.com/?q="
 
     def clear(self):
         self._languages = {}
@@ -49,8 +53,9 @@ class Settings(object):
         for key, value in data.items():
             logger.debug("Configure %s = %s", key, value)
             if key == "languages":
-                self._current_language = value.pop("current")
+                current = value.pop("current")
                 self._languages = self._parse_platform(value)
+                self.set_language(current)
                 logger.debug(self._languages)
             elif key == "logging":
                 logging.config.dictConfig(value)
@@ -66,6 +71,7 @@ class Settings(object):
 
     def set_language(self, lang):
         self._current_language = lang
+        translator.set_language(LANG_PATH, lang)
 
     def set_language_data(self, lang, data):
         self._languages[lang] = data

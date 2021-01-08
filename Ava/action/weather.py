@@ -8,49 +8,9 @@ from Ava.core import (
     TTSMixin
 )
 
+from Ava.translation import _
+
 logger = logging.getLogger(__name__)
-
-day_to_int_map = {
-    "aujourd'hui": 0,
-    "demain": 1,
-    "après demain": 2
-}
-
-day_cycle = [
-    "lundi",
-    "mardi",
-    "mercredi",
-    "jeudi",
-    "vendredi",
-    "samedi",
-    "dimanche"
-]
-
-
-def day_to_int(day, data):
-    if isinstance(day, int):
-        return day
-    res = 0
-
-    m = re.match("dans (\d+) jour[s]?", day)
-    if m:
-        tmp = int(m.group(1))
-        if tmp < len(data):
-            res = tmp
-    else:
-        m = re.match("((le|de|pour) )?([\w ]+)( prochain)?", day)
-        if m:
-            day = m.group(3)
-            logger.debug("day = %s", day)
-            today = datetime.date.today().weekday()  # index of today
-            if day in day_cycle:
-                day_index = day_cycle.index(day)  # index of the request day
-                res = (today - day_index) % (len(day_cycle) + 1)  # compute the delta
-                if m.group(4):  # add a week if needed
-                    res += len(day_cycle)
-            elif day in day_to_int_map.keys():
-                res = day_to_int_map[day]
-    return res
 
 
 class WeatherAction(Action, TTSMixin):
@@ -60,6 +20,7 @@ class WeatherAction(Action, TTSMixin):
         self._day = day
 
     def _do_trigger(self, *args, city=None, day=0, **kwargs) -> None:
+        print(_)
         city = city or self._city
         logger.debug("Weather data for city=%s day=%s", city, day)
         try:
@@ -67,9 +28,9 @@ class WeatherAction(Action, TTSMixin):
             list_places = client.search_places(city)
             my_place = list_places[0]
             my_place_weather_forecast = client.get_forecast_for_place(my_place)
-            day_delta = day_to_int(day or self._day, my_place_weather_forecast)
+            day_delta = self.day_to_int(day or self._day, my_place_weather_forecast)
 
-            day_str = "aujourd'hui" if day_delta == 0 else "dans %s jours" % day_delta
+            day_str = _("today") if day_delta == 0 else _("in %s days") % day_delta
             weather = ""
             temperature = ""
             rain_status = ""
@@ -79,14 +40,14 @@ class WeatherAction(Action, TTSMixin):
             if day_delta == 0:
                 forecast = my_place_weather_forecast.current_forecast
                 weather = forecast["weather"]["desc"].lower()
-                temperature = "une température de %s" % forecast["T"]["value"]
+                temperature = _("a temperature of %s") % forecast["T"]["value"]
 
                 # If rain in the hour forecast is available, get it.
                 if my_place_weather_forecast.position["rain_product_available"] == 1:
                     my_place_rain_forecast = client.get_rain(my_place.latitude, my_place.longitude)
                     next_rain_dt = my_place_rain_forecast.next_rain_date_locale()
                     if next_rain_dt:
-                        rain_status = "Pluie prévue à " + next_rain_dt.strftime("%H heure %M minutes ")
+                        rain_status = next_rain_dt.strftime(_("rain forecast at %H hour %M minutes "))
 
                 department = my_place_weather_forecast.position["dept"]
                 try:
@@ -97,12 +58,12 @@ class WeatherAction(Action, TTSMixin):
             else:
                 forecast = my_place_weather_forecast.daily_forecast[day_delta]
                 weather = forecast["weather12H"]["desc"].lower()
-                temperature = "des températures allant de %s à %s" % (
+                temperature = _("temperatures from %s to %s") % (
                     forecast["T"]["min"],
                     forecast["T"]["max"]
                 )
 
-            msg = "Météo à {city} pour {day}. {weather} avec {temperature} {rain} {alert}.".format(
+            msg = _("Weather forcast at {city} for {day}. {weather} with {temperature} {rain} {alert}.").format(
                 city=city,
                 day=day_str,
                 weather=weather,
@@ -113,6 +74,53 @@ class WeatherAction(Action, TTSMixin):
 
         except Exception as e:
             logger.exception("Impossible to get weather for city=%s, day=%s", city, day, exc_info=e)
-            msg = "impossible to get weather informations"
+            msg = _("impossible to get weather informations")
         logger.debug(msg)
         self.say(msg)
+
+    def day_to_int(self, day, data):
+        if isinstance(day, int):
+            return day
+
+        res = 0
+
+        m = re.match(_("in (?P<day>[\d]+) day[s]?"), day)
+        if m:
+            tmp = int(m.groupdict()["day"])
+            if tmp < len(data):
+                res = tmp
+        else:
+            day_cycle = self.get_day_cycle()
+            m = re.match(_("(for )?(?P<next>next )?(?P<day>[\w]+)"), day)
+            if m:
+                day = m.groupdict()["day"]
+                logger.debug("day = %s", day)
+                today = datetime.date.today().weekday()  # index of today
+                if day in day_cycle:
+                    day_index = day_cycle.index(day)  # index of the request day
+                    res = (today - day_index) % (len(day_cycle) + 1)  # compute the delta
+                    if m.groupdict()["next"]:  # add a week if needed
+                        res += len(day_cycle)
+                else:
+                    day_to_int_map = self.get_day_to_int_map()
+                    if day in day_to_int_map.keys():
+                        res = day_to_int_map[day]
+        return res
+
+    def get_day_to_int_map(self):
+        return {
+            _("today"): 0,
+            _("tomorrow"): 1,
+            _("after tomorrow"): 2
+        }
+
+    def get_day_cycle(self):
+        return [
+            _("monday"),
+            _("tuesday"),
+            _("wednesday"),
+            _("thursday"),
+            _("friday"),
+            _("saturday"),
+            _("sunday")
+        ]

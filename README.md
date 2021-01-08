@@ -51,3 +51,15 @@ python -m Ava
 ## Configure the actions
 
 Please edit data/ava.json to customize the actions to make with specifics sentences.
+
+# Translation
+
+To make a new translation:
+
+```
+LANG=fr
+MESSAGE_DIR=data/lang/${LANG}/LC_MESSAGES
+mkdir -p $MESSAGE_DIR
+find . -iname "*.py" |xargs xgettext --from-code=UTF-8 --default-domain=ava -p $MESSAGE_DIR
+msgfmt -o $MESSAGE_DIR/ava.mo $MESSAGE_DIR/ava.po
+```

@@ -26,7 +26,7 @@ class WebBrowserSearchAction(Action):
     def __init__(self, *args, search=None, base_url=None, **kwargs):
         super().__init__(*args, name=search, **kwargs)
         self._search = search
-        self._base_url = base_url or "https://duckduckgo.com/?q="
+        self._base_url = base_url or settings.search_url
 
     def _do_trigger(self, *args, search=None, base_url=None, **kwargs) -> None:
         search = search or self._search or ""
