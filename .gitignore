@@ -134,6 +134,7 @@ dmypy.json
 # project
 debug_audio/
 data/lang/*/model/
+data/futur/
 
 .buildozer/
 *.apk
