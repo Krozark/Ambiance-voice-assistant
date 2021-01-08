@@ -55,7 +55,7 @@ class MicrophoneWorker(Worker, OThread):
         self._stream.start_stream()
         while self._is_running:
             logger.debug("Listen....")
-            audio = self._stream.read(AUDIO_CHUNK // 2)
+            audio = self._stream.read(AUDIO_CHUNK)
             logger.debug("End Listen....")
             if len(audio):
                 self.output_push(audio)
