@@ -34,20 +34,7 @@
                 "type": "Ava:Action:AudioFilePlayer",
                 "args": [
                     "data/music/ambiance/night-village-1.ogg",
-                    "data/music/ambiance/night-village-2.ogg"
-                ],
-                "kwargs": {
-                    "playlist": "ambiance"
-                }
-            }
-        },
-        {
-            "tokens": [
-                "la nuit tombe"
-            ],
-            "type": {
-                "type": "Ava:Action:AudioFilePlayer",
-                "args": [
+                    "data/music/ambiance/night-village-2.ogg",
                     "data/music/ambiance/night-crickets-ambience-on-rural-property.wav"
                 ],
                 "kwargs": {
@@ -319,6 +306,82 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": "/home/mba/Documents/git/Ambiance-voice-assistant/data/music/effect/animals/cockerel_early_morning.mp3",
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": [
+                "reçois un coup",
+                "prend un coup",
+                "te fais taper"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/human/hit.wav"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": [
+                "chiffonne le message",
+                "chiffonne le papier",
+                "chiffone le message",
+                "chiffone le papier"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/paper/crumples1.wav",
+                        "data/music/effect/paper/crumples2.wav"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": [
+                "tourne la page",
+                "tourner une page",
+                "feuilleter"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/paper/pageturn1.wav",
+                        "data/music/effect/paper/pageturn2.wav",
+                        "data/music/effect/paper/paper-sketchbook-page-flips-1.wav",
+                        "data/music/effect/paper/paper-sketchbook-page-flips-2.wav"
+                    ],
+                    "kwargs": {
+                        "playlist": "effect"
+                    }
+                }
+            ]
+        },
+        {
+            "tokens": [
+                "écrir quelque chose"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/music/effect/paper/pencil-scratch-1.wav",
+                        "data/music/effect/paper/pencil-scratch-2.wav"
+                    ],
                     "kwargs": {
                         "playlist": "effect"
                     }
