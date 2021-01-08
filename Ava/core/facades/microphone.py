@@ -6,9 +6,9 @@ class MicrophoneState(enum.Enum):
     recording = 2
 
 
-class MicrophoneStream(object):
-    pass
-
+# class MicrophoneStream(object):
+#     pass
+#
 
 class MicrophoneFacade(object):
     def __init__(self):

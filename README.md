@@ -7,6 +7,7 @@ The software run offline, so all data are contained to your computer.
 
 
 As Vosk is use for the Speach to text, you need to download a langage model (https://alphacephei.com/vosk/models) and place it in data/models/<language>/.
+It will be downloaded if not present the first time if missing, causing a waiting time. 
 
 
 # Installation
@@ -28,6 +29,7 @@ python setup.py install .[android] # for android
 ## Requirements for linux
 
 ```
+sudo apt install espeak-ng portaudio19-dev
 python -m spacy download fr_core_news_md
 apt install mbrola-fr1 # or change voices in data/ava.json
 ```

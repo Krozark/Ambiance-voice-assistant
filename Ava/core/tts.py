@@ -12,11 +12,13 @@ _TTSEngineClass = ProxyClass(TTSFacade)
 class TTSMixin(object):
     _engine_tts = None
 
+    def __init__(self):
+        self._ensure_engine()
+
     def say(self, text, sync=True) -> None:
         if settings.get("audio_as_text"):
             logger.info("TTS '%s'", text)
         else:
-            self._ensure_engine()
             self._engine_tts.say(text, sync=sync)
 
     def _ensure_engine(self):

@@ -23,6 +23,8 @@ setuptools.setup(
    classifiers=[
       "Programming Language :: Python",
       "Programming Language :: Python :: 3",
+      "Programming Language :: Python :: 3.7",
+      "Programming Language :: Python :: 3.8",
       "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
       "Operating System :: OS Independent",
     ],
@@ -37,11 +39,11 @@ setuptools.setup(
       "sound-player~=0.2",
       "Unidecode>=1.1",
       "vosk~=0.3",
-      "text2num==2.2.1"
+      "text2num==2.2.1",
+      'py-espeak-ng~=0.1',  # linux only
    ],
    extras_require={
       'linux': [
-         'py-espeak-ng~=0.1'
       ],
       'android': [
          "kivy~=1.11",
@@ -53,5 +55,5 @@ setuptools.setup(
         'ava = Ava.__main__:main',
       ],
    },
-   python_requires='>=3.7',
+   python_requires='>=3.7, <3.9, <4',
 )

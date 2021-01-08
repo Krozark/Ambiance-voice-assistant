@@ -114,5 +114,5 @@ class WeatherAction(Action, TTSMixin):
         except Exception as e:
             logger.exception("Impossible to get weather for city=%s, day=%s", city, day, exc_info=e)
             msg = "impossible to get weather informations"
-
+        logger.debug(msg)
         self.say(msg)
