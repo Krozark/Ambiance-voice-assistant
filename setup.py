@@ -38,9 +38,10 @@ setuptools.setup(
       "meteofrance-api",
       "sound-player~=0.2",
       "Unidecode>=1.1",
-      "vosk~=0.3",
+      "vosk==0.3.15",
       "text2num==2.2.1",
       'py-espeak-ng~=0.1',  # linux only
+      "humanize~=3.2",
    ],
    extras_require={
       'linux': [
