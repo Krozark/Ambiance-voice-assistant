@@ -23,6 +23,8 @@ setuptools.setup(
    classifiers=[
       "Programming Language :: Python",
       "Programming Language :: Python :: 3",
+      "Programming Language :: Python :: 3.7",
+      "Programming Language :: Python :: 3.8",
       "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
       "Operating System :: OS Independent",
     ],
@@ -53,5 +55,5 @@ setuptools.setup(
         'ava = Ava.__main__:main',
       ],
    },
-   python_requires='>=3.7',
+   python_requires='>=3.7, <3.9, <4',
 )
