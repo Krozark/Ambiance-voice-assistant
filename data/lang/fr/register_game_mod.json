@@ -33,9 +33,9 @@
             "type": {
                 "type": "Ava:Action:AudioFilePlayer",
                 "args": [
-                    "data/music/ambiance/night-village-1.ogg",
-                    "data/music/ambiance/night-village-2.ogg",
-                    "data/music/ambiance/night-crickets-ambience-on-rural-property.wav"
+                    "data/sounds/ambiance/night-village-1.ogg",
+                    "data/sounds/ambiance/night-village-2.ogg",
+                    "data/sounds/ambiance/night-crickets-ambience-on-rural-property.wav"
                 ],
                 "kwargs": {
                     "playlist": "ambiance"
@@ -52,8 +52,8 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/ambiance/town-1.ogg",
-                        "data/music/ambiance/town-2.ogg"
+                        "data/sounds/ambiance/town-1.ogg",
+                        "data/sounds/ambiance/town-2.ogg"
                     ],
                     "kwargs": {
                         "playlist": "ambiance"
@@ -71,9 +71,9 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/ambiance/forest-1.ogg",
-                        "data/music/ambiance/forest-2.ogg",
-                        "data/music/ambiance/forest-3.ogg"
+                        "data/sounds/ambiance/forest-1.ogg",
+                        "data/sounds/ambiance/forest-2.ogg",
+                        "data/sounds/ambiance/forest-3.ogg"
                     ],
                     "kwargs": {
                         "playlist": "ambiance"
@@ -89,7 +89,7 @@
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/music/ambiance/burning-village-1.ogg",
+                    "args": "data/sounds/ambiance/burning-village-1.ogg",
                     "kwargs": {
                         "playlist": "ambiance"
                     }
@@ -105,9 +105,9 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/grass_footsteps.wav",
-                        "data/music/effect/human/Womens_shoes_1.wav",
-                        "data/music/effect/human/footsteps1_lp.ogg"
+                        "data/sounds/effect/human/grass_footsteps.wav",
+                        "data/sounds/effect/human/Womens_shoes_1.wav",
+                        "data/sounds/effect/human/footsteps1_lp.ogg"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -123,7 +123,7 @@
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/music/effect/objects/loopable-ticking-clock.wav",
+                    "args": "data/sounds/effect/objects/loopable-ticking-clock.wav",
                     "kwargs": {
                         "playlist": "effect",
                         "loop": 2
@@ -140,7 +140,7 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/running-shoes-1.wav"
+                        "data/sounds/effect/human/running-shoes-1.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -153,7 +153,7 @@
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/music/effect/water/splash-pool.ogg",
+                    "args": "data/sounds/effect/water/splash-pool.ogg",
                     "kwargs": {
                         "playlist": "effect"
                     }
@@ -168,7 +168,7 @@
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/music/effect/human/drink-sip-and-swallow.wav",
+                    "args": "data/sounds/effect/human/drink-sip-and-swallow.wav",
                     "kwargs": {
                         "playlist": "effect"
                     }
@@ -181,9 +181,9 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/cough1.wav",
-                        "data/music/effect/human/cough2.wav",
-                        "data/music/effect/human/cough3.wav"
+                        "data/sounds/effect/human/cough1.wav",
+                        "data/sounds/effect/human/cough2.wav",
+                        "data/sounds/effect/human/cough3.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -197,7 +197,7 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/laugh1.wav"
+                        "data/sounds/effect/human/laugh1.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -211,7 +211,7 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/SCREAM.wav"
+                        "data/sounds/effect/human/SCREAM.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -225,7 +225,7 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/attention-whistle.wav"
+                        "data/sounds/effect/human/attention-whistle.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -239,9 +239,9 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/breath-female.wav",
-                        "data/music/effect/human/breath-female2.wav",
-                        "data/music/effect/human/breath-mal.wav"
+                        "data/sounds/effect/human/breath-female.wav",
+                        "data/sounds/effect/human/breath-female2.wav",
+                        "data/sounds/effect/human/breath-mal.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -255,8 +255,8 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/freakedbreath.wav",
-                        "data/music/effect/human/gasp1.wav"
+                        "data/sounds/effect/human/freakedbreath.wav",
+                        "data/sounds/effect/human/gasp1.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -270,8 +270,8 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/solo-clap.wav",
-                        "data/music/effect/human/light_applause.ogg"
+                        "data/sounds/effect/human/solo-clap.wav",
+                        "data/sounds/effect/human/light_applause.ogg"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -285,8 +285,8 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/cheers.ogg",
-                        "data/music/effect/human/boos.ogg"
+                        "data/sounds/effect/human/cheers.ogg",
+                        "data/sounds/effect/human/boos.ogg"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -305,7 +305,7 @@
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "/home/mba/Documents/git/Ambiance-voice-assistant/data/music/effect/animals/cockerel_early_morning.mp3",
+                    "args": "/home/mba/Documents/git/Ambiance-voice-assistant/data/sounds/effect/animals/cockerel_early_morning.mp3",
                     "kwargs": {
                         "playlist": "effect"
                     }
@@ -322,7 +322,7 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/human/hit.wav"
+                        "data/sounds/effect/human/hit.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -341,8 +341,8 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/paper/crumples1.wav",
-                        "data/music/effect/paper/crumples2.wav"
+                        "data/sounds/effect/paper/crumples1.wav",
+                        "data/sounds/effect/paper/crumples2.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -360,10 +360,10 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/paper/pageturn1.wav",
-                        "data/music/effect/paper/pageturn2.wav",
-                        "data/music/effect/paper/paper-sketchbook-page-flips-1.wav",
-                        "data/music/effect/paper/paper-sketchbook-page-flips-2.wav"
+                        "data/sounds/effect/paper/pageturn1.wav",
+                        "data/sounds/effect/paper/pageturn2.wav",
+                        "data/sounds/effect/paper/paper-sketchbook-page-flips-1.wav",
+                        "data/sounds/effect/paper/paper-sketchbook-page-flips-2.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
@@ -379,8 +379,8 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/music/effect/paper/pencil-scratch-1.wav",
-                        "data/music/effect/paper/pencil-scratch-2.wav"
+                        "data/sounds/effect/paper/pencil-scratch-1.wav",
+                        "data/sounds/effect/paper/pencil-scratch-2.wav"
                     ],
                     "kwargs": {
                         "playlist": "effect"
