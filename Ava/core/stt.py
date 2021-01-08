@@ -71,6 +71,7 @@ class STTMixin(object):
             if not os.path.exists(model_path):
                 logger.critical("Please download the model from https://alphacephei.com/vosk/models and unpack it as %s.", model_path)
                 exit(1)
-
+            logger.info("Loading Kaldi module. Please wait.")
             self._model = Model(model_path)
             self._rec = KaldiRecognizer(self._model, AUDIO_RATE)
+            logger.info("Kaldi module loaded")
