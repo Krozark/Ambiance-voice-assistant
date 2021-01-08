@@ -33,49 +33,9 @@
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/sounds/music/burning-village-1.ogg",
+                    "args": "data/sounds/ambiance/burning-village-1.ogg",
                     "kwargs": {
-                        "playlist": "music"
-                    }
-                }
-            ]
-        },
-
-
-
-
-        {
-            "tokens": [
-                "la nuit tombe sur le village",
-                "le village s'endort"
-            ],
-            "type": {
-                "type": "Ava:Action:AudioFilePlayer",
-                "args": [
-                    "data/sounds/tone/night-village-1.ogg",
-                    "data/sounds/tone/night-village-2.ogg",
-                    "data/sounds/tone/night-crickets-ambience-on-rural-property.wav"
-                ],
-                "kwargs": {
-                    "playlist": "tone"
-                }
-            }
-        },
-        {
-             "tokens": [
-                "entrez dans un village",
-                "le jour se lève sur le village",
-                "le village se lève"
-            ],
-            "type": [
-                {
-                    "type": "Ava:Action:AudioFilePlayer",
-                    "args": [
-                        "data/sounds/tone/town-1.ogg",
-                        "data/sounds/tone/town-2.ogg"
-                    ],
-                    "kwargs": {
-                        "playlist": "tone"
+                        "playlist": "ambiance"
                     }
                 }
             ]
@@ -90,16 +50,53 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/tone/forest-1.ogg",
-                        "data/sounds/tone/forest-2.ogg",
-                        "data/sounds/tone/forest-3.ogg"
+                        "data/sounds/ambiance/forest-1.ogg",
+                        "data/sounds/ambiance/forest-2.ogg",
+                        "data/sounds/ambiance/forest-3.ogg"
                     ],
                     "kwargs": {
-                        "playlist": "tone"
+                        "playlist": "ambiance"
                     }
                 }
             ]
         },
+        {
+            "tokens": [
+                "la nuit tombe sur le village",
+                "le village s'endort"
+            ],
+            "type": {
+                "type": "Ava:Action:AudioFilePlayer",
+                "args": [
+                    "data/sounds/ambiance/night-village-1.ogg",
+                    "data/sounds/ambiance/night-village-2.ogg",
+                    "data/sounds/ambiance/night-crickets-ambience-on-rural-property.wav"
+                ],
+                "kwargs": {
+                    "playlist": "ambiance"
+                }
+            }
+        },
+        {
+             "tokens": [
+                "entrez dans un village",
+                "le jour se lève sur le village",
+                "le village se lève"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": [
+                        "data/sounds/ambiance/town-1.ogg",
+                        "data/sounds/ambiance/town-2.ogg"
+                    ],
+                    "kwargs": {
+                        "playlist": "ambiance"
+                    }
+                }
+            ]
+        },
+
 
 
 

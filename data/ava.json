@@ -59,20 +59,26 @@
             "replace": true,
             "loop": 0
         },
+        "ambiance": {
+            "description": "main ambiance of the scene",
+            "concurency": 1,
+            "replace": true,
+            "loop": 0
+        },
         "tone": {
-            "description": "alteration of the music",
+            "description": "alteration of the music / ambiance",
             "concurency": 1,
             "replace": true,
             "loop": 0
         },
         "backgroud": {
             "description": "weather conditions, people talking ...",
-            "concurency": 2,
+            "concurency": 3,
             "replace": true,
             "loop": 0
         },
         "event": {
-            "description": "brief effect with strong impact",
+            "description": "brief effects with strong impact",
             "concurency": 10,
             "replace": true
         }
