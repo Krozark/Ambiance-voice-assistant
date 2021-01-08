@@ -4,7 +4,7 @@
             "current": "fr",
             "fr": {
                 "vosk-model": "https://alphacephei.com/vosk/models/vosk-model-fr-0.6-linto.zip",
-                "input-file": "data/text-francais-utf8.txt",
+                "input-file": "data/lang/fr/text-utf8.txt",
                 "nltk": "french",
                 "spacy": "fr_core_news_md",
                 "wikipedia": "fr",
@@ -45,13 +45,6 @@
                         "console"
                     ],
                     "level": "DEBUG",
-                    "propapate": true
-                },
-                "Ava.worker.audio": {
-                    "handlers": [
-                        "console"
-                    ],
-                    "level": "INFO",
                     "propapate": true
                 }
             }

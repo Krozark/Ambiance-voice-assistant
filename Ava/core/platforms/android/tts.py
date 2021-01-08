@@ -24,14 +24,14 @@ class AndroidTTSEngine(TTSFacade):
 
     def _say(self, text, sync=False) -> None:
         retries = 0  # First try rarely succeeds due to some timing issue
-        speak_status = self.tts.speak(
+        speak_status = self._engine.speak(
                 text,
                 TextToSpeech.QUEUE_FLUSH,
                 None
         )
         while retries < 100 and speak_status == -1:
             sleep(0.1)
-            speak_status = self.tts.speak(
+            speak_status = self._engine.speak(
                 text,
                 TextToSpeech.QUEUE_FLUSH,
                 None

@@ -1,10 +1,9 @@
 import datetime
 import logging
 import os
-
-import pyaudio
 import wave
 
+import pyaudio
 from sound_player import Sound
 
 from Ava.core import (
@@ -15,7 +14,6 @@ from Ava.core import (
     Worker
 )
 from Ava.settings import (
-    settings,
     AUDIO_CHANNELS,
     AUDIO_CHUNK,
     AUDIO_RATE

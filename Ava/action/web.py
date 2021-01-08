@@ -29,7 +29,7 @@ class WebBrowserSearchAction(Action):
         self._base_url = base_url or "https://duckduckgo.com/?q="
 
     def _do_trigger(self, *args, search=None, base_url=None, **kwargs) -> None:
-        search =  search or self._search or ""
+        search = search or self._search or ""
         base_url = base_url or self._base_url
         webbrowser.open_new_tab(base_url + search)
 
@@ -40,7 +40,7 @@ class WikipediaSearchAction(Action):
         self._search = search
 
     def _do_trigger(self, *args, search=None, **kwargs) -> None:
-        search =  search or self._search or ""
+        search = search or self._search or ""
         wikipedia.set_lang(settings.language_data["wikipedia"])
         key = wikipedia.search(search, results=1)
         if key:
@@ -55,7 +55,7 @@ class WikipediaSearchTTSAction(Action, TTSMixin):
         self._sentences = sentences
 
     def _do_trigger(self, *args, search=None, sentences=None, **kwargs) -> None:
-        search =  search or self._search or ""
+        search = search or self._search or ""
         sentences = sentences or self._sentences or 2
         wikipedia.set_lang(settings.language_data["wikipedia"])
         key = wikipedia.search(search, results=1)
