@@ -29,9 +29,10 @@ class Tokenizer(Worker, IOxThread):
 
 class TokenizerSimpleWorker(Tokenizer):
     def tokenize(self, text: str) -> List[str]:
-        for token in word_tokenize(text):
-            logger.debug("TokenizerWorker create token %s", token)
-            yield token
+        for token in word_tokenize(text, language=settings.language_data["nltk"]):
+            for token2 in token.split("-"):
+                logger.debug("TokenizerWorker create token %s", token2)
+                yield token2
 
 
 class TokenizerLemmaWorker(Tokenizer):

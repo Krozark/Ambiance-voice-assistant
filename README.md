@@ -44,8 +44,6 @@ python Ava/ui # for UI version
 ## With install
 ```
 python -m Ava
-# or
-Ava
 ```
 
 ## Configure the actions
