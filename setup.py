@@ -36,7 +36,6 @@ setuptools.setup(
       "meteofrance-api",
       "sound-player~=0.2",
       "Unidecode>=1.1",
-      "kivy~=1.11",
       "vosk==0.3.15",
       "text2num==2.2.1"
    ],
@@ -45,6 +44,7 @@ setuptools.setup(
          'py-espeak-ng~=0.1'
       ],
       'android': [
+         "kivy~=1.11",
          "pyjnius"
       ]
    },

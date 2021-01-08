@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 day_to_int_map = {
     "aujourd'hui": 0,
     "demain": 1,
-    "après-demain": 2
+    "après demain": 2
 }
 
 day_cycle = [
@@ -38,9 +38,10 @@ def day_to_int(day, data):
         if tmp < len(data):
             res = tmp
     else:
-        m = re.match("((le|de|pour) )?([-\w]+)( prochain)?", day)
+        m = re.match("((le|de|pour) )?([\w ]+)( prochain)?", day)
         if m:
             day = m.group(3)
+            logger.debug("day = %s", day)
             today = datetime.date.today().weekday()  # index of today
             if day in day_cycle:
                 day_index = day_cycle.index(day)  # index of the request day
