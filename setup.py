@@ -36,7 +36,7 @@ setuptools.setup(
       "meteofrance-api",
       "sound-player~=0.2",
       "Unidecode>=1.1",
-      "vosk==0.3.15",
+      "vosk~=0.3",
       "text2num==2.2.1"
    ],
    extras_require={
@@ -53,5 +53,5 @@ setuptools.setup(
         'ava = Ava.__main__:main',
       ],
    },
-   python_requires='>=3.6',
+   python_requires='>=3.7',
 )
