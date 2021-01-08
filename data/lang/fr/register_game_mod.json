@@ -27,18 +27,37 @@
     "register" : [
         {
             "tokens": [
+                "un village en feu",
+                "village est en feu"
+            ],
+            "type": [
+                {
+                    "type": "Ava:Action:AudioFilePlayer",
+                    "args": "data/sounds/music/burning-village-1.ogg",
+                    "kwargs": {
+                        "playlist": "music"
+                    }
+                }
+            ]
+        },
+
+
+
+
+        {
+            "tokens": [
                 "la nuit tombe sur le village",
                 "le village s'endort"
             ],
             "type": {
                 "type": "Ava:Action:AudioFilePlayer",
                 "args": [
-                    "data/sounds/ambiance/night-village-1.ogg",
-                    "data/sounds/ambiance/night-village-2.ogg",
-                    "data/sounds/ambiance/night-crickets-ambience-on-rural-property.wav"
+                    "data/sounds/tone/night-village-1.ogg",
+                    "data/sounds/tone/night-village-2.ogg",
+                    "data/sounds/tone/night-crickets-ambience-on-rural-property.wav"
                 ],
                 "kwargs": {
-                    "playlist": "ambiance"
+                    "playlist": "tone"
                 }
             }
         },
@@ -52,11 +71,11 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/ambiance/town-1.ogg",
-                        "data/sounds/ambiance/town-2.ogg"
+                        "data/sounds/tone/town-1.ogg",
+                        "data/sounds/tone/town-2.ogg"
                     ],
                     "kwargs": {
-                        "playlist": "ambiance"
+                        "playlist": "tone"
                     }
                 }
             ]
@@ -71,31 +90,26 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/ambiance/forest-1.ogg",
-                        "data/sounds/ambiance/forest-2.ogg",
-                        "data/sounds/ambiance/forest-3.ogg"
+                        "data/sounds/tone/forest-1.ogg",
+                        "data/sounds/tone/forest-2.ogg",
+                        "data/sounds/tone/forest-3.ogg"
                     ],
                     "kwargs": {
-                        "playlist": "ambiance"
+                        "playlist": "tone"
                     }
                 }
             ]
         },
-        {
-            "tokens": [
-                "un village en feu",
-                "village est en feu"
-            ],
-            "type": [
-                {
-                    "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/sounds/ambiance/burning-village-1.ogg",
-                    "kwargs": {
-                        "playlist": "ambiance"
-                    }
-                }
-            ]
-        },
+
+
+
+
+
+
+
+
+
+
         {
             "tokens": [
                 "bruits de pas",
@@ -105,12 +119,12 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/human/grass_footsteps.wav",
-                        "data/sounds/effect/human/Womens_shoes_1.wav",
-                        "data/sounds/effect/human/footsteps1_lp.ogg"
+                        "data/sounds/event/human/grass_footsteps.wav",
+                        "data/sounds/event/human/Womens_shoes_1.wav",
+                        "data/sounds/event/human/footsteps1_lp.ogg"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -123,9 +137,9 @@
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/sounds/effect/objects/loopable-ticking-clock.wav",
+                    "args": "data/sounds/event/objects/loopable-ticking-clock.wav",
                     "kwargs": {
-                        "playlist": "effect",
+                        "playlist": "event",
                         "loop": 2
                     }
                 }
@@ -140,10 +154,10 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/human/running-shoes-1.wav"
+                        "data/sounds/event/human/running-shoes-1.wav"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -153,9 +167,9 @@
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/sounds/effect/water/splash-pool.ogg",
+                    "args": "data/sounds/event/water/splash-pool.ogg",
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -168,9 +182,9 @@
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "data/sounds/effect/human/drink-sip-and-swallow.wav",
+                    "args": "data/sounds/event/human/drink-sip-and-swallow.wav",
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -181,12 +195,12 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/human/cough1.wav",
-                        "data/sounds/effect/human/cough2.wav",
-                        "data/sounds/effect/human/cough3.wav"
+                        "data/sounds/event/human/cough1.wav",
+                        "data/sounds/event/human/cough2.wav",
+                        "data/sounds/event/human/cough3.wav"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -197,10 +211,10 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/human/laugh1.wav"
+                        "data/sounds/event/human/laugh1.wav"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -211,10 +225,10 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/human/SCREAM.wav"
+                        "data/sounds/event/human/SCREAM.wav"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -225,10 +239,10 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/human/attention-whistle.wav"
+                        "data/sounds/event/human/attention-whistle.wav"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -239,12 +253,12 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/human/breath-female.wav",
-                        "data/sounds/effect/human/breath-female2.wav",
-                        "data/sounds/effect/human/breath-mal.wav"
+                        "data/sounds/event/human/breath-female.wav",
+                        "data/sounds/event/human/breath-female2.wav",
+                        "data/sounds/event/human/breath-mal.wav"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -255,11 +269,11 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/human/freakedbreath.wav",
-                        "data/sounds/effect/human/gasp1.wav"
+                        "data/sounds/event/human/freakedbreath.wav",
+                        "data/sounds/event/human/gasp1.wav"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -270,11 +284,11 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/human/solo-clap.wav",
-                        "data/sounds/effect/human/light_applause.ogg"
+                        "data/sounds/event/human/solo-clap.wav",
+                        "data/sounds/event/human/light_applause.ogg"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -285,11 +299,11 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/human/cheers.ogg",
-                        "data/sounds/effect/human/boos.ogg"
+                        "data/sounds/event/human/cheers.ogg",
+                        "data/sounds/event/human/boos.ogg"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -305,9 +319,9 @@
             "type": [
                 {
                     "type": "Ava:Action:AudioFilePlayer",
-                    "args": "/home/mba/Documents/git/Ambiance-voice-assistant/data/sounds/effect/animals/cockerel_early_morning.mp3",
+                    "args": "/home/mba/Documents/git/Ambiance-voice-assistant/data/sounds/event/animals/cockerel_early_morning.mp3",
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -322,10 +336,10 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/human/hit.wav"
+                        "data/sounds/event/human/hit.wav"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -341,11 +355,11 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/paper/crumples1.wav",
-                        "data/sounds/effect/paper/crumples2.wav"
+                        "data/sounds/event/paper/crumples1.wav",
+                        "data/sounds/event/paper/crumples2.wav"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -360,13 +374,13 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/paper/pageturn1.wav",
-                        "data/sounds/effect/paper/pageturn2.wav",
-                        "data/sounds/effect/paper/paper-sketchbook-page-flips-1.wav",
-                        "data/sounds/effect/paper/paper-sketchbook-page-flips-2.wav"
+                        "data/sounds/event/paper/pageturn1.wav",
+                        "data/sounds/event/paper/pageturn2.wav",
+                        "data/sounds/event/paper/paper-sketchbook-page-flips-1.wav",
+                        "data/sounds/event/paper/paper-sketchbook-page-flips-2.wav"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]
@@ -379,11 +393,11 @@
                 {
                     "type": "Ava:Action:AudioFilePlayer",
                     "args": [
-                        "data/sounds/effect/paper/pencil-scratch-1.wav",
-                        "data/sounds/effect/paper/pencil-scratch-2.wav"
+                        "data/sounds/event/paper/pencil-scratch-1.wav",
+                        "data/sounds/event/paper/pencil-scratch-2.wav"
                     ],
                     "kwargs": {
-                        "playlist": "effect"
+                        "playlist": "event"
                     }
                 }
             ]

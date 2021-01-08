@@ -54,16 +54,25 @@
     },
     "sound-player": {
         "music": {
+            "description": "Main sound",
             "concurency": 1,
             "replace": true,
             "loop": 0
         },
-        "ambiance": {
+        "tone": {
+            "description": "alteration of the music",
             "concurency": 1,
             "replace": true,
             "loop": 0
         },
-        "effect": {
+        "backgroud": {
+            "description": "weather conditions, people talking ...",
+            "concurency": 2,
+            "replace": true,
+            "loop": 0
+        },
+        "event": {
+            "description": "brief effect with strong impact",
             "concurency": 10,
             "replace": true
         }
