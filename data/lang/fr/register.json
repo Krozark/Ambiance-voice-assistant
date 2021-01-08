@@ -183,7 +183,7 @@
     {
         "tokens": {
             "tokens": "r_search",
-            "regex": {
+            "regex_": {
                 "r_search": {
                     "regex":"\\w+",
                     "multiple": true

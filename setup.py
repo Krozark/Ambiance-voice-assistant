@@ -33,7 +33,7 @@ setuptools.setup(
       'spacy~=2.2',
       "wikipedia>=1.4",
       "krozark-json-include>=3.1",
-      "krozark_meteofrance>=0.3.9",
+      "meteofrance-api",
       "sound-player~=0.2",
       "Unidecode>=1.1",
       "kivy~=1.11",

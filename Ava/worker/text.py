@@ -2,6 +2,7 @@ import logging
 import time
 
 import nltk
+from text_to_num import alpha2digit
 
 from Ava.core import (
     IThread,
@@ -89,5 +90,7 @@ class NormalizerWorker(Worker, IOThread):
     def _process_input_data(self, text: str) -> str:
         logger.debug("Receive data to normalize = '%s'", text)
         normalized = text.strip().lower()
+        normalized = alpha2digit(normalized, settings.get_language())
+        normalized = normalized.replace(" une ", " 1 ").replace(" un ", " 1 ")
         logger.debug("Normalized as = '%s'", normalized)
         return normalized

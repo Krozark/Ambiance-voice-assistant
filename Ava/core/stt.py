@@ -15,7 +15,6 @@ from Ava.settings import (
 import requests
 import tempfile
 from zipfile import ZipFile
-from text_to_num import alpha2digit
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +33,6 @@ class STTMixin(object):
             data = self._rec.Result()
             j = json.loads(data)
             res = j["text"]
-            # res = alpha2digit(res, settings.language_data["vosk"])
         elif partial:
             data = self._rec.PartialResult()
             j = json.loads(data)

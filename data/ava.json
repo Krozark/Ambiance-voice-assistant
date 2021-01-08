@@ -46,6 +46,13 @@
                     ],
                     "level": "DEBUG",
                     "propapate": true
+                },
+                "Ava.worker.audio.MicrophoneWorker": {
+                    "handlers": [
+                        "console"
+                    ],
+                    "level": "INFO",
+                    "propapate": true
                 }
             }
         },
