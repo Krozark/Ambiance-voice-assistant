@@ -71,9 +71,15 @@
             "replace": true,
             "loop": 0
         },
+        "weather": {
+            "description": "weather conditions",
+            "concurency": 2,
+            "replace": true,
+            "loop": 0
+        },
         "backgroud": {
-            "description": "weather conditions, people talking ...",
-            "concurency": 3,
+            "description": "people talking ...",
+            "concurency": 2,
             "replace": true,
             "loop": 0
         },
